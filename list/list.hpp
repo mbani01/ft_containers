@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 10:49:44 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/21 12:14:54 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/22 10:29:32 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,10 +138,10 @@ class list : public std::allocator<T>
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
-		typedef iterators<node, T>								iterator;
+		typedef iterators<node, T>							iterator;
 		typedef iterators< node, const T>					const_iterator;
-		// typedef rev_iterator<node>			  				reverse_iterator;
-		// typedef rev_iterator<node const>					const_reverse_iterator;
+		typedef rev_iter<node, T>		  				reverse_iterator;
+		typedef rev_iter<node, const T>					const_reverse_iterator;
 		typedef  ptrdiff_t									difference_type;
 		typedef  size_t										size_type;
 		typedef typename allocator_type::template rebind<node>::other node_allocator;
@@ -151,7 +151,9 @@ class list : public std::allocator<T>
 		// default constructor
 		explicit list(const allocator_type& = allocator_type())
 		{
-			allocator_type();
+			_size = 0;
+			this->head = nullptr;
+			// allocator_type();
 		};
 		
 		// fill constructor
@@ -255,14 +257,19 @@ class list : public std::allocator<T>
 	iterator begin(void)
 	{
 		return (iterator(this->head));
-		// return it;
 	};
 	const_iterator begin(void) const
 	{
-		// node const *ptr = this->head;
 		return const_iterator(this->head);
-		// return c_it;
 	};
+	reverse_iterator rbegin()
+	{
+		node *tmp = head;
+		while(tmp->next->next) 
+			tmp = tmp->next;
+		reverse_iterator it(tmp);
+		return it;
+	}
 	iterator end()
 	{
 		node *tmp = head;

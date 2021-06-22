@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/19 16:15:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/21 12:19:47 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/22 12:27:51 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,9 @@ class iterators
 {
 	protected:
 		Tp *current;
-		// T value;
 	public:
 		iterators():current(nullptr)
 		{
-			std::cout << "called\n";
 		};
 		iterators(Tp *node)
 		{
@@ -41,7 +39,7 @@ class iterators
 		}
 		iterators *operator->()
 		{
-			return this->current;
+			return this;
 		}
 		iterators operator++()//preincrement
 		{
@@ -81,28 +79,43 @@ class iterators
 		~iterators(){};
 };
 
-// template <class Tp>
-// class const_iterators : public iterators<Tp>
-// {
-// 	public:
-// 		const_iterators(){};
-// 		~const_iterators(){};
-// 		const_iterators(Tp *head)
-// 		{
-// 			std::cout << "called here\n";
-// 			this->current = head;
-// 		};
-// 		const_iterators(const const_iterators &it)
-// 		{
-// 			*this = it;
-// 		};
-// 		const_iterators &operator=(const const_iterators &it)
-// 		{
-// 			this->current = it.current;
-// 			return *this;
-// 		};
-// 		const T operator*()
-// 		{
-// 			return this->current->value;
-// 		};
-// };
+template <class Tp, class Tv>
+class rev_iter : public iterators<Tp, Tv>
+{
+	// private:
+	// 	Tp *current;
+	public:
+		rev_iter()
+		{
+			this->current = nullptr;
+		};
+		rev_iter(Tp *node)
+		{
+			// Tp *tmp = 
+			this->head->prev = alloc
+			this->current = node;
+		}
+		rev_iter(const rev_iter &obj)
+		{
+			*this = obj;
+		}
+	// 	void operator=(const rev_iter &obj)
+	// 	{
+	// 		this->current = obj.current;
+	// 	}
+	// 	Tv &operator*() const
+	// 	{
+	// 		return this->current->value;
+	// 	}
+		rev_iter operator++()//preincrement
+		{
+			this->current = this->current->prev;
+			return this->current;
+		}
+		rev_iter operator++(int)
+		{
+			rev_iter tmp(*this);
+			this->current = this->current->prev;
+			return *tmp;
+		}
+};
