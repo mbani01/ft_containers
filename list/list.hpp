@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 10:49:44 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/24 10:06:34 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/24 10:35:14 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,37 @@ template<class T, class Alloc = std::allocator<T> >
 class list : public std::allocator<T>
 {
 	private:
-		/*	======================> doubly linked-list <============================  */
+	/*	======================> doubly linked-list <============================  */
 		typedef struct node{
 			T value;
 			node(): next(nullptr), prev(nullptr){};
 			struct node *next;
 		 	struct node *prev;
 		}				node;
+		
+	/*	======================> private functions <============================  */
+	void node_fill(T value,node **head)
+	{
+		node *tmp = nullptr;
+		tmp = node_all.allocate(1);
+		node_all.construct(tmp, node());
+		if (!tmp)
+			exit(1);
+		tmp->value = value;
+		tmp->next = nullptr;
+		tmp->prev = nullptr;
+		node_addback(head, tmp);
+	};
+
+	void add_rend_node(node *head)
+	{
+		node *tmp = node_all.allocate(1);
+		node_all.construct(tmp, node());
+		if (!tmp)
+			exit(1);
+		head->prev = tmp;
+		tmp->next = head;
+	}
 	/*	======================> attributes <============================  */
 		node *head;
 		size_t _size;
@@ -127,25 +151,13 @@ class list : public std::allocator<T>
 			_size = 0;
 			while (1)
 			{
-				tmp = node_all.allocate(1);
-				node_all.construct(tmp, node());
-				if (!tmp)
-					exit(1);
-				tmp->value = *first;
-				tmp->next = nullptr;
-				tmp->prev = nullptr;
-				node_addback(&head, tmp);
+				node_fill(*first, &head);
 				_size++;
 				if (first == last)
 					break;
 				first++;
 			}
-			tmp = node_all.allocate(1);
-				node_all.construct(tmp, node());
-				if (!tmp)
-					exit(1);
-			head->prev = tmp;
-			tmp->next = head;
+			add_rend_node(head);
 			_size--;
 		 };
 
@@ -170,6 +182,7 @@ class list : public std::allocator<T>
 			
 		}
 		/*	======================> member functions <============================  */
+		
 	list &operator=(list& obj)
 	{
 		node *tmp = this->head;	
@@ -184,28 +197,14 @@ class list : public std::allocator<T>
 		tmp = nullptr;
 		iterator it(obj.begin());
 		this->_size = obj.size();
-		// for(it = obj.begin(); it != obj.end(); it++)
-		// {
 		while(1)
 		{
-			tmp = node_all.allocate(1);
-			node_all.construct(tmp, node());
-			if (!tmp)
-				exit(1);
-			tmp->value = *it;
-			tmp->next = nullptr;
-			tmp->prev = nullptr;
-			node_addback(&head, tmp);
+			node_fill(*it, &head);
 			if (it == obj.end())
 				break;
 			++it;
 		}
-		tmp = node_all.allocate(1);
-		node_all.construct(tmp, node());
-		if (!tmp)
-			exit(1);
-		head->prev = tmp;
-		tmp->next = head;
+		add_rend_node(head);
 		return *this;
 	};
 			/*	======================> iterators <============================  */

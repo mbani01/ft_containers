@@ -54,10 +54,10 @@ int main()
 	ft::list<int> ft_list_int1(std_list_int.begin(), std_list_int.end());
 	ft::list<int> ft_list_int;
 
+	//test opeartor= 
 	ft_list_int = ft_list_int1;
 
 	ft::list<int>::iterator  ft_it(ft_list_int.begin());
-
 	print_list(std_list_int.begin(),std_list_int.end(),
 	ft_list_int.begin(), ft_list_int.end());
 
