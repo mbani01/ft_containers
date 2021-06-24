@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 10:49:44 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/22 10:29:32 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/24 10:06:34 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,73 +46,6 @@ class list : public std::allocator<T>
 		};
 	public:
 		/*	======================> iterators classes <============================  */
-
-	/*	template<class Tp>
-		class my_iterator {
-			private:
-				Tp *current;
-				Tp *prev;
-				T 	value;
-			public:
-			my_iterator()
-			{
-				current = nullptr;
-				prev = nullptr;
-			};
-			// my_iterator(Tp *obj)
-			// {
-			// 	*this = obj;
-			// };
-			my_iterator(Tp *obj)
-			{
-				this->current = obj;
-				this->prev = obj->prev;
-				this->value = obj->value;
-			};
-			void operator=(const Tp& obj)
-			{
-				this->current = obj;
-				this->prev = obj.prev;
-				this->value = obj.value;
-			};
-			my_iterator &operator++()//pre increment
-			{
-				// std::cout << "current val : " << this->current->value << std::endl;
-				this->current = this->current->next; 
-				// std::cout << "after inc   : " << this->current->value << std::endl;
-				return this->current;
-			};
-			my_iterator &operator++(int)//post increment
-			{
-				my_iterator *tmp;
-				tmp->current = tmp->prev;
-				tmp->value = this->prev->value;
-				std::cout << "current val : " << this->current->value << std::endl;
-				this->current = current->next;
-				std::cout << "after inc   : " << this->current->value << std::endl;
-				std::cout << "retured val : " << tmp->current->value << std::endl;
-				return *this;
-			};
-			my_iterator &operator--(){this->current = this->current->prev; return *this;};//pre decrement
-			my_iterator &operator--(int){my_iterator *tmp(this); this->current = this->current->prev; return *tmp;};//post decrement
-			bool operator==(my_iterator<Tp> const &obj)
-			{
-				// this->copy = nullptr;
-				return this->current == obj.current;
-			};
-			bool operator!=(my_iterator<Tp> const &obj){return this->current != obj.current;};
-			T& operator*() const {return this->current->value;};
-			~my_iterator()
-			{
-				// if (this->copy)
-				// {
-				// 	std::cout << "freed\n";
-				// 	delete this->copy;
-				// }
-				// this->copy = nullptr;
-			}
-		}; 
-		*/
 		#include "iterators.hpp"
 
 		template<class Tp>
@@ -153,7 +86,6 @@ class list : public std::allocator<T>
 		{
 			_size = 0;
 			this->head = nullptr;
-			// allocator_type();
 		};
 		
 		// fill constructor
@@ -175,6 +107,12 @@ class list : public std::allocator<T>
 				tmp->prev = nullptr;
 				node_addback(&head, tmp);
 			};
+			tmp = node_all.allocate(1);
+				node_all.construct(tmp, node());
+				if (!tmp)
+					exit(1);
+			head->prev = tmp;
+			tmp->next = head;
 			_size = n;
 		};
 		
@@ -202,6 +140,12 @@ class list : public std::allocator<T>
 					break;
 				first++;
 			}
+			tmp = node_all.allocate(1);
+				node_all.construct(tmp, node());
+				if (!tmp)
+					exit(1);
+			head->prev = tmp;
+			tmp->next = head;
 			_size--;
 		 };
 
@@ -226,7 +170,7 @@ class list : public std::allocator<T>
 			
 		}
 		/*	======================> member functions <============================  */
-	list &operator=(const list& obj)
+	list &operator=(list& obj)
 	{
 		node *tmp = this->head;	
 		
@@ -238,9 +182,11 @@ class list : public std::allocator<T>
 			head = tmp;
 		}
 		tmp = nullptr;
-		iterator it;
-		this->_size = obj._size();
-		for(it = obj.begin(); it != obj.end(); it++)
+		iterator it(obj.begin());
+		this->_size = obj.size();
+		// for(it = obj.begin(); it != obj.end(); it++)
+		// {
+		while(1)
 		{
 			tmp = node_all.allocate(1);
 			node_all.construct(tmp, node());
@@ -250,7 +196,16 @@ class list : public std::allocator<T>
 			tmp->next = nullptr;
 			tmp->prev = nullptr;
 			node_addback(&head, tmp);
+			if (it == obj.end())
+				break;
+			++it;
 		}
+		tmp = node_all.allocate(1);
+		node_all.construct(tmp, node());
+		if (!tmp)
+			exit(1);
+		head->prev = tmp;
+		tmp->next = head;
 		return *this;
 	};
 			/*	======================> iterators <============================  */
@@ -263,6 +218,14 @@ class list : public std::allocator<T>
 		return const_iterator(this->head);
 	};
 	reverse_iterator rbegin()
+	{
+		node *tmp = head;
+		while(tmp->next->next)
+			tmp = tmp->next;
+		reverse_iterator it(tmp);
+		return it;
+	}
+	const_reverse_iterator rbegin() const
 	{
 		node *tmp = head;
 		while(tmp->next->next) 
@@ -278,11 +241,27 @@ class list : public std::allocator<T>
 		iterator it(tmp);
 		return it;
 	}
+	const_iterator end() const
+	{
+		node *tmp = head;
+		while(tmp->next)
+			tmp = tmp->next;
+		iterator it(tmp);
+		return it;
+	}
+	reverse_iterator rend()
+	{
+		return (reverse_iterator(this->head->prev));
+	}
+	const_reverse_iterator rend() const
+	{
+		return (reverse_iterator(this->head->prev));
+	}
 	bool empty()
 	{
 		return (_size == 0);
 	};
-	size_type size()
+	size_type size() const
 	{
 		return this->_size;
 	};

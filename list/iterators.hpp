@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/19 16:15:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/22 12:27:51 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/24 10:03:11 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,18 +72,23 @@ class iterators
 		{
 			return this->current != obj.current;
 		}
+		Tp *get_node()
+		{
+			return this->current;
+		}
 		operator iterators<node, const Tv>() const 
 		{
-			return iterators<node, const Tv>(current);}
+			return iterators<node, const Tv>(current);
+		}
 
 		~iterators(){};
 };
 
 template <class Tp, class Tv>
-class rev_iter : public iterators<Tp, Tv>
+class rev_iter
 {
-	// private:
-	// 	Tp *current;
+	private:
+		Tp *current;
 	public:
 		rev_iter()
 		{
@@ -91,22 +96,32 @@ class rev_iter : public iterators<Tp, Tv>
 		};
 		rev_iter(Tp *node)
 		{
-			// Tp *tmp = 
-			this->head->prev = alloc
 			this->current = node;
 		}
 		rev_iter(const rev_iter &obj)
 		{
 			*this = obj;
 		}
-	// 	void operator=(const rev_iter &obj)
-	// 	{
-	// 		this->current = obj.current;
-	// 	}
-	// 	Tv &operator*() const
-	// 	{
-	// 		return this->current->value;
-	// 	}
+		rev_iter(iterators<Tp,Tv> it)
+		{
+			this->current = (it.get_node())->prev;
+		}
+		void operator=(const rev_iter &obj)
+		{
+			this->current = obj.current;
+		}
+		bool operator!=(const rev_iter &obj)
+		{
+			return (this->current != obj.current);
+		}
+		bool operator==(const rev_iter &obj)
+		{
+			return (this->current == obj.current);
+		}
+		Tv &operator*() const
+		{
+			return this->current->value;
+		}
 		rev_iter operator++()//preincrement
 		{
 			this->current = this->current->prev;
@@ -117,5 +132,20 @@ class rev_iter : public iterators<Tp, Tv>
 			rev_iter tmp(*this);
 			this->current = this->current->prev;
 			return *tmp;
+		}
+		rev_iter operator--()//predecrement
+		{
+			this->current = this->current->next;
+			return *this;
+		}
+		rev_iter operator--(int)
+		{
+			rev_iter tmp(*this);
+			this->current = this->current->next;
+			return tmp;
+		}
+		operator rev_iter<node, const Tv>() const
+		{
+			return rev_iter<node, const Tv>(current);
 		}
 };
