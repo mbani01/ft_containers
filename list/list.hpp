@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 10:49:44 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/24 10:35:14 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/25 11:04:31 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,12 @@ class list : public std::allocator<T>
 		if (!tmp)
 			exit(1);
 		head->prev = tmp;
+		prev = head->prev;
 		tmp->next = head;
 	}
 	/*	======================> attributes <============================  */
 		node *head;
+		node *prev;
 		size_t _size;
 		typename Alloc::template rebind<node>::other node_all;
 	/*	==================================================  */
@@ -71,23 +73,7 @@ class list : public std::allocator<T>
 	public:
 		/*	======================> iterators classes <============================  */
 		#include "iterators.hpp"
-
-		template<class Tp>
-		class rev_iterator {
-			private:
-				Tp *lst;
-			public:
-			rev_iterator(){lst = nullptr;};
-			rev_iterator(Tp *lst){while(lst->next) lst = lst->next; return lst;};
-			Tp &rend(Tp *lst){while(lst->prev) lst = lst->prev; return lst;};
-			Tp &rbegin(Tp *lst){while(lst->next) lst = lst->next; return lst;};
-			void operator++(){lst = lst->next;};
-			void operator--(){this->lst = this->lst->prev;};
-			bool operator==(rev_iterator<Tp> const &obj){return this->lst == obj.lst;};
-			Tp& operator*() const {return *lst;};
-		};
-
-			/*	======================> typedef <============================  */
+		/*	======================> typedef <============================  */
 
 		typedef T 											value_type;
 		typedef Alloc										allocator_type;
@@ -110,6 +96,9 @@ class list : public std::allocator<T>
 		{
 			_size = 0;
 			this->head = nullptr;
+			this->prev = nullptr;
+			// this->head->prev = nullptr;
+			// this->head->next = nullptr;
 		};
 		
 		// fill constructor
@@ -131,12 +120,7 @@ class list : public std::allocator<T>
 				tmp->prev = nullptr;
 				node_addback(&head, tmp);
 			};
-			tmp = node_all.allocate(1);
-				node_all.construct(tmp, node());
-				if (!tmp)
-					exit(1);
-			head->prev = tmp;
-			tmp->next = head;
+			add_rend_node(head);
 			_size = n;
 		};
 		
@@ -185,16 +169,7 @@ class list : public std::allocator<T>
 		
 	list &operator=(list& obj)
 	{
-		node *tmp = this->head;	
-		
-		while(head)
-		{
-			tmp = head->next;
-			node_all.deallocate(head, 1);
-			node_all.destroy(head);
-			head = tmp;
-		}
-		tmp = nullptr;
+		free_tmp();
 		iterator it(obj.begin());
 		this->_size = obj.size();
 		while(1)
@@ -210,14 +185,20 @@ class list : public std::allocator<T>
 			/*	======================> iterators <============================  */
 	iterator begin(void)
 	{
-		return (iterator(this->head));
+		if (this->head)
+			return (iterator(this->head));
+		return (iterator());
 	};
 	const_iterator begin(void) const
 	{
-		return const_iterator(this->head);
+		if (this->head)
+			return const_iterator(this->head);
+		return (iterator());
 	};
 	reverse_iterator rbegin()
 	{
+		if (!head)
+			return (reverse_iterator());
 		node *tmp = head;
 		while(tmp->next->next)
 			tmp = tmp->next;
@@ -226,6 +207,8 @@ class list : public std::allocator<T>
 	}
 	const_reverse_iterator rbegin() const
 	{
+		if (!head)
+			return (reverse_iterator());
 		node *tmp = head;
 		while(tmp->next->next) 
 			tmp = tmp->next;
@@ -234,6 +217,8 @@ class list : public std::allocator<T>
 	}
 	iterator end()
 	{
+		if (!head)
+			return (iterator());
 		node *tmp = head;
 		while(tmp->next) 
 			tmp = tmp->next;
@@ -242,6 +227,8 @@ class list : public std::allocator<T>
 	}
 	const_iterator end() const
 	{
+		if (!head)
+			return (iterator());
 		node *tmp = head;
 		while(tmp->next)
 			tmp = tmp->next;
@@ -250,10 +237,14 @@ class list : public std::allocator<T>
 	}
 	reverse_iterator rend()
 	{
+		if (!head)
+			return (reverse_iterator());
 		return (reverse_iterator(this->head->prev));
 	}
 	const_reverse_iterator rend() const
 	{
+		if (!head)
+			return (reverse_iterator());
 		return (reverse_iterator(this->head->prev));
 	}
 	bool empty()
@@ -266,18 +257,76 @@ class list : public std::allocator<T>
 	};
 	size_type max_size()
 	{
-		return allocator_type::max_size();
+		return node_all.max_size();
 	};
-	value_type &front()
+	reference front()
 	{
-		return this->head->value;
+		static T val = value_type();
+		if (this->head)
+			return this->head->value;
+		return val;
 	};
-	value_type &back()
+	const_reference front() const
 	{
-		iterator it = end();
+		static T val = value_type();
+		if (this->head)
+			return this->head->value;
+		return val;
+	};
+	reference back()
+	{
+		reverse_iterator it = rbegin();
+		return *it;
+	};
+	const_reference back() const
+	{
+		const_reverse_iterator it = rbegin();
 		return *it;
 	};
 	// assign();
+	void free_tmp()
+	{
+		if (prev)
+		{
+			node_all.deallocate(prev, 1);
+			node_all.destroy(prev);
+			prev = nullptr;
+		}
+		node *tmp;
+		while(head)
+		{
+			tmp = head->next;
+			node_all.deallocate(head, 1);
+			node_all.destroy(head);
+			head = tmp;
+		}
+		tmp = nullptr;
+	}
+	template <class InputIterator>
+	void assign (InputIterator first, InputIterator last)
+	{
+		free_tmp();
+		if (first == last)
+		{
+			_size = 0;
+			return ;
+		}
+		_size = 0;
+		while (1)
+		{
+			node_fill(*first, &head);
+			_size++;
+			if (first == last)
+				break;
+			first++;
+		}
+		add_rend_node(head);
+		_size--;
+	}
+	void assign (size_type n, const value_type& val)
+	{
+		
+	}
 	// push_front();
 	// pop_front();
 	// push_back();

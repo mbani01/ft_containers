@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/19 16:15:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/24 10:03:11 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/25 08:47:32 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,17 @@ class iterators
 		};
 		void operator=(const iterators &obj)
 		{
-			this->current = obj.current;
+			if (obj.current)
+				this->current = obj.current;
+			else
+				this->current = nullptr;
 		};
 		Tv& operator*() const
 		{
-			return this->current->value;
+			static Tv val = Tv();
+			if (this->current)
+				return this->current->value;
+			return val;
 		}
 		iterators *operator->()
 		{
@@ -120,7 +126,10 @@ class rev_iter
 		}
 		Tv &operator*() const
 		{
-			return this->current->value;
+			static Tv val = Tv();
+			if (this->current)
+				return this->current->value;
+			return val;
 		}
 		rev_iter operator++()//preincrement
 		{
