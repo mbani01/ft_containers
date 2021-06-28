@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 10:49:44 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/25 11:04:31 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/28 10:57:55 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 namespace ft
 {
 template<class T, class Alloc = std::allocator<T> >
-class list : public std::allocator<T>
+class list
 {
 	private:
 	/*	======================> doubly linked-list <============================  */
@@ -41,7 +41,24 @@ class list : public std::allocator<T>
 		tmp->prev = nullptr;
 		node_addback(head, tmp);
 	};
-
+	void free_tmp()
+	{
+		if (prev)
+		{
+			node_all.deallocate(prev, 1);
+			node_all.destroy(prev);
+			prev = nullptr;
+		}
+		node *tmp;
+		while(head)
+		{
+			tmp = head->next;
+			node_all.deallocate(head, 1);
+			node_all.destroy(head);
+			head = tmp;
+		}
+		tmp = nullptr;
+	}
 	void add_rend_node(node *head)
 	{
 		node *tmp = node_all.allocate(1);
@@ -102,7 +119,7 @@ class list : public std::allocator<T>
 		};
 		
 		// fill constructor
-		explicit list (size_type n, const value_type& val = value_type(),
+		list(size_type n, const value_type& val = value_type(),
 						const allocator_type& alloc = allocator_type())
 		{
 			node *tmp = NULL;
@@ -123,14 +140,37 @@ class list : public std::allocator<T>
 			add_rend_node(head);
 			_size = n;
 		};
+		template <typename TY>
+		static bool is_int(TY)
+		{return false;}
+		template<>
+		static bool is_int<int>(int){
+			return true;
+		}
+		// struct is_int : std::false_type
+		// {
+		// };
+		// template<>  // explicit specialization for T = void
+		// struct is_int<int> : std::true_type
+		// {
+		// };
 		
+		template<bool Condition, typename TC = void>
+		struct enable_if
+		{
+		};
+		template<typename TC>
+		struct enable_if<true, TC>
+		{
+			typedef TC type;
+		};
 		// range constructor
-		template <class InputIterator>
+		template <typename InputIterator>
 		list (InputIterator first, InputIterator last,
-         const allocator_type& alloc = allocator_type())
-		 {
+         const allocator_type& alloc = allocator_type(), typename enable_if<is_int(InputIterator), InputIterator>::type = nullptr)
+		 {	 
 			node *tmp = NULL;
-			 
+			
 			this->head = nullptr;
 			_size = 0;
 			while (1)
@@ -283,25 +323,6 @@ class list : public std::allocator<T>
 		const_reverse_iterator it = rbegin();
 		return *it;
 	};
-	// assign();
-	void free_tmp()
-	{
-		if (prev)
-		{
-			node_all.deallocate(prev, 1);
-			node_all.destroy(prev);
-			prev = nullptr;
-		}
-		node *tmp;
-		while(head)
-		{
-			tmp = head->next;
-			node_all.deallocate(head, 1);
-			node_all.destroy(head);
-			head = tmp;
-		}
-		tmp = nullptr;
-	}
 	template <class InputIterator>
 	void assign (InputIterator first, InputIterator last)
 	{
@@ -325,7 +346,7 @@ class list : public std::allocator<T>
 	}
 	void assign (size_type n, const value_type& val)
 	{
-		
+		// free_tmp();
 	}
 	// push_front();
 	// pop_front();
@@ -352,13 +373,5 @@ class list : public std::allocator<T>
 	// friend bool operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
 
 };
-
-// list::list(/* args */)
-// {
-// };
-
-// list::~list()
-// {
-// }
 
 };

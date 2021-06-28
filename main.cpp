@@ -42,6 +42,7 @@ int main()
 	// Creating lists of diffrent types
 	std::list<int> std_list_int; 
 	std::list<int>::iterator  std_it(std_list_int.begin());
+	// ft::list<int> list_1(10, 5);
 	ft::list<char> ft_list_char(5, 'a');
 	std::list<char> std_list_char;
 	ft::list<float> ft_list_float;
