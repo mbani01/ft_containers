@@ -148,15 +148,32 @@ int main()
 	std::cout << "ft back  : " << ft_list_int.back() << std::endl;
 	std::cout << "std back : " << std_list_int.back() << std::endl;
 
-	// std::cout << "ft back  : " << ft_emp.back() << std::endl;
-	// std::cout << "std back : " << std_emp.back() << std::endl;
 	ft::list<int> new_lst;
-	// if (new_lst.begin() == new_lst.end())
-	// 	std::cout << "here" ;
-	ft_list_int.assign(new_lst.begin(), new_lst.end()); 
-	std::cout << ft_list_int.size() ;
-/*
-	 should  free node before head in opeartor= 
-*/
+	ft_list_int.assign(new_lst.begin(), new_lst.end());
+	
+	ft_list_int.push_front(10);
+	ft_list_int.push_front(100);
+	ft_list_int.push_front(1000);
+	ft_list_int.push_back(50);
+	ft_list_int.push_back(200);
+	std_list_int.push_front(10);
+	std_list_int.push_front(100);
+	std_list_int.push_front(1000);
+	std_list_int.push_back(50);
+	std_list_int.push_back(200);
+	print_list(std_list_int.begin(),std_list_int.end(),
+	ft_list_int.begin(), ft_list_int.end());
+	ft_list_int.pop_front();
+	ft_list_int.pop_front();
+	std_list_int.pop_front();
+	std_list_int.pop_front();
+	print_list(std_list_int.begin(),std_list_int.end(),
+	ft_list_int.begin(), ft_list_int.end());
+	ft_list_int.pop_back();
+	// ft_list_int.pop_back();
+	// std_list_int.pop_back();
+	// std_list_int.pop_back();
+	// print_list(std_list_int.begin(),std_list_int.end(),
+	// ft_list_int.begin(), ft_list_int.end());
 // while (1);
 }

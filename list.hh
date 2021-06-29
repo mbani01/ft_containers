@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list.hpp                                           :+:      :+:    :+:   */
+/*   list.hh                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 10:49:44 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/29 11:02:27 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/28 12:04:26 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,24 @@
 
 namespace ft
 {
+		template<typename> struct is_int {
+		static const bool value = false;
+	};
+	template<> struct is_int<bool> {static const bool value = true;};
+	template<> struct is_int<char> {static const bool value = true;};
+	template<> struct is_int<signed char> {static const bool value = true;};
+	template<> struct is_int<short int> {static const bool value = true;};
+	template<> struct is_int<int> {static const bool value = true;};
+	template<> struct is_int<long int> {static const bool value = true;};
+	template<> struct is_int<long long int> {static const bool value = true;};
+	template<> struct is_int<unsigned char> {static const bool value = true;};
+	template<> struct is_int<unsigned short int> {static const bool value = true;};
+	template<> struct is_int<unsigned int> {static const bool value = true;};
+	template<> struct is_int<unsigned long int> {static const bool value = true;};
+	template<> struct is_int<unsigned long long int> {static const bool value = true;};
+	template<bool Cond, class T1 = void> struct enable_if {};
+	template<class T1> struct enable_if<true, T1> { typedef T1 type; };
+
 template<class T, class Alloc = std::allocator<T> >
 class list
 {
@@ -69,17 +87,6 @@ class list
 		prev = head->prev;
 		tmp->next = head;
 	}
-	void add_last_ele(node **head, node *new_node)
-	{
-		node *tmp = *head;
-		node *last = nullptr;
-		while(tmp->next)
-			tmp = tmp->next;
-		last = tmp->prev;
-		new_node->next = tmp;
-		tmp->prev = new_node;
-		last->next = new_node;
-	}
 	/*	======================> attributes <============================  */
 		node *head;
 		node *prev;
@@ -111,8 +118,8 @@ class list
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef iterators<node, T>							iterator;
 		typedef iterators< node, const T>					const_iterator;
-		typedef rev_iter<node, T>		  					reverse_iterator;
-		typedef rev_iter<node, const T>						const_reverse_iterator;
+		typedef rev_iter<node, T>		  				reverse_iterator;
+		typedef rev_iter<node, const T>					const_reverse_iterator;
 		typedef  ptrdiff_t									difference_type;
 		typedef  size_t										size_type;
 		typedef typename allocator_type::template rebind<node>::other node_allocator;
@@ -130,7 +137,7 @@ class list
 		};
 		
 		// fill constructor
-		explicit list(size_type n, const value_type& val = value_type(),
+		list(size_type n, const value_type& val = value_type(),
 						const allocator_type& alloc = allocator_type())
 		{
 			node *tmp = NULL;
@@ -151,19 +158,7 @@ class list
 			add_rend_node(head);
 			_size = n;
 		};
-		template <typename TY>static bool is_int(TY){return false;}
-		template<>static bool is_int<int>(int){return true;}
-		template<>static bool is_int<bool> (bool){return true;};
-		template<>static bool is_int<char> (char){return true;};
-		template<>static bool is_int<signed char>(signed char) {return true;};
-		template<>static bool is_int<short int> (short int){return true;};
-		template<>static bool is_int<long int> (long int){return true;};
-		template<>static bool is_int<long long int> (long long int){return true;};
-		template<>static bool is_int<unsigned char> (unsigned char){return true;};
-		template<>static bool is_int<unsigned short int> (unsigned short int){return true;};
-		template<>static bool is_int<unsigned int> (unsigned int){return true;};
-		template<>static bool is_int<unsigned long int> (unsigned long int){return true;};
-		template<>static bool is_int<unsigned long long int> (unsigned long long int){return true;};
+
 		// struct is_int : std::false_type
 		// {
 		// };
@@ -172,21 +167,20 @@ class list
 		// {
 		// };
 		
-		template<bool Condition, typename TC = void>
-		struct enable_if
-		{
-		};
-		template<typename TC>
-		struct enable_if<true, TC>
-		{
-			typedef TC type;
-		};
+		// template<bool Condition, typename TC = void>
+		// struct enable_if
+		// {
+		// };
+		// template<typename TC>
+		// struct enable_if<true, TC>
+		// {
+		// 	typedef TC type;
+		// };
+
 		// range constructor
 		template <typename InputIterator>
-		// list (InputIterator first, InputIterator last,
-        //  const allocator_type& alloc = allocator_type(), typename enable_if<!is_int(first), InputIterator>::type = 0)
 		list (InputIterator first, InputIterator last,
-         const allocator_type& alloc = allocator_type())
+         const allocator_type& alloc = allocator_type(), typename enable_if<!is_int<InputIterator>::value, InputIterator>::type = 0)
 		 {	 
 			node *tmp = NULL;
 			
@@ -365,112 +359,12 @@ class list
 	}
 	void assign (size_type n, const value_type& val)
 	{
-
-
-		/* TO BE TESTED !!! */
-		node *tmp;
-		free_tmp();
-		for(int i = 0; i <= n; i++)
-		{
-			tmp = node_all.allocate(1);
-			node_all.construct(tmp, node());
-			if (!tmp)
-				exit(1);
-			tmp->value = val;
-			tmp->next = nullptr;
-			tmp->prev = nullptr;
-			node_addback(&head, tmp);
-		};
-		add_rend_node(head);
-		_size = n;
+		// free_tmp();
 	}
 	// push_front();
-	void push_front (const value_type& val)
-	{
-		node *tmp = nullptr;
-		node *tmp1 = nullptr;
-		
-		tmp = node_all.allocate(1);
-		node_all.construct(tmp, node());
-		tmp->value = val;
-		if (!head)
-		{
-			head = tmp;
-			_size += 1;
-			add_rend_node(head);
-			tmp = node_all.allocate(1);
-			node_all.construct(tmp, node());
-			node_addback(&head, tmp);
-			return ;
-		}
-
-		if (head->prev)
-			tmp1 = head->prev;
-		tmp->next = head;
-		tmp->prev = head->prev;
-		head->prev = tmp;
-		tmp1->next = tmp;
-		head = head->prev;
-		_size += 1;
-	}
 	// pop_front();
-	void pop_front()
-	{
-		if (!head)
-			return ;
-		node *tmp = head;
-		head = head->next;
-		head->prev = tmp->prev;
-		node_all.deallocate(tmp, 1);
-		node_all.destroy(tmp);
-		tmp = nullptr;
-		_size--;
-	}
 	// push_back();
-	void push_back (const value_type& val)
-	{
-		node *tmp = node_all.allocate(1);
-		node_all.construct(tmp, node());
-		if (!tmp)
-			exit(1);
-		tmp->value = val;
-		std::cout << "this is val: " << val << std::endl;
-		if (!head)
-		{
-			head = tmp;
-			add_rend_node(head);
-			tmp = node_all.allocate(1);
-			node_all.construct(tmp, node());
-			node_addback(&head, tmp);
-			_size++;
-			return ;
-		}
-		add_last_ele(&head, tmp);
-		_size++;
-	}
-	
-	void pop_back()
-	{
-		if (!head)
-			return ;
-		node *tmp = head;
-		while(tmp->next)
-			tmp = tmp->next;
-		node_all.deallocate(tmp, 1);
-		node_all.destroy(tmp);
-		tmp = nullptr;
-		// last = tmp->prev;
-		// tmp->prev = last->prev;
-		
-		
-		
-	}
 	// insert();
-	// iterator insert (iterator it, const value_type& val)
-	// {
-	// 	node *pos = it.get_node();
-		
-	// }
 	// erase();
 	// swap();
 	// resize();
