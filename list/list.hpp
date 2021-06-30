@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 10:49:44 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/29 11:02:27 by mbani            ###   ########.fr       */
+/*   Updated: 2021/06/30 09:50:26 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ class list
 		head->prev = tmp;
 		prev = head->prev;
 		tmp->next = head;
+		tmp->prev = nullptr;
 	}
 	void add_last_ele(node **head, node *new_node)
 	{
@@ -183,10 +184,10 @@ class list
 		};
 		// range constructor
 		template <typename InputIterator>
-		// list (InputIterator first, InputIterator last,
-        //  const allocator_type& alloc = allocator_type(), typename enable_if<!is_int(first), InputIterator>::type = 0)
 		list (InputIterator first, InputIterator last,
-         const allocator_type& alloc = allocator_type())
+         const allocator_type& alloc = allocator_type(), typename enable_if<!is_int(first), InputIterator>::type = 0)
+		// list (InputIterator first, InputIterator last,
+        //  const allocator_type& alloc = allocator_type())
 		 {	 
 			node *tmp = NULL;
 			
@@ -393,6 +394,8 @@ class list
 		tmp = node_all.allocate(1);
 		node_all.construct(tmp, node());
 		tmp->value = val;
+		tmp->prev = nullptr;
+		tmp->next = nullptr;
 		if (!head)
 		{
 			head = tmp;
@@ -400,6 +403,8 @@ class list
 			add_rend_node(head);
 			tmp = node_all.allocate(1);
 			node_all.construct(tmp, node());
+			tmp->prev = nullptr;
+			tmp->next = nullptr;
 			node_addback(&head, tmp);
 			return ;
 		}
@@ -434,13 +439,16 @@ class list
 		if (!tmp)
 			exit(1);
 		tmp->value = val;
-		std::cout << "this is val: " << val << std::endl;
+		tmp->prev = nullptr;
+		tmp->next = nullptr;
 		if (!head)
 		{
 			head = tmp;
 			add_rend_node(head);
 			tmp = node_all.allocate(1);
 			node_all.construct(tmp, node());
+			tmp->prev = nullptr;
+			tmp->next = nullptr;
 			node_addback(&head, tmp);
 			_size++;
 			return ;
@@ -451,16 +459,21 @@ class list
 	
 	void pop_back()
 	{
+		node *bf_last;
+		node *end;
 		if (!head)
 			return ;
 		node *tmp = head;
-		while(tmp->next)
+		while(tmp->next->next)
 			tmp = tmp->next;
+		end = tmp->next;
+		bf_last = tmp->prev;
+		bf_last->next = end;
+		end->prev = bf_last;
 		node_all.deallocate(tmp, 1);
 		node_all.destroy(tmp);
 		tmp = nullptr;
-		// last = tmp->prev;
-		// tmp->prev = last->prev;
+		// bf_last->next = nullptr;
 		
 		
 		
