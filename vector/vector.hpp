@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:04:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/30 12:33:32 by mbani            ###   ########.fr       */
+/*   Updated: 2021/07/06 16:13:46 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,33 @@ class vector
 				fatal_error();
 			for(int i = 1 ; i <= n; i++)
 				_ptr[i] = val;
+			_size = n;
+			_capacity = n;
 		}
 		template <class InputIterator>
 		void allocate_range(InputIterator first, InputIterator last)
 		{
-			this->_ptr = _alloc.allocate((last - first) + 2);
+			this->_ptr = _alloc.allocate(_size + 2);
 			_alloc.construct(_ptr);
-			_ptr[(last - first) + 1] = *first;
+			_ptr[_size + 1] = *first;
 			_ptr[0] = *first;
 			if (!_ptr)
 				fatal_error();
 			int i = 1;
-			for(; first < last ; first++)
+			for(; first != last ; first++)
 			{
 				_ptr[i] = *first;
 				++i;
 			}
 		}
+		void free_vect()
+		{
+			_alloc.deallocate(_ptr, _capacity + 2);
+			_alloc.destroy(_ptr);
+			_ptr = nullptr;
+		}
 	public:
 		/*	======================> iterators classes <============================  */
-		// #include "iterators.hpp"
 
 				// Dereferencing start from 1 to n (included) 0 && n+1 reserved for rbegin and end
 		
@@ -68,13 +75,38 @@ class vector
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
-		// typedef iterators<node, T>							iterator;
-		// typedef iterators< node, const T>					const_iterator;
+		#include "iterators.hpp"
+		typedef iterators<T>							iterator;
+		typedef iterators<const T>							const_iterator;
 		// typedef rev_iter<node, T>		  					reverse_iterator;
 		// typedef rev_iter<node, const T>						const_reverse_iterator;
 		typedef  ptrdiff_t									difference_type;
-		typedef  size_t										size_type;	
+		typedef  size_t										size_type;
+		
+		/*	======================> enable_if && is_integral implementation <============================  */
+		template<typename> struct is_integral {static const bool value = false;};
+		template<> struct is_integral<bool> {static const bool value = true;};
+		template<> struct is_integral<char> {static const bool value = true;};
+		template<> struct is_integral<signed char> {static const bool value = true;};
+		template<> struct is_integral<short int> {static const bool value = true;};
+		template<> struct is_integral<int> {static const bool value = true;};
+		template<> struct is_integral<long int> {static const bool value = true;};
+		template<> struct is_integral<long long int> {static const bool value = true;};
+		template<> struct is_integral<unsigned char> {static const bool value = true;};
+		template<> struct is_integral<unsigned short int> {static const bool value = true;};
+		template<> struct is_integral<unsigned int> {static const bool value = true;};
+		template<> struct is_integral<unsigned long int> {static const bool value = true;};
+		template<> struct is_integral<unsigned long long int> {static const bool value = true;};
 
+		template<bool Condition, typename TC = void>
+		struct enable_if
+		{
+		};
+		template<typename TC>
+		struct enable_if<true, TC>
+		{
+			typedef TC type;
+		};
 		/*	======================> constructors  && descturtor <============================  */
 		explicit vector (const allocator_type& alloc = allocator_type())
 		{
@@ -89,55 +121,11 @@ class vector
 			_capacity = n;
 			allocate_arr(n, val);
 		};
-
-
-		// template <typename TY>static const bool is_int(TY){return false;}
-		// template<>static const bool is_int<int>(int){return true;}
-		// template<>static const bool is_int<bool> (bool){return true;};
-		// template<>static const bool is_int<char> (char){return true;};
-		// template<>static const bool is_int<signed char>(signed char) {return true;};
-		// template<>static const bool is_int<short int> (short int){return true;};
-		// template<>static const bool is_int<long int> (long int){return true;};
-		// template<>static const bool is_int<long long int> (long long int){return true;};
-		// template<>static const bool is_int<unsigned char> (unsigned char){return true;};
-		// template<>static const bool is_int<unsigned short int> (unsigned short int){return true;};
-		// template<>static const bool is_int<unsigned int> (unsigned int){return true;};
-		// template<>static const bool is_int<unsigned long int> (unsigned long int){return true;};
-		// template<>static const bool is_int<unsigned long long int> (unsigned long long int){return true;};
-template<typename> struct is_int {
-		static const bool value = false;
-	};
-	template<> struct is_int<bool> {static const bool value = true;};
-	template<> struct is_int<char> {static const bool value = true;};
-	template<> struct is_int<signed char> {static const bool value = true;};
-	template<> struct is_int<short int> {static const bool value = true;};
-	template<> struct is_int<int> {static const bool value = true;};
-	template<> struct is_int<long int> {static const bool value = true;};
-	template<> struct is_int<long long int> {static const bool value = true;};
-	template<> struct is_int<unsigned char> {static const bool value = true;};
-	template<> struct is_int<unsigned short int> {static const bool value = true;};
-	template<> struct is_int<unsigned int> {static const bool value = true;};
-	template<> struct is_int<unsigned long int> {static const bool value = true;};
-	template<> struct is_int<unsigned long long int> {static const bool value = true;};
-	// template<bool Cond, class T1 = void> struct enable_if {};
-	// template<class T1> struct enable_if<true, T1> { typedef T1 type; };
-
-		template<bool Condition, typename TC = void>
-		struct enable_if
-		{
-		};
-		template<typename TC>
-		struct enable_if<true, TC>
-		{
-			typedef TC type;
-		};
-	
 		template <class InputIterator>
          vector (InputIterator first, InputIterator last,
                  const allocator_type& alloc = allocator_type(), 
-				typename enable_if<!is_int<InputIterator>::value, InputIterator>::type = InputIterator())
+				typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
 		{
-			std::cout << "called" << std::endl;
 			if (first == last)
 			{
 				_size = 0;
@@ -145,16 +133,79 @@ template<typename> struct is_int {
 				_ptr = nullptr;
 				return;
 			}
+			_size = last - first;
+			_capacity = _size;
 			allocate_range(first, last);
-			
 		};
 
+		vector (const vector& x)
+		{
+			//should allocate size of x not capacity ^_^
+			if (x._capacity == 0)
+			{
+				_size = 0;
+				_capacity = 0;
+				_ptr = nullptr;
+				return ;
+			}
+			allocate_range(x.begin(), x.end()); // should check if end index == capacity 
+		}
+		~vector()
+		{
+			if (this->_ptr)
+				free_vect();
+		}
+		/*	======================> member functions <============================  */
 
-
-
-
-
-
+		iterator begin(void)
+		{
+			if (_size != 0)
+				return (iterator(&_ptr[1], _size, 1));
+			return (iterator());
+		}
+		const_iterator begin(void) const
+		{
+			if (_size != 0)
+				return (const_iterator(&_ptr[1], _size, 1));
+			return (const_iterator());
+		}
+		iterator end(void)
+		{
+			if (_size != 0)
+				return (iterator(&_ptr[_size + 1], _size, _size + 1));
+			return (iterator());
+		}
+		// const_iterator end(void) const
+		// {
+		// 	if (this->_ptr)
+		// 		return (const_iterator(_ptr, _size, _capacity));
+		// 	return (const_iterator());
+		// }
+		size_type size() const
+		{
+			return (this->_size);
+		}
+		size_type max_size() const
+		{
+			return (_alloc.max_size());	
+		}
+		size_type capacity() const
+		{
+			return (this->_capacity);
+		}
+		bool empty() const
+		{
+			return (_size == 0);
+		}
+		void reserve (size_type n)
+		{
+			if (n > _capacity)
+			{
+				free_vect();
+				std::cout << "entered\n";
+				allocate_arr(n, T());
+			}
+		}
 };
 
 };

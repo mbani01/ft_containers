@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 10:49:44 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/28 12:04:26 by mbani            ###   ########.fr       */
+/*   Updated: 2021/07/01 09:05:25 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,21 @@
 
 namespace ft
 {
-		template<typename> struct is_int {
+		template<typename> struct is_integral {
 		static const bool value = false;
 	};
-	template<> struct is_int<bool> {static const bool value = true;};
-	template<> struct is_int<char> {static const bool value = true;};
-	template<> struct is_int<signed char> {static const bool value = true;};
-	template<> struct is_int<short int> {static const bool value = true;};
-	template<> struct is_int<int> {static const bool value = true;};
-	template<> struct is_int<long int> {static const bool value = true;};
-	template<> struct is_int<long long int> {static const bool value = true;};
-	template<> struct is_int<unsigned char> {static const bool value = true;};
-	template<> struct is_int<unsigned short int> {static const bool value = true;};
-	template<> struct is_int<unsigned int> {static const bool value = true;};
-	template<> struct is_int<unsigned long int> {static const bool value = true;};
-	template<> struct is_int<unsigned long long int> {static const bool value = true;};
+	template<> struct is_integral<bool> {static const bool value = true;};
+	template<> struct is_integral<char> {static const bool value = true;};
+	template<> struct is_integral<signed char> {static const bool value = true;};
+	template<> struct is_integral<short int> {static const bool value = true;};
+	template<> struct is_integral<int> {static const bool value = true;};
+	template<> struct is_integral<long int> {static const bool value = true;};
+	template<> struct is_integral<long long int> {static const bool value = true;};
+	template<> struct is_integral<unsigned char> {static const bool value = true;};
+	template<> struct is_integral<unsigned short int> {static const bool value = true;};
+	template<> struct is_integral<unsigned int> {static const bool value = true;};
+	template<> struct is_integral<unsigned long int> {static const bool value = true;};
+	template<> struct is_integral<unsigned long long int> {static const bool value = true;};
 	template<bool Cond, class T1 = void> struct enable_if {};
 	template<class T1> struct enable_if<true, T1> { typedef T1 type; };
 
@@ -159,11 +159,11 @@ class list
 			_size = n;
 		};
 
-		// struct is_int : std::false_type
+		// struct is_integral : std::false_type
 		// {
 		// };
 		// template<>  // explicit specialization for T = void
-		// struct is_int<int> : std::true_type
+		// struct is_integral<int> : std::true_type
 		// {
 		// };
 		
@@ -180,7 +180,7 @@ class list
 		// range constructor
 		template <typename InputIterator>
 		list (InputIterator first, InputIterator last,
-         const allocator_type& alloc = allocator_type(), typename enable_if<!is_int<InputIterator>::value, InputIterator>::type = 0)
+         const allocator_type& alloc = allocator_type(), typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = 0)
 		 {	 
 			node *tmp = NULL;
 			

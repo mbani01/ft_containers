@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 10:49:44 by mbani             #+#    #+#             */
-/*   Updated: 2021/06/30 09:50:26 by mbani            ###   ########.fr       */
+/*   Updated: 2021/07/02 12:39:40 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ class list
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef iterators<node, T>							iterator;
-		typedef iterators< node, const T>					const_iterator;
+		typedef iterators<node, const T>					const_iterator;
 		typedef rev_iter<node, T>		  					reverse_iterator;
 		typedef rev_iter<node, const T>						const_reverse_iterator;
 		typedef  ptrdiff_t									difference_type;
@@ -152,24 +152,24 @@ class list
 			add_rend_node(head);
 			_size = n;
 		};
-		template <typename TY>static bool is_int(TY){return false;}
-		template<>static bool is_int<int>(int){return true;}
-		template<>static bool is_int<bool> (bool){return true;};
-		template<>static bool is_int<char> (char){return true;};
-		template<>static bool is_int<signed char>(signed char) {return true;};
-		template<>static bool is_int<short int> (short int){return true;};
-		template<>static bool is_int<long int> (long int){return true;};
-		template<>static bool is_int<long long int> (long long int){return true;};
-		template<>static bool is_int<unsigned char> (unsigned char){return true;};
-		template<>static bool is_int<unsigned short int> (unsigned short int){return true;};
-		template<>static bool is_int<unsigned int> (unsigned int){return true;};
-		template<>static bool is_int<unsigned long int> (unsigned long int){return true;};
-		template<>static bool is_int<unsigned long long int> (unsigned long long int){return true;};
-		// struct is_int : std::false_type
+		template <typename TY>static bool is_integral(TY){return false;}
+		template<>static bool is_integral<int>(int){return true;}
+		template<>static bool is_integral<bool> (bool){return true;};
+		template<>static bool is_integral<char> (char){return true;};
+		template<>static bool is_integral<signed char>(signed char) {return true;};
+		template<>static bool is_integral<short int> (short int){return true;};
+		template<>static bool is_integral<long int> (long int){return true;};
+		template<>static bool is_integral<long long int> (long long int){return true;};
+		template<>static bool is_integral<unsigned char> (unsigned char){return true;};
+		template<>static bool is_integral<unsigned short int> (unsigned short int){return true;};
+		template<>static bool is_integral<unsigned int> (unsigned int){return true;};
+		template<>static bool is_integral<unsigned long int> (unsigned long int){return true;};
+		template<>static bool is_integral<unsigned long long int> (unsigned long long int){return true;};
+		// struct is_integral : std::false_type
 		// {
 		// };
 		// template<>  // explicit specialization for T = void
-		// struct is_int<int> : std::true_type
+		// struct is_integral<int> : std::true_type
 		// {
 		// };
 		
@@ -185,7 +185,7 @@ class list
 		// range constructor
 		template <typename InputIterator>
 		list (InputIterator first, InputIterator last,
-         const allocator_type& alloc = allocator_type(), typename enable_if<!is_int(first), InputIterator>::type = 0)
+         const allocator_type& alloc = allocator_type(), typename enable_if<!is_integral(first), InputIterator>::type = 0)
 		// list (InputIterator first, InputIterator last,
         //  const allocator_type& alloc = allocator_type())
 		 {	 
