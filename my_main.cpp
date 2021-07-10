@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 10:51:27 by mbani             #+#    #+#             */
-/*   Updated: 2021/07/10 11:04:08 by mbani            ###   ########.fr       */
+/*   Updated: 2021/07/10 19:47:33 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,8 +196,8 @@ int main()
 	ft::vector<int> ft_new2;
 
 	std::cout << std::endl;
-	std_new2.reserve(1);
-	ft_new2.reserve(1);
+	// std_new2.reserve(1);
+	// ft_new2.reserve(1);
 	std::vector<int>::iterator std_it2(std_new2.begin());
 	ft::vector<int>::iterator ft_it2(ft_new2.begin());
 	
@@ -246,16 +246,38 @@ int main()
 
 	print_vector(std_new2.begin(),std_new2.end(),
 	ft_new2.begin(), ft_new2.end());
+	std_it2 = std_new2.end();
+	ft_it2 = ft_new2.end();
+	std_it2--;
+	ft_it2--;
+
+	std_new2.insert(std_it2, 18, 55);
+	ft_new2.insert(ft_it2, 18, 55);
+		print_vector(std_new2.begin(),std_new2.end(),
+	ft_new2.begin(), ft_new2.end());
 	std_it2 = std_new2.begin();
 	ft_it2 = ft_new2.begin();
-	// std_it2--;
-	// ft_it2--;
-	std_new2.insert(std_it2, 2, 55);
-	ft_new2.insert(ft_it2, 2, 55);
-		print_vector(std_new2.begin(),std_new2.end(),
+	std_it2++;
+	ft_it2++;
+	std_new2.insert(std_it2, 190);
+	ft_new2.insert(ft_it2, 190);
+	print_vector(std_new2.begin(),std_new2.end(),
 	ft_new2.begin(), ft_new2.end());
 	std::cout << "std capacity : " << std_new2.capacity() << std::endl;
 	std::cout << "std size :" << std_new2.size() << std::endl;
 	std::cout << "ft capacity : " << ft_new2.capacity() << std::endl;
 	std::cout << "ft size :" << ft_new2.size() << std::endl << std::endl;
+
+	std::vector<int> std_new3(10, 0);
+	ft::vector<int> ft_new3;
+
+	std_new3.insert(std_new2.begin(), std_new2.begin(), std_new2.end());
+	// ft_new3.insert(ft_new2.begin(), std_new2.begin(), std_new2.end());
+
+	print_vector(std_new3.begin(),std_new3.end(),
+		ft_new3.begin(), ft_new3.end());
+	// std::cout << "std capacity : " << std_new3.capacity() << std::endl;
+	// std::cout << "std size :" << std_new3.size() << std::endl;
+	// std::cout << "ft capacity : " << ft_new3.capacity() << std::endl;
+	// std::cout << "ft size :" << ft_new3.size() << std::endl << std::endl;
 }

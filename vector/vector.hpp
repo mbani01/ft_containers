@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:04:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/07/10 11:04:50 by mbani            ###   ########.fr       */
+/*   Updated: 2021/07/10 19:48:38 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,26 +312,7 @@ class vector
 		{
 			_size--;
 		}
-		// void reserve_and_insert (size_type n, iterator postion, const value_type& val)
-		// {
-		// 	if (n > _capacity)
-		// 	{
-		// 		vector<T> tmp(this->begin(), this->end());
-		// 		int size = tmp.size();
-		// 		free_vect();
-		// 		allocate_arr(n, T());
-		// 		this->_size = size;
-		// 		int j = 1;
-		// 		for(int i = 1; i <= _size; ++i)
-		// 		{
-		// 			if (j == postion.get_pos())
-		// 				this->_ptr[j++] = val;
-		// 			this->_ptr[j] = tmp[i - 1];
-		// 			++j;
-		// 		}
-		// 	}
-		// }
-		void reserve_and_insert (size_type n, iterator postion, size_type nbr, const value_type& val)
+		void reserve_and_insert (size_type n, iterator postion, const value_type& val)
 		{
 			if (n > _capacity)
 			{
@@ -344,9 +325,27 @@ class vector
 				for(int i = 1; i <= _size; ++i)
 				{
 					if (j == postion.get_pos())
-						while (nbr--)
 						this->_ptr[j++] = val;
 					this->_ptr[j] = tmp[i - 1];
+					++j;
+				}
+			}
+		}
+		void reserve_and_insert (size_type n, iterator position, size_type nbr, const value_type& val)
+		{
+			if (n > _capacity)
+			{
+				vector<T> tmp(this->begin(), this->end());
+				int size = tmp.size();
+				free_vect();
+				allocate_arr(n, val);
+				_size = size + nbr;
+				int j = 0;
+				for(int i = 1; i <= _size; ++i)
+				{
+					if (i == position.get_pos())
+						i += nbr;
+					_ptr[i] = tmp[j];
 					++j;
 				}
 			}
@@ -372,7 +371,7 @@ class vector
 			}
 			else
 			{
-				this->reserve_and_insert(_capacity + 1, position, 1, val);
+				this->reserve_and_insert(_capacity * 2, position, val);
 				_size++;
 				return iterator(&_ptr[position.get_pos()], _size, position.get_pos());
 			}
@@ -382,37 +381,88 @@ class vector
 		{
 			if (n == 0)
 				return ;
-			if (position == this->end())
-			{
-				// while (n--)
-				// 	push_back(val);
-				// return ;
-				// position--;
-			}
 			if (_capacity >= _size + n)
 			{
-				int i = _size + 1;
-				if (position != this->end())
-					for(; i >= position.get_pos(); --i) // shift elements to end
-						_ptr[i + n] = _ptr[i];
-				_size += n;
-				std::cout << "end pos :" << position.get_pos() << std::endl;
 				if (position == this->end())
-					--i;
-				while(n--) // insert new elements
-					_ptr[++i] = val;
-				return ;
+				{
+					while(n--)
+						push_back(val);
+					return ;
+				}
+				std::cout << position.get_pos() << std::endl;
+				for (int j = _size + 1 ; j >= position.get_pos(); --j) //shift elements 
+				{
+					_ptr[j + n] = _ptr[j];
+					if (j <= position.get_pos() + n) // add new elements
+						_ptr[j] = val;
+				}
+				_size += n;
+				return;
 			}
-			this->reserve_and_insert(_size + n, position, n , val);
-			_size += n;
+			size_type new_capacity = _capacity * 2;
+			if (n > new_capacity)
+				new_capacity = _size + n;
+			this->reserve_and_insert(new_capacity , position, n , val); // reallocate and add elements
 			return ;
 		}
-		// template <class InputIterator>
-		// void insert (iterator position, InputIterator first, InputIterator last, 
-		// 		typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
-		// {
-			
-		// }
+		template <class InputIterator>
+		void reserve_and_insert (size_type n, iterator position, size_type nbr, InputIterator itr, 
+			typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+		{
+			if (n > _capacity)
+			{
+				vector<T> tmp(this->begin(), this->end());
+				int size = tmp.size();
+				free_vect();
+				allocate_arr(n, T());
+				_size = size + nbr;
+				int j = 0;
+				for(int i = 1; i <= _size; ++i)
+				{
+					if (i == position.get_pos())
+					{
+						while(i < i + nbr)
+							_ptr[i] = *itr++;
+						i += nbr;
+					}
+					_ptr[i] = tmp[j];
+					++j;
+				}
+			}
+		}
+		template <class InputIterator>
+		void insert (iterator position, InputIterator first, InputIterator last, 
+			typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+		{
+			// std::cout << "here \n";
+			// size_type n = last - first;
+			// InputIterator tmp(first);
+			// if (n == 0)
+			// 	return ;
+			// if (_capacity >= _size + n)
+			// {
+			// 	if (position == this->end())
+			// 	{
+			// 		while(n--)
+			// 			push_back(*tmp++);
+			// 		return ;
+			// 	}
+			// 	std::cout << position.get_pos() << std::endl;
+			// 	for (int j = _size + 1 ; j >= position.get_pos(); --j) //shift elements 
+			// 	{
+			// 		_ptr[j + n] = _ptr[j];
+			// 		if (j <= position.get_pos() + n) // add new elements
+			// 			_ptr[j] = *tmp++;
+			// 	}
+			// 	_size += n;
+			// 	return;
+			// }
+			// size_type new_capacity = _capacity * 2;
+			// if (n > new_capacity)
+			// 	new_capacity = _size + n;
+			// this->reserve_and_insert(new_capacity , position, n , tmp); // reallocate and add elements
+			// return ;
+		}
 };
 
 };
