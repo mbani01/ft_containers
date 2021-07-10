@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/19 16:15:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/07/06 16:20:37 by mbani            ###   ########.fr       */
+/*   Updated: 2021/07/08 13:04:16 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class iterators
 		iterators():_it(nullptr), _size(0), _pos(-1)
 		{
 		};
-		iterators(Tp *ptr):_it(ptr){};
+		// iterators(Tp *ptr):_it(ptr){};
 		iterators(Tp *vect, size_t size, size_t pos)
 		{
 			this->_it = vect;
@@ -49,6 +49,10 @@ class iterators
 		Tp& operator*() const
 		{
 			return *_it;
+		}
+		Tp get_pos()
+		{
+			return this->_pos;
 		}
 		iterators *operator->()
 		{
@@ -79,6 +83,10 @@ class iterators
 			--_it;
 			return tmp;
 		}
+		std::ptrdiff_t operator-(iterators const obj)
+		{
+			return this->_pos - obj._pos;
+		}
 		bool operator==(iterators const &obj)
 		{
 			return (this->_it == obj._it);
@@ -93,7 +101,7 @@ class iterators
 		}
 		operator iterators<const Tp>() const 
 		{
-			return iterators<const Tp>(_it);
+			return iterators<const Tp>(_it, _size, _pos);
 		}
 
 		~iterators(){};
