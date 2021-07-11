@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 10:51:27 by mbani             #+#    #+#             */
-/*   Updated: 2021/07/10 19:47:33 by mbani            ###   ########.fr       */
+/*   Updated: 2021/07/11 16:46:33 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,20 +264,27 @@ int main()
 	print_vector(std_new2.begin(),std_new2.end(),
 	ft_new2.begin(), ft_new2.end());
 	std::cout << "std capacity : " << std_new2.capacity() << std::endl;
-	std::cout << "std size :" << std_new2.size() << std::endl;
-	std::cout << "ft capacity : " << ft_new2.capacity() << std::endl;
-	std::cout << "ft size :" << ft_new2.size() << std::endl << std::endl;
+	std::cout << "std size :     " << std_new2.size() << std::endl;
+	std::cout << "ft capacity :  " << ft_new2.capacity() << std::endl;
+	std::cout << "ft size :      " << ft_new2.size() << std::endl << std::endl;
 
-	std::vector<int> std_new3(10, 0);
+	std::vector<int> std_new3;
 	ft::vector<int> ft_new3;
-
-	std_new3.insert(std_new2.begin(), std_new2.begin(), std_new2.end());
-	// ft_new3.insert(ft_new2.begin(), std_new2.begin(), std_new2.end());
+	std_new3.reserve(10);
+	ft_new3.reserve(10);
+	ft_new3.push_back(10);
+	ft_new3.push_back(20);
+	ft_new3.push_back(30);	
+	std_new3.push_back(10);
+	std_new3.push_back(20);
+	std_new3.push_back(30);
+	std_new3.insert(std_new3.begin(), std_new2.begin() + 2, std_new2.begin() + 3);
+	ft_new3.insert(ft_new2.begin(), std_new2.begin() + 2, std_new2.begin() + 3);
 
 	print_vector(std_new3.begin(),std_new3.end(),
 		ft_new3.begin(), ft_new3.end());
-	// std::cout << "std capacity : " << std_new3.capacity() << std::endl;
-	// std::cout << "std size :" << std_new3.size() << std::endl;
-	// std::cout << "ft capacity : " << ft_new3.capacity() << std::endl;
-	// std::cout << "ft size :" << ft_new3.size() << std::endl << std::endl;
+	std::cout << "std capacity : " << std_new3.capacity() << std::endl;
+	std::cout << "std size :" << std_new3.size() << std::endl;
+	std::cout << "ft capacity : " << ft_new3.capacity() << std::endl;
+	std::cout << "ft size :" << ft_new3.size() << std::endl << std::endl;
 }
