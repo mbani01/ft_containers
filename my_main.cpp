@@ -272,14 +272,14 @@ int main()
 	ft::vector<int> ft_new3(1, 0);
 	std_new3.reserve(10);
 	ft_new3.reserve(10);
-	// ft_new3.push_back(10);
-	// ft_new3.push_back(20);
-	// ft_new3.push_back(30);
-	// ft_new3.push_back(40);
-	// std_new3.push_back(10);
-	// std_new3.push_back(20);
-	// std_new3.push_back(30);
-	// std_new3.push_back(40);
+	ft_new3.push_back(10);
+	ft_new3.push_back(20);
+	ft_new3.push_back(30);
+	ft_new3.push_back(40);
+	std_new3.push_back(10);
+	std_new3.push_back(20);
+	std_new3.push_back(30);
+	std_new3.push_back(40);
 	std_new3.insert(std_new3.begin(), std_new2.begin(), std_new2.end());
 	ft_new3.insert(ft_new3.begin(), std_new2.begin(), std_new2.end());
 
@@ -289,4 +289,73 @@ int main()
 	std::cout << "std size :" << std_new3.size() << std::endl;
 	std::cout << "ft capacity : " << ft_new3.capacity() << std::endl;
 	std::cout << "ft size :" << ft_new3.size() << std::endl << std::endl;
+
+
+	// std::cout << *(std_new3.erase(std_new3.end() - 3)) << std::endl;
+	// std::cout << *(ft_new3.erase(ft_new3.end()  - 3)) << std::endl;
+
+
+	// std::cout << *(std_new3.erase(std_new3.begin() + 3, std_new3.end())) << std::endl;
+	// std::cout << *(ft_new3.erase(ft_new3.begin() + 3, ft_new3.end())) << std::endl;
+
+	print_vector(std_new3.begin(),std_new3.end(),
+		ft_new3.begin(), ft_new3.end());
+	std::cout << "std capacity : " << std_new3.capacity() << std::endl;
+	std::cout << "std size :" << std_new3.size() << std::endl;
+	std::cout << "ft capacity : " << ft_new3.capacity() << std::endl;
+	std::cout << "ft size :" << ft_new3.size() << std::endl << std::endl;
+
+	std::cout << "iter " << ft_new3.end() - ft_new3.begin() << std::endl;
+
+	std::vector<int> std_new4(20, 0);
+	ft::vector<int> ft_new4(20, 0);
+	std_new4 = std_new3;
+	ft_new4 = ft_new3;
+	std::cout << "print new4" << std::endl << std::endl;
+	print_vector(std_new4.begin(),std_new4.end(),
+		ft_new4.begin(), ft_new4.end());
+	std::cout << "std capacity : " << std_new4.capacity() << std::endl;
+	std::cout << "std size :" << std_new4.size() << std::endl;
+	std::cout << "ft capacity : " << ft_new4.capacity() << std::endl;
+	std::cout << "ft size :" << ft_new4.size() << std::endl;
+
+
+	ft_new3.push_back(3333);
+	ft_new3.push_back(20);
+	ft_new3.push_back(30);
+	ft_new3.push_back(3333);
+	std_new3.push_back(3333);
+	std_new3.push_back(20);
+	std_new3.push_back(30);
+	std_new3.push_back(3333);
+	ft_new3.swap(ft_new4);
+	std_new3.swap(std_new4);
+	std::cout << "print new4" << std::endl << std::endl;
+	print_vector(std_new4.begin(),std_new4.end(),
+		ft_new4.begin(), ft_new4.end());
+	std::cout << "std capacity : " << std_new4.capacity() << std::endl;
+	std::cout << "std size :" << std_new4.size() << std::endl;
+	std::cout << "ft capacity : " << ft_new4.capacity() << std::endl;
+	std::cout << "ft size :" << ft_new4.size() << std::endl;
+	std::cout << "print new3" << std::endl << std::endl;
+	print_vector(std_new3.begin(),std_new3.end(),
+		ft_new3.begin(), ft_new3.end());
+	std::cout << "std capacity : " << std_new3.capacity() << std::endl;
+	std::cout << "std size :" << std_new3.size() << std::endl;
+	std::cout << "ft capacity : " << ft_new3.capacity() << std::endl;
+	std::cout << "ft size :" << ft_new3.size() << std::endl;
+
+	ft_new4.clear();
+	std_new4.clear();
+	print_vector(std_new4.begin(),std_new4.end(),
+		ft_new4.begin(), ft_new4.end());
+	std::cout << "std capacity : " << std_new4.capacity() << std::endl;
+	std::cout << "std size :" << std_new4.size() << std::endl;
+	std::cout << "ft capacity : " << ft_new4.capacity() << std::endl;
+	std::cout << "ft size :" << ft_new4.size() << std::endl;
+
+	// ft::vector<int, std_new4.get_allocator()> ft_new5;
+
+	// std::cout << std_new4.get_allocator() == ft_new5 << std::endl;
+
 }

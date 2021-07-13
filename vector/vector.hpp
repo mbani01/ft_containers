@@ -179,6 +179,40 @@ class vector
 			}
 			allocate_range(x.begin(), x.end()); // should check if end index == capacity 
 		}
+		vector& operator= (const vector& x)
+		{
+			// vector<T> tmp(x);
+			const_iterator last(x.end());
+			const_iterator first(x.begin());
+			if (x.size() > _capacity)
+			{
+				std::cout << "here " << x.size() << std::endl;
+				free_vect();
+				this->_size = x.size();
+				this->_capacity = _size;
+				this->_ptr = _alloc.allocate(_size + 2);
+				_alloc.construct(_ptr);
+				_ptr[_size + 1] = *first;
+				_ptr[0] = *first;
+				if (!_ptr)
+					fatal_error();
+				int i = 1;
+				for(int len = 0 ; len < x.size() ; ++len)
+				{
+					_ptr[i] = x[i - 1];
+					++i;
+				}
+				return *this;
+			}
+			_size = x.size();
+			int i = 1;
+			for(int len = 0 ; len < x.size() ; ++len)
+			{
+				_ptr[i] = x[i - 1];
+				i++;
+			}
+			return *this;
+		}
 		~vector()
 		{
 			if (this->_ptr)
@@ -457,7 +491,43 @@ class vector
 		}
 		iterator erase (iterator position)
 		{
-			
+			for(int i = position.get_pos(); i < _size + 1; ++i)
+				_ptr[i] = _ptr[i + 1];
+			_size--;
+			return iterator(&_ptr[position.get_pos()], _size, position.get_pos());
+		}
+		iterator erase (iterator first, iterator last)
+		{
+			int len = last - first;
+			for(int i = first.get_pos(); i < last.get_pos(); ++i)
+			{
+				if (_ptr[i + len])
+				{
+					_ptr[i] = _ptr[i + len];
+				}
+			}
+			_size -= len;
+			return iterator(&_ptr[first.get_pos()], _size, first.get_pos());
+		}
+		void swap (vector& x)
+		{
+			T *tmp = x._ptr;
+			x._ptr = this->_ptr;
+			_ptr = tmp;
+			size_type tmp_sz = x._size;
+			x._size = this->_size; 
+			this->_size = tmp_sz;
+			size_type tmp_cp = x._capacity;
+			x._capacity = this->_capacity; 
+			this->_capacity = tmp_cp;			
+		}
+		void clear()
+		{
+			this->erase(this->begin(), this->end());
+		}
+		allocator_type get_allocator() const
+		{
+			return this->_alloc;
 		}
 };
 
