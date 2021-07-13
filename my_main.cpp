@@ -246,13 +246,13 @@ int main()
 
 	print_vector(std_new2.begin(),std_new2.end(),
 	ft_new2.begin(), ft_new2.end());
-	std_it2 = std_new2.end();
-	ft_it2 = ft_new2.end();
-	std_it2--;
-	ft_it2--;
+	std_it2 = std_new2.begin();
+	ft_it2 = ft_new2.begin();
+	// std_it2--;
+	// ft_it2--;
 
-	std_new2.insert(std_it2, 18, 55);
-	ft_new2.insert(ft_it2, 18, 55);
+	std_new2.insert(std_it2, 1, 55);
+	ft_new2.insert(ft_it2, 1, 55);
 		print_vector(std_new2.begin(),std_new2.end(),
 	ft_new2.begin(), ft_new2.end());
 	std_it2 = std_new2.begin();
@@ -268,18 +268,20 @@ int main()
 	std::cout << "ft capacity :  " << ft_new2.capacity() << std::endl;
 	std::cout << "ft size :      " << ft_new2.size() << std::endl << std::endl;
 
-	std::vector<int> std_new3;
-	ft::vector<int> ft_new3;
+	std::vector<int> std_new3(1, 0);
+	ft::vector<int> ft_new3(1, 0);
 	std_new3.reserve(10);
 	ft_new3.reserve(10);
-	ft_new3.push_back(10);
-	ft_new3.push_back(20);
-	ft_new3.push_back(30);	
-	std_new3.push_back(10);
-	std_new3.push_back(20);
-	std_new3.push_back(30);
-	std_new3.insert(std_new3.begin(), std_new2.begin() + 2, std_new2.begin() + 3);
-	ft_new3.insert(ft_new2.begin(), std_new2.begin() + 2, std_new2.begin() + 3);
+	// ft_new3.push_back(10);
+	// ft_new3.push_back(20);
+	// ft_new3.push_back(30);
+	// ft_new3.push_back(40);
+	// std_new3.push_back(10);
+	// std_new3.push_back(20);
+	// std_new3.push_back(30);
+	// std_new3.push_back(40);
+	std_new3.insert(std_new3.begin(), std_new2.begin(), std_new2.end());
+	ft_new3.insert(ft_new3.begin(), std_new2.begin(), std_new2.end());
 
 	print_vector(std_new3.begin(),std_new3.end(),
 		ft_new3.begin(), ft_new3.end());

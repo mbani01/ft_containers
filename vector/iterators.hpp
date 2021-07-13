@@ -87,6 +87,22 @@ class iterators
 		{
 			return this->_pos - obj._pos;
 		}
+		std::ptrdiff_t operator+(iterators const obj)
+		{
+			return this->_pos + obj._pos;
+		}
+		iterators operator-(size_t position)
+		{
+			this->_it -= position;
+			this->_pos -= position;
+			return *this;
+		}
+		iterators operator+(size_t position)
+		{
+			this->_it += position;
+			this->_pos += position;
+			return *this;
+		}
 		bool operator==(iterators const &obj)
 		{
 			return (this->_it == obj._it);

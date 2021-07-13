@@ -14,9 +14,50 @@
 
 namespace ft
 {
+			
+	/*	======================> enable_if && is_integral implementation <============================  */
+	template<typename> struct is_integral {static const bool value = false;};
+	template<> struct is_integral<bool> {static const bool value = true;};
+	template<> struct is_integral<char> {static const bool value = true;};
+	template<> struct is_integral<signed char> {static const bool value = true;};
+	template<> struct is_integral<short int> {static const bool value = true;};
+	template<> struct is_integral<int> {static const bool value = true;};
+	template<> struct is_integral<long int> {static const bool value = true;};
+	template<> struct is_integral<long long int> {static const bool value = true;};
+	template<> struct is_integral<unsigned char> {static const bool value = true;};
+	template<> struct is_integral<unsigned short int> {static const bool value = true;};
+	template<> struct is_integral<unsigned int> {static const bool value = true;};
+	template<> struct is_integral<unsigned long int> {static const bool value = true;};
+	template<> struct is_integral<unsigned long long int> {static const bool value = true;};
+
+	template<bool Condition, typename TC = void>
+	struct enable_if
+	{
+	};
+	template<typename TC>
+	struct enable_if<true, TC>
+	{
+		typedef TC type;
+	};
 template < class T, class Alloc = std::allocator<T> > 
 class vector
 {
+	public:
+			/*	======================> typedef <============================  */
+		typedef T 											value_type;
+		typedef Alloc										allocator_type;
+		typedef typename allocator_type::reference 			reference;
+		typedef typename allocator_type::const_reference	const_reference;
+		typedef typename allocator_type::pointer			pointer;
+		typedef typename allocator_type::const_pointer		const_pointer;
+		#include "iterators.hpp"
+		typedef iterators<T>								iterator;
+		typedef iterators<const T>							const_iterator;
+		// typedef rev_iter<node, T>		  					reverse_iterator;
+		// typedef rev_iter<node, const T>						const_reverse_iterator;
+		typedef  ptrdiff_t									difference_type;
+		typedef  size_t										size_type;
+
 	private:
 		T *_ptr;
 		size_t _size;
@@ -68,7 +109,7 @@ class vector
 			_alloc.destroy(_ptr);
 			_ptr = nullptr;
 		}
-				template <class InputIterator>
+		template <class InputIterator>
 		void reserve_and_insert (size_type n, iterator position, size_type nbr, InputIterator itr, 
 			typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
 		{
@@ -84,9 +125,8 @@ class vector
 				{
 					if (i == position.get_pos())
 					{
-						while(i < i + nbr)
+						for(; i < position.get_pos() + nbr; ++i)
 							_ptr[i] = *itr++;
-						i += nbr;
 					}
 					_ptr[i] = tmp[j];
 					++j;
@@ -94,49 +134,8 @@ class vector
 			}
 		}
 	public:
-		/*	======================> iterators classes <============================  */
+			// Dereferencing start from 1 to n (included) 0 && n+1 reserved for rbegin and end
 
-				// Dereferencing start from 1 to n (included) 0 && n+1 reserved for rbegin and end
-		
-		/*	======================> typedef <============================  */
-		typedef T 											value_type;
-		typedef Alloc										allocator_type;
-		typedef typename allocator_type::reference 			reference;
-		typedef typename allocator_type::const_reference	const_reference;
-		typedef typename allocator_type::pointer			pointer;
-		typedef typename allocator_type::const_pointer		const_pointer;
-		#include "iterators.hpp"
-		typedef iterators<T>							iterator;
-		typedef iterators<const T>							const_iterator;
-		// typedef rev_iter<node, T>		  					reverse_iterator;
-		// typedef rev_iter<node, const T>						const_reverse_iterator;
-		typedef  ptrdiff_t									difference_type;
-		typedef  size_t										size_type;
-		
-		/*	======================> enable_if && is_integral implementation <============================  */
-		template<typename> struct is_integral {static const bool value = false;};
-		template<> struct is_integral<bool> {static const bool value = true;};
-		template<> struct is_integral<char> {static const bool value = true;};
-		template<> struct is_integral<signed char> {static const bool value = true;};
-		template<> struct is_integral<short int> {static const bool value = true;};
-		template<> struct is_integral<int> {static const bool value = true;};
-		template<> struct is_integral<long int> {static const bool value = true;};
-		template<> struct is_integral<long long int> {static const bool value = true;};
-		template<> struct is_integral<unsigned char> {static const bool value = true;};
-		template<> struct is_integral<unsigned short int> {static const bool value = true;};
-		template<> struct is_integral<unsigned int> {static const bool value = true;};
-		template<> struct is_integral<unsigned long int> {static const bool value = true;};
-		template<> struct is_integral<unsigned long long int> {static const bool value = true;};
-
-		template<bool Condition, typename TC = void>
-		struct enable_if
-		{
-		};
-		template<typename TC>
-		struct enable_if<true, TC>
-		{
-			typedef TC type;
-		};
 		/*	======================> constructors  && descturtor <============================  */
 		explicit vector (const allocator_type& alloc = allocator_type())
 		{
@@ -414,13 +413,10 @@ class vector
 						push_back(val);
 					return ;
 				}
-				std::cout << position.get_pos() << std::endl;
 				for (int j = _size + 1 ; j >= position.get_pos(); --j) //shift elements 
-				{
 					_ptr[j + n] = _ptr[j];
-					if (j <= position.get_pos() + n) // add new elements
+				for (int j = position.get_pos(); j < position.get_pos() + n; ++j) 
 						_ptr[j] = val;
-				}
 				_size += n;
 				return;
 			}
@@ -436,7 +432,6 @@ class vector
 		{
 			size_type n = last - first;
 			InputIterator tmp(first);
-				std::cout << "hesfre " << n << std::endl;
 			if (n == 0)
 				return ;
 			if (_capacity >= _size + n)
@@ -447,21 +442,22 @@ class vector
 						push_back(*tmp++);
 					return ;
 				}
-				std::cout << position.get_pos() << std::endl;
-				for (int j = _size + 1 ; j >= position.get_pos(); --j) //shift elements 
-				{
+				for (int j = _size + 1 ; j >= position.get_pos(); --j) //shift elements
 					_ptr[j + n] = _ptr[j];
-				}
 				for (int j = position.get_pos(); j < position.get_pos() + n; ++j) 
 						_ptr[j] = *tmp++;
 				_size += n;
 				return;
 			}
-			// size_type new_capacity = _capacity * 2;
-			// if (n > new_capacity)
-			// 	new_capacity = _size + n;
-			// this->reserve_and_insert(new_capacity , position, n , tmp); // reallocate and add elements
-			// return ;
+			size_type new_capacity = _capacity * 2;
+			if (n > new_capacity)
+				new_capacity = _size + n;
+			this->reserve_and_insert(new_capacity , position, n , tmp); // reallocate and add elements
+			return ;
+		}
+		iterator erase (iterator position)
+		{
+			
 		}
 };
 
