@@ -77,7 +77,7 @@ class vector
 			_ptr[0] = val;
 			if (!_ptr)
 				fatal_error();
-			for(int i = 1 ; i <= n; i++)
+			for(size_t i = 1 ; i <= n; i++)
 				_ptr[i] = val;
 			_size = n;
 			_capacity = n;
@@ -121,9 +121,9 @@ class vector
 				allocate_arr(n, T());
 				_size = size + nbr;
 				int j = 0;
-				for(int i = 1; i <= _size; ++i)
+				for(size_t i = 1; i <= _size; ++i)
 				{
-					if (i == position.get_pos())
+					if ((int)i == position.get_pos())
 					{
 						for(; i < position.get_pos() + nbr; ++i)
 							_ptr[i] = *itr++;
@@ -139,6 +139,7 @@ class vector
 		/*	======================> constructors  && descturtor <============================  */
 		explicit vector (const allocator_type& alloc = allocator_type())
 		{
+			(void)alloc;
 			_size = 0;
 			_capacity = 0;
 			_ptr = nullptr;
@@ -146,6 +147,7 @@ class vector
 		explicit vector (size_type n, const value_type& val = value_type(),
                  const allocator_type& alloc = allocator_type())
 		{
+			(void)alloc;
 			_size = n;
 			_capacity = n;
 			allocate_arr(n, val);
@@ -155,6 +157,7 @@ class vector
                  const allocator_type& alloc = allocator_type(), 
 				typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
 		{
+			(void)alloc;
 			if (first == last)
 			{
 				_size = 0;
@@ -197,7 +200,7 @@ class vector
 				if (!_ptr)
 					fatal_error();
 				int i = 1;
-				for(int len = 0 ; len < x.size() ; ++len)
+				for(size_t len = 0 ; len < x.size() ; ++len)
 				{
 					_ptr[i] = x[i - 1];
 					++i;
@@ -206,7 +209,7 @@ class vector
 			}
 			_size = x.size();
 			int i = 1;
-			for(int len = 0 ; len < x.size() ; ++len)
+			for(unsigned long len = 0 ; len < x.size() ; ++len)
 			{
 				_ptr[i] = x[i - 1];
 				i++;
@@ -252,6 +255,40 @@ class vector
 		{
 			return (_alloc.max_size());	
 		}
+		void resize (size_type n, value_type val = value_type())
+		{
+			if (n <= _size)
+			{
+				for(size_t i = n; i != _size; ++i)
+				{
+					_ptr[i].~T();
+				}
+				this->_size = n;
+				return;
+			}
+			if (n > _size && n <= _capacity)
+			{
+				for(size_t i = _size; i < n; ++i)
+					_ptr[i + 1] = val;
+				this->_size = n;
+				return;					
+			}
+			if (n > _capacity)
+			{
+				size_t new_cap = _capacity * 2;
+				if (n > new_cap)
+					new_cap =  n;
+				vector<T> tmp;
+				tmp.reserve(new_cap);
+				tmp.insert(this->begin(), this->begin(), this->end());
+				tmp.insert(tmp.end(), tmp.capacity() - tmp.size(), val);
+				free_vect();
+				this->swap(tmp);
+				this->_size = n;
+				return;
+			}
+			return;
+		}
 		size_type capacity() const
 		{
 			return (this->_capacity);
@@ -269,7 +306,7 @@ class vector
 				free_vect();
 				allocate_arr(n, T());
 				this->_size = size;
-				for(int i = 1; i <= _size; ++i)
+				for(size_t i = 1; i <= _size; ++i)
 				{
 					this->_ptr[i] = tmp[i - 1];
 				}
@@ -315,7 +352,7 @@ class vector
   		void assign (InputIterator first, InputIterator last, 
 				typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
 				{
-					if (last - first > _capacity)
+					if (last - first > (int)_capacity)
 					{
 						free_vect();
 						this->_size = last - first;
@@ -341,7 +378,7 @@ class vector
 				return ;
 			}
 			_size = n;
-			for (int i = 1; i <= n; i++)
+			for (size_t i = 1; i <= n; i++)
 				_ptr[i] = val;
 		}
 		void push_back (const value_type& val)
@@ -380,7 +417,7 @@ class vector
 				allocate_arr(n, T());
 				this->_size = size;
 				int j = 1;
-				for(int i = 1; i <= _size; ++i)
+				for(size_t i = 1; i <= _size; ++i)
 				{
 					if (j == postion.get_pos())
 						this->_ptr[j++] = val;
@@ -399,9 +436,9 @@ class vector
 				allocate_arr(n, val);
 				_size = size + nbr;
 				int j = 0;
-				for(int i = 1; i <= _size; ++i)
+				for(unsigned long i = 1; i <= _size; ++i)
 				{
-					if (i == position.get_pos())
+					if (i == (unsigned long)position.get_pos())
 						i += nbr;
 					_ptr[i] = tmp[j];
 					++j;
@@ -449,7 +486,7 @@ class vector
 				}
 				for (int j = _size + 1 ; j >= position.get_pos(); --j) //shift elements 
 					_ptr[j + n] = _ptr[j];
-				for (int j = position.get_pos(); j < position.get_pos() + n; ++j) 
+				for (unsigned long j = position.get_pos(); j < position.get_pos() + n; ++j) 
 						_ptr[j] = val;
 				_size += n;
 				return;
@@ -457,7 +494,7 @@ class vector
 			size_type new_capacity = _capacity * 2;
 			if (n > new_capacity)
 				new_capacity = _size + n;
-			this->reserve_and_insert(new_capacity , position, n , val); // reallocate and add elements
+			this->reserve_and_insert(new_capacity , position, n , val); // te and add elements
 			return ;
 		}
 		template <class InputIterator>
@@ -478,7 +515,7 @@ class vector
 				}
 				for (int j = _size + 1 ; j >= position.get_pos(); --j) //shift elements
 					_ptr[j + n] = _ptr[j];
-				for (int j = position.get_pos(); j < position.get_pos() + n; ++j) 
+				for (unsigned long j = position.get_pos(); j < position.get_pos() + n; ++j) 
 						_ptr[j] = *tmp++;
 				_size += n;
 				return;
@@ -531,4 +568,80 @@ class vector
 		}
 };
 
+	/* 
+	
+		Non-member functions
+	
+	*/
+template <class T, class Alloc>
+bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+	if (lhs.size() != rhs.size())
+		return false;
+	for(size_t i = 0 ; i < lhs.size(); ++i)
+	{
+		if (lhs[i] != rhs[i])
+			return false;
+	}
+	return true;
+}
+template <class T, class Alloc>
+bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+	return !(lhs==rhs);
+}
+template <class T, class Alloc>
+bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+	for(size_t i = 0; i < lhs.size() &&  i < rhs.size(); ++i)
+	{
+		if (lhs[i] < rhs[i])
+			continue;
+		return false;
+	}
+	return true;
+}
+template <class T, class Alloc>
+bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+	if (lhs.size() != rhs.size())
+		return false;
+	for(size_t i = 0; i < lhs.size(); ++i)
+	{
+		if (lhs[i] <= rhs[i])
+			continue;
+		return false;
+	}
+	return true;	
+}
+template <class T, class Alloc>
+bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+	for(size_t i = 0; i < lhs.size() &&  i < rhs.size(); ++i)
+	{
+		if (lhs[i] > rhs[i])
+			continue;
+		return false;
+	}
+	return true;
+}
+template <class T, class Alloc>
+bool operator>=  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+	if (lhs.size() != rhs.size())
+		return false;
+	for(size_t i = 0; i < lhs.size(); ++i)
+	{
+		if (lhs[i] >= rhs[i])
+			continue;
+		return false;
+	}
+	return true;	
+}
+
+template <class T, class Alloc>
+void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+{
+	x.swap(y);
+}
 };

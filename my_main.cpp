@@ -62,6 +62,8 @@ int main()
 	ft::vector<int>::const_iterator ft_itc(vect_1.end());
 	std::vector<int>::const_iterator std_itc(std_vect_int.end());
 
+	// std_it = ft_itc;
+	ft_itc = ft_it;
 	// *ft_itc = 8;
 	// *std_itc = 8;
 
@@ -357,5 +359,47 @@ int main()
 	// ft::vector<int, std_new4.get_allocator()> ft_new5;
 
 	// std::cout << std_new4.get_allocator() == ft_new5 << std::endl;
+	ft::vector<int> foo (3,200);
+	ft::vector<int> bar (3,300);
 
+	if (foo == bar)
+		std::cout << "equal\n";
+	if (foo != bar)
+		std::cout << "not equal \n";
+	if (foo < bar)
+		std::cout << "foo is less than bar" << std::endl;
+	if (foo <= bar)
+		std::cout << "foo is less than or equal bar" << std::endl;
+	if (bar > foo)
+		std::cout << "bar is greater than foo" << std::endl;
+	if (foo >= bar)
+		std::cout << "foo is greater than or equal bar" << std::endl;
+	
+	std::cout << std::endl;
+	print_vector(std_new3.begin(),std_new3.end(),
+		ft_new3.begin(), ft_new3.end());
+	print_vector(std_new2.begin(),std_new2.end(),
+		ft_new2.begin(), ft_new2.end());
+	ft::swap(ft_new3, ft_new2);
+	std::swap(std_new3, std_new2);
+	std::cout << std::endl;
+	print_vector(std_new3.begin(),std_new3.end(),
+		ft_new3.begin(), ft_new3.end());
+	print_vector(std_new2.begin(),std_new2.end(),
+		ft_new2.begin(), ft_new2.end());
+
+	std::cout << std_new3.size() << " " << std_new3.capacity() << std::endl;
+	std::cout << ft_new3.size() << " " << ft_new3.capacity() << std::endl;
+	std_new3.resize(12, 10);
+	ft_new3.resize(12, 10);
+	print_vector(std_new3.begin(),std_new3.end(),
+		ft_new3.begin(), ft_new3.end());
+	std::cout << std_new3.size() << " " << std_new3.capacity() << std::endl;
+	std::cout << ft_new3.size() << " " << ft_new3.capacity() << std::endl;
+	std_new3.resize(13, 6);
+	ft_new3.resize(13, 6);
+	print_vector(std_new3.begin(),std_new3.end(),
+		ft_new3.begin(), ft_new3.end());
+	std::cout << std_new3.size() << " " << std_new3.capacity() << std::endl;
+	std::cout << ft_new3.size() << " " << ft_new3.capacity() << std::endl;
 }
