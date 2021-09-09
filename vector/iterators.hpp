@@ -12,6 +12,38 @@
 
 #pragma once
 
+template <class Iterator> struct iterator_traits
+{
+	struct input_iterator_tag {};
+	struct output_iterator_tag {};
+	struct forward_iterator_tag {};
+	struct bidirectional_iterator_tag {};
+	struct random_access_iterator_tag {};
+
+   typedef typename Iterator::value_type		value_type;
+   typedef typename Iterator::difference_type	difference_type;
+   typedef typename Iterator::pointer			pointer;
+   typedef typename Iterator::reference			reference;
+   typedef typename Iterator::iterator_category	iterator_category;
+};
+
+template <class U> struct iterator_traits<U*>
+{
+	struct input_iterator_tag {};
+	struct output_iterator_tag {};
+	struct forward_iterator_tag {};
+	struct bidirectional_iterator_tag {};
+	struct random_access_iterator_tag {};
+
+   typedef U							value_type;
+   typedef ptrdiff_t					difference_type;
+   typedef U*							pointer;
+   typedef U&							reference;
+   typedef random_access_iterator_tag	iterator_category;
+};
+
+
+
 template <typename Tp>
 class iterators
 {
@@ -27,7 +59,6 @@ class iterators
 		iterators():_it(nullptr), _size(0), _pos(-1)
 		{
 		};
-		// iterators(Tp *ptr):_it(ptr){};
 		iterators(Tp *vect, size_t size, size_t pos)
 		{
 			this->_it = vect;

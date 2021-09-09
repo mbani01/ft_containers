@@ -13,6 +13,7 @@
 #include <iostream>
 #include "vector/vector.hpp"
 #include <vector>
+#include <iterator>
 
 
 void print_vector(std::vector<int>::iterator std_it_b, std::vector<int>::iterator std_it_e,
@@ -42,6 +43,11 @@ ft::vector<int>::iterator ft_it_b, ft::vector<int>::iterator ft_it_e)
 // 	std::cout << std::endl; 
 // }
 
+bool mypredicate (int i, int j) 
+	{return (i==j);}
+
+bool mycomp (char c1, char c2)
+{ return std::tolower(c1)<std::tolower(c2); }
 int main()
 {
 
@@ -359,21 +365,7 @@ int main()
 	// ft::vector<int, std_new4.get_allocator()> ft_new5;
 
 	// std::cout << std_new4.get_allocator() == ft_new5 << std::endl;
-	ft::vector<int> foo (3,200);
-	ft::vector<int> bar (3,300);
 
-	if (foo == bar)
-		std::cout << "equal\n";
-	if (foo != bar)
-		std::cout << "not equal \n";
-	if (foo < bar)
-		std::cout << "foo is less than bar" << std::endl;
-	if (foo <= bar)
-		std::cout << "foo is less than or equal bar" << std::endl;
-	if (bar > foo)
-		std::cout << "bar is greater than foo" << std::endl;
-	if (foo >= bar)
-		std::cout << "foo is greater than or equal bar" << std::endl;
 	
 	std::cout << std::endl;
 	print_vector(std_new3.begin(),std_new3.end(),
@@ -402,4 +394,52 @@ int main()
 		ft_new3.begin(), ft_new3.end());
 	std::cout << std_new3.size() << " " << std_new3.capacity() << std::endl;
 	std::cout << ft_new3.size() << " " << ft_new3.capacity() << std::endl;
+
+	std::cout << "	======================>\033[1;31m Non-member functions tests \033[0m<============================ " << std::endl << std::endl;
+	ft::vector<int> foo (3,200);
+	ft::vector<int> bar (3,300);
+
+	if (foo == bar)
+		std::cout << "equal\n";
+	if (foo != bar)
+		std::cout << "not equal \n";
+	if (foo < bar)
+		std::cout << "foo is less than bar" << std::endl;
+	if (foo <= bar)
+		std::cout << "foo is less than or equal bar" << std::endl;
+	if (bar > foo)
+		std::cout << "bar is greater than foo" << std::endl;
+	if (foo >= bar)
+		std::cout << "foo is greater than or equal bar" << std::endl;
+
+	int myints[] = {20,40,60,80,100};               //   myints: 20 40 60 80 100
+	ft::vector<int>myvector (myints,myints+5);     // myvector: 20 40 60 80 100
+
+	// using default comparison:
+	if ( ft::equal (myvector.begin(), myvector.end(), myints) )
+		std::cout << "The contents of both sequences are equal.\n";
+	else
+		std::cout << "The contents of both sequences differ.\n";
+
+	myvector[3]=81;                                 // myvector: 20 40 60 81 100
+
+	// using predicate comparison:
+	if ( ft::equal (myvector.begin(), myvector.end(), myints, mypredicate) )
+		std::cout << "The contents of both sequences are equal.\n";
+	else
+		std::cout << "The contents of both sequences differ.\n"<< std::endl;
+  char foo1[]="Apple";
+  char bar1[]="apartment";
+
+  std::cout << std::boolalpha;
+
+  std::cout << "Comparing foo1 and bar1 lexicographically (foo1<bar1):\n";
+
+  std::cout << "Using default comparison (operator<): ";
+  std::cout << ft::lexicographical_compare(foo1,foo1+5,bar1,bar1+9);
+  std::cout << '\n';
+
+  std::cout << "Using mycomp as comparison object: ";
+  std::cout << ft::lexicographical_compare(foo1,foo1+5,bar1,bar1+9,mycomp);
+  std::cout << '\n';
 }
