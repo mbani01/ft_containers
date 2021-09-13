@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 10:51:27 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/13 11:38:54 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/13 12:00:55 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -475,12 +475,23 @@ int main()
 	std::cout << *(ft_it3 + 2) << std::endl;	
 	std::cout << *std_it3 << std::endl;
 	std::cout << *ft_it3 << std::endl;
-
-
-
-	
-	std::cout << *(std_new3.end() - 3) << std::endl;
-	std::cout << *(ft_new3.end() - 3)<< std::endl;
+	std::cout << *(std_it3 += 1) << std::endl;
+	std::cout << *(ft_it3 += 1) << std::endl;	
 	std::cout << *std_it3 << std::endl;
 	std::cout << *ft_it3 << std::endl;
+
+	
+	// std::cout << std::endl;
+	// std_it3 = std_new3.end() - 1;
+	// ft_it3 = ft_new3.end() - 1;
+	// std::cout << *std_it3-- << std::endl;
+	// std::cout << *ft_it3-- << std::endl;
+	// std::cout << *(std_it3 - 5) << std::endl;
+	// std::cout << *(ft_it3 - 5) << std::endl;	
+	// std::cout << *std_it3 << std::endl;
+	// std::cout << *ft_it3 << std::endl;
+	// std::cout << *(std_it3 -= 8) << std::endl;
+	// std::cout << *(ft_it3 -= 8) << std::endl;	
+	// std::cout << *std_it3 << std::endl;
+	// std::cout << *ft_it3 << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/19 16:15:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/13 11:32:03 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/13 11:52:54 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,24 @@ class random_access_iterator : public ft::iterator<ft::random_access_iterator_ta
 			tmp._pos -= position;
 			return tmp;
 		}
-		random_access_iterator operator+(size_t position)
+		random_access_iterator operator+(difference_type position)
 		{
 			random_access_iterator tmp(*this);
 			tmp._it += position;
 			tmp._pos += position;
 			return tmp;
+		}
+		random_access_iterator operator+=(difference_type n)
+		{
+			this->_it += n;
+			this->_pos += n;
+			return *this;
+		}
+		random_access_iterator operator-=(difference_type n)
+		{
+			this->_it -= n;
+			this->_pos -= n;
+			return *this;
 		}
 		bool operator==(random_access_iterator const &obj)
 		{
