@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 10:51:27 by mbani             #+#    #+#             */
-/*   Updated: 2021/07/11 16:46:33 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/13 11:38:54 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,18 @@ int main()
 
 	std::vector<int>::iterator std_it;
 	ft::vector<int>::iterator ft_it;
+	ft::vector<char>::iterator ft_it_char(ft_vect_char.begin());
 	ft::vector<int>::const_iterator ft_itc(vect_1.end());
 	std::vector<int>::const_iterator std_itc(std_vect_int.end());
 
 	// std_it = ft_itc;
 	ft_itc = ft_it;
+
 	// *ft_itc = 8;
 	// *std_itc = 8;
+
+	std::cout << (ft_itc == ft_it) << std::endl;
+	std::cout << (ft_itc != ft_it) << std::endl << std::endl;
 
 	for(int i = 0; i < 10; ++i)
 		std_vect_int.push_back(i);
@@ -82,6 +87,7 @@ int main()
 		std::cout << *ft_it << std::endl;
 	print_vector(std_vect_int.begin(),std_vect_int.end(),
 	ft_vect_int1.begin(), ft_vect_int1.end());
+
 	std::cout << "	======================>\033[1;31m member functions tests \033[0m<============================ " << std::endl;
 	
 	std::cout << ft_vect_int.max_size() << std::endl;
@@ -395,6 +401,15 @@ int main()
 	std::cout << std_new3.size() << " " << std_new3.capacity() << std::endl;
 	std::cout << ft_new3.size() << " " << ft_new3.capacity() << std::endl;
 
+	std::cout << "	======================>\033[1;31m reverse iterator tests \033[0m<============================ " << std::endl << std::endl;
+
+	std::vector<int>::reverse_iterator std_rit(std_new3.end() - 1);
+
+
+	std_rit--;
+	std::cout << *std_rit << std::endl;
+
+
 	std::cout << "	======================>\033[1;31m Non-member functions tests \033[0m<============================ " << std::endl << std::endl;
 	ft::vector<int> foo (3,200);
 	ft::vector<int> bar (3,300);
@@ -442,4 +457,30 @@ int main()
   std::cout << "Using mycomp as comparison object: ";
   std::cout << ft::lexicographical_compare(foo1,foo1+5,bar1,bar1+9,mycomp);
   std::cout << '\n';
+
+	std::cout << "	======================>\033[1;31m iteartors arithmetic operations tests \033[0m<============================ " << std::endl << std::endl;
+	print_vector(std_new3.begin(),std_new3.end(),
+		ft_new3.begin(), ft_new3.end());
+	std::cout << "std::size :" << std_new3.size() << " std::capacity :" << std_new3.capacity() << std::endl;
+	std::cout << "ft::size  :" <<ft_new3.size() << " ft::capacity  :" << ft_new3.capacity() << std::endl<< std::endl;
+
+	std::vector<int>::iterator std_it3(std_new3.begin());
+	ft::vector<int>::iterator ft_it3(ft_new3.begin());
+
+	std::cout << *(4 + std_it3) << std::endl;
+	std::cout << *(4 + ft_it3) << std::endl;
+	std::cout << *std_it3++ << std::endl;
+	std::cout << *ft_it3++ << std::endl;
+	std::cout << *(std_it3 + 2) << std::endl;
+	std::cout << *(ft_it3 + 2) << std::endl;	
+	std::cout << *std_it3 << std::endl;
+	std::cout << *ft_it3 << std::endl;
+
+
+
+	
+	std::cout << *(std_new3.end() - 3) << std::endl;
+	std::cout << *(ft_new3.end() - 3)<< std::endl;
+	std::cout << *std_it3 << std::endl;
+	std::cout << *ft_it3 << std::endl;
 }

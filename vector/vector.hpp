@@ -6,11 +6,12 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:04:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/07/11 16:50:29 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/13 10:44:49 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
+#include "iterators.hpp"
 
 namespace ft
 {
@@ -39,7 +40,7 @@ namespace ft
 	{
 		typedef TC type;
 	};
-template < class T, class Alloc = std::allocator<T> > 
+template < class T, class Alloc = std::allocator<T> >
 class vector
 {
 	public:
@@ -50,9 +51,8 @@ class vector
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
-		#include "iterators.hpp"
-		typedef iterators<T>								iterator;
-		typedef iterators<const T>							const_iterator;
+		typedef random_access_iterator<T>								iterator;
+		typedef random_access_iterator<const T>							const_iterator;
 		// typedef rev_iter<node, T>		  					reverse_iterator;
 		// typedef rev_iter<node, const T>						const_reverse_iterator;
 		typedef  ptrdiff_t									difference_type;
@@ -72,7 +72,7 @@ class vector
 		void allocate_arr(size_t n, const T& val)
 		{
 			this->_ptr = _alloc.allocate(n + 2);
-			_alloc.construct(_ptr);
+			// _alloc.construct(_ptr);
 			_ptr[n + 1] = val;
 			_ptr[0] = val;
 			if (!_ptr)
@@ -91,7 +91,7 @@ class vector
 			*/
 			
 			this->_ptr = _alloc.allocate(_size + 2);
-			_alloc.construct(_ptr);
+			// _alloc.construct(_ptr);
 			_ptr[_size + 1] = *first;
 			_ptr[0] = *first;
 			if (!_ptr)
@@ -106,7 +106,7 @@ class vector
 		void free_vect()
 		{
 			_alloc.deallocate(_ptr, _capacity + 2);
-			_alloc.destroy(_ptr);
+			// _alloc.destroy(_ptr);
 			_ptr = nullptr;
 		}
 		template <class InputIterator>
@@ -189,12 +189,11 @@ class vector
 			const_iterator first(x.begin());
 			if (x.size() > _capacity)
 			{
-				std::cout << "here " << x.size() << std::endl;
 				free_vect();
 				this->_size = x.size();
 				this->_capacity = _size;
 				this->_ptr = _alloc.allocate(_size + 2);
-				_alloc.construct(_ptr);
+				// _alloc.construct(_ptr);
 				_ptr[_size + 1] = *first;
 				_ptr[0] = *first;
 				if (!_ptr)

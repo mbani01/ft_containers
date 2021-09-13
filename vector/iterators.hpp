@@ -6,49 +6,24 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/19 16:15:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/07/08 13:04:16 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/13 11:32:03 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-
-template <class Iterator> struct iterator_traits
-{
-	struct input_iterator_tag {};
-	struct output_iterator_tag {};
-	struct forward_iterator_tag {};
-	struct bidirectional_iterator_tag {};
-	struct random_access_iterator_tag {};
-
-   typedef typename Iterator::value_type		value_type;
-   typedef typename Iterator::difference_type	difference_type;
-   typedef typename Iterator::pointer			pointer;
-   typedef typename Iterator::reference			reference;
-   typedef typename Iterator::iterator_category	iterator_category;
-};
-
-template <class U> struct iterator_traits<U*>
-{
-	struct input_iterator_tag {};
-	struct output_iterator_tag {};
-	struct forward_iterator_tag {};
-	struct bidirectional_iterator_tag {};
-	struct random_access_iterator_tag {};
-
-   typedef U							value_type;
-   typedef ptrdiff_t					difference_type;
-   typedef U*							pointer;
-   typedef U&							reference;
-   typedef random_access_iterator_tag	iterator_category;
-};
-
-
+#include "iterator_traits.hpp"
 
 template <typename Tp>
-class iterators
+class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, Tp>
 {
+	public:
+	typedef typename ft::iterator<ft::random_access_iterator_tag, Tp>::iterator_category	iterator_category;
+	typedef typename ft::iterator<ft::random_access_iterator_tag, Tp>::value_type			value_type;
+	typedef typename ft::iterator<ft::random_access_iterator_tag, Tp>::difference_type		difference_type;
+	typedef Tp*																				pointer;
+	typedef Tp&																				reference;
 	private:
-		Tp *_it;
+		pointer _it;
 		size_t _size;
 		int _pos;
 	public:
@@ -56,28 +31,28 @@ class iterators
 		{return this->_size;}
 		int get_pos() const
 		{return this->_pos;}
-		iterators():_it(nullptr), _size(0), _pos(-1)
+		random_access_iterator():_it(nullptr), _size(0), _pos(-1)
 		{
 		};
-		iterators(Tp *vect, size_t size, size_t pos)
+		random_access_iterator(Tp *vect, size_t size, size_t pos)
 		{
 			this->_it = vect;
 			this->_size = size;
 			this->_pos = pos;
 		};
-		iterators(const iterators &obj)
+		random_access_iterator(const random_access_iterator &obj)
 		{
 			this->_it = obj.get_ptr();
 			this->_size = obj.get_size();
 			this->_pos = obj.get_pos();
 		};
-		void operator=(const iterators &obj)
+		void operator=(const random_access_iterator &obj)
 		{
 			this->_it = obj._it;
 			this->_size = obj._size;
 			this->_pos = obj._pos;
 		};
-		Tp& operator*() const
+		reference operator*() const
 		{
 			return *_it;
 		}
@@ -85,74 +60,118 @@ class iterators
 		{
 			return this->_pos;
 		}
-		iterators *operator->()
+		Tp const *operator->() const
 		{
+			return _it;
 		}
-		iterators operator++()//preincrement
+		pointer base() const 
+		{
+			return this->_it;
+		}
+		random_access_iterator operator++()//preincrement
 		{
 			++_pos;
 			++_it;
 			return *this;
 		}
-		iterators operator++(int)
+		random_access_iterator operator++(int)
 		{
-			iterators tmp(*this);
+			random_access_iterator tmp(*this);
 			++_pos;
 			++_it;
 			return tmp;
 		};
-		iterators operator--()
+		random_access_iterator operator--()
 		{
 			--_pos;
 			--_it;
 			return *this;
 		}
-		iterators operator--(int)
+		random_access_iterator operator--(int)
 		{
-			iterators tmp(*this);
+			random_access_iterator tmp(*this);
 			--_pos;
 			--_it;
 			return tmp;
 		}
-		std::ptrdiff_t operator-(iterators const obj)
+		std::ptrdiff_t operator-(random_access_iterator const obj)
 		{
 			return this->_pos - obj._pos;
 		}
-		std::ptrdiff_t operator+(iterators const obj)
+		std::ptrdiff_t operator+(random_access_iterator const obj)
 		{
 			return this->_pos + obj._pos;
 		}
-		iterators operator-(size_t position)
+		random_access_iterator operator-(size_t position)
 		{
-			this->_it -= position;
-			this->_pos -= position;
-			return *this;
+			random_access_iterator tmp(*this);
+			tmp._it -= position;
+			tmp._pos -= position;
+			return tmp;
 		}
-		iterators operator+(size_t position)
+		random_access_iterator operator+(size_t position)
 		{
-			this->_it += position;
-			this->_pos += position;
-			return *this;
+			random_access_iterator tmp(*this);
+			tmp._it += position;
+			tmp._pos += position;
+			return tmp;
 		}
-		bool operator==(iterators const &obj)
+		bool operator==(random_access_iterator const &obj)
 		{
 			return (this->_it == obj._it);
 		}
-		bool operator!=(iterators const &obj)
+		bool operator!=(random_access_iterator const &obj)
 		{
 			return (this->_it != obj._it);
 		}
-		Tp *get_ptr() const
+		pointer get_ptr() const
 		{
 			return _it;
 		}
-		operator iterators<const Tp>() const 
+		operator random_access_iterator<const Tp>() const 
 		{
-			return iterators<const Tp>(_it, _size, _pos);
+			return random_access_iterator<const Tp>(_it, _size, _pos);
 		}
 
-		~iterators(){};
+		~random_access_iterator(){};
 };
+template <typename Tp>
+random_access_iterator<Tp> operator+(typename ft::iterator<ft::random_access_iterator_tag, Tp>::difference_type		n, random_access_iterator<Tp> lhs)
+{
+	return lhs + n;
+}
+
+// template <class Iterator> 
+// class reverse_iterator
+// {
+// 	typedef Iterator 												iterator_type;
+// 	typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
+// 	typedef typename ft::iterator_traits<Iterator>::value_type			value_type;
+// 	typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
+// 	typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
+// 	typedef typename ft::iterator_traits<Iterator>::reference			reference;
+// 	private:
+// 		// iterators<Iterator> it;
+// 	public:
+// 	reverse_iterator()
+// 	{
+
+// 	};
+// 	// explicit reverse_iterator (iterator_type it)
+// 	// {
+
+// 	// };
+// 	// template <class Iter>
+//   	// reverse_iterator (const reverse_iterator<Iter>& rev_it)
+// 	// {
+		
+// 	// }
+// };
+
+
+
+
+
 
 // template <class Tp, class Tv>
 // class rev_iter
