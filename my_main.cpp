@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 10:51:27 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/13 12:00:55 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/15 17:38:48 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -481,17 +481,117 @@ int main()
 	std::cout << *ft_it3 << std::endl;
 
 	
-	// std::cout << std::endl;
-	// std_it3 = std_new3.end() - 1;
-	// ft_it3 = ft_new3.end() - 1;
-	// std::cout << *std_it3-- << std::endl;
-	// std::cout << *ft_it3-- << std::endl;
-	// std::cout << *(std_it3 - 5) << std::endl;
-	// std::cout << *(ft_it3 - 5) << std::endl;	
-	// std::cout << *std_it3 << std::endl;
-	// std::cout << *ft_it3 << std::endl;
-	// std::cout << *(std_it3 -= 8) << std::endl;
-	// std::cout << *(ft_it3 -= 8) << std::endl;	
-	// std::cout << *std_it3 << std::endl;
-	// std::cout << *ft_it3 << std::endl;
+	std::cout << std::endl;
+	std_it3 = std_new3.end();
+	ft_it3 = ft_new3.end();
+	--std_it3;
+	--ft_it3;
+	std_it3--;
+	ft_it3--;
+	std::cout << *std_it3-- << std::endl;
+	std::cout << *ft_it3-- << std::endl;
+	std::cout << *(std_it3 - 6) << std::endl;
+	std::cout << *(ft_it3 - 6) << std::endl;	
+	std::cout << *std_it3 << std::endl;
+	std::cout << *ft_it3 << std::endl;
+	std::cout << *(std_it3 -= 9) << std::endl;
+	std::cout << *(ft_it3 -= 9) << std::endl;	
+	std::cout << *std_it3 << std::endl;
+	std::cout << *ft_it3 << std::endl;
+	ft_it3 = ft_new3.begin();
+	std_it3 = std_new3.begin();
+	std::cout << (ft_new3.end() - ft_it3) << std::endl;
+	std::cout << (std_new3.end() - std_it3) << std::endl;
+	
+	std::cout << std::endl;
+	std::cout << (ft_it3 < ft_new3.end()) << std::endl;
+	std::cout << (std_it3 < std_new3.end()) << std::endl;
+	std::cout << (ft_it3 > ft_new3.end()) << std::endl;
+	std::cout << (std_it3 > std_new3.end()) << std::endl;
+	std::cout << (ft_it3 <= ft_new3.end()) << std::endl;
+	std::cout << (std_it3 <= std_new3.end()) << std::endl;
+	std::cout << (ft_it3 >= ft_new3.end()) << std::endl;
+	std::cout << (std_it3 >= std_new3.end()) << std::endl;
+	std::cout << *(std_it3.base()) << std::endl;
+	std::cout << *(ft_it3.base()) << std::endl;
+	std::cout << std_it3[4] << std::endl;
+	std::cout << ft_it3[4] << std::endl;
+
+
+	std::cout << std::endl;
+	std::vector<int>::reverse_iterator std_rit3(std_new3.end() - 1);
+	ft::vector<int>::reverse_iterator ft_rit3(ft_new3.end() - 1);
+	std::cout << *std_rit3 << std::endl;
+	std::cout << *ft_rit3 << std::endl;
+	std_rit3 = std_new3.rbegin();
+	ft_rit3 = ft_new3.rbegin();
+	std::cout << *std_rit3 << std::endl;
+	std::cout << *ft_rit3 << std::endl;	
+	std::cout << *(std_rit3 + 8) << std::endl;
+	std::cout << *(ft_rit3 + 8) << std::endl;
+	++std_rit3;
+	++ft_rit3;
+	std_rit3++;
+	ft_rit3++;
+	std::cout << *std_rit3 << std::endl;
+	std::cout << *ft_rit3 << std::endl;
+	std_rit3 += 5;
+	ft_rit3 += 5;
+	std::cout << *std_rit3 << std::endl;
+	std::cout << *ft_rit3 << std::endl;
+	std::cout << *(std_rit3 - 1) << std::endl;
+	std::cout << *(ft_rit3 - 1) << std::endl;	
+	std::cout << *std_rit3-- << std::endl;
+	std::cout << *ft_rit3-- << std::endl;
+	std::cout << *--std_rit3 << std::endl;
+	std::cout << *--ft_rit3 << std::endl;
+	std::cout << *std_rit3 << std::endl;
+	std::cout << *ft_rit3 << std::endl;
+	std::cout << *(std_rit3 -= 5) << std::endl;
+	std::cout << *(ft_rit3 -= 5) << std::endl;
+
+	
+	std::cout << std::endl;
+
+	std_rit3 = std_new3.rend();
+	ft_rit3 = ft_new3.rend();
+	std::cout << std_rit3[1] << std::endl;
+	std::cout << ft_rit3[1] << std::endl;
+
+
+	
+	std::cout << *(std_new3.rend() - 2) << std::endl;
+	std::cout << *(ft_new3.rend() - 2) << std::endl;
+	std::vector<int>::const_reverse_iterator std_crit3(std_new3.end() - 1);
+	ft::vector<int>::const_reverse_iterator ft_crit3(ft_new3.end() - 1);
+
+	std::cout << *std_crit3 << std::endl;
+	std::cout << *ft_crit3 << std::endl;
+
+	// *std_crit3 = 8;
+	// *ft_crit3 = 8;
+
+	std::cout << std::endl;
+
+	std::cout << (ft_rit3 < ft_new3.rend()) << std::endl;
+	std::cout << (std_rit3 < std_new3.rend()) << std::endl;
+	std::cout << (ft_rit3 <= ft_new3.rend()) << std::endl;
+	std::cout << (std_rit3 <= std_new3.rend()) << std::endl;
+	std::cout << (ft_rit3 > ft_new3.rend()) << std::endl;
+	std::cout << (std_rit3 > std_new3.rend()) << std::endl;
+	std::cout << (ft_rit3 >= ft_new3.rend()) << std::endl;
+	std::cout << (std_rit3 >= std_new3.rend()) << std::endl;
+	std::cout << (ft_rit3 != ft_new3.rend()) << std::endl;
+	std::cout << (std_rit3 != std_new3.rend()) << std::endl;
+	std::cout << (ft_rit3 == ft_new3.rend()) << std::endl;
+	std::cout << (std_rit3 == std_new3.rend()) << std::endl;
+
+	std_rit3 = std_new3.rbegin();
+	ft_rit3 = ft_new3.rbegin();
+	std::cout << *(8 + std_rit3) << std::endl;
+	std::cout << *(8 + ft_rit3) << std::endl;
+
+	std::cout << ft_new3.rbegin() - ft_new3.rend() << std::endl;
+	std::cout << std_new3.rbegin() - std_new3.rend() << std::endl;
+
 }
