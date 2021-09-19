@@ -65,7 +65,8 @@
 		"deque": "cpp",
 		"map": "cpp",
 		"stack": "cpp",
-		"memory_resource": "cpp"
+		"memory_resource": "cpp",
+		"filesystem": "cpp"
 	},
 	"C_Cpp.dimInactiveRegions": true
 }

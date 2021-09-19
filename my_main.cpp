@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 10:51:27 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/15 17:38:48 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/19 12:42:20 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,27 @@ ft::vector<int>::iterator ft_it_b, ft::vector<int>::iterator ft_it_e)
 {
 	std::cout << "ft  :: ";
 	for(; ft_it_b != ft_it_e ; ++ft_it_b)
-	 {
-		std:: cout << *ft_it_b << " ";
-	 }
+	{
+	std:: cout << *ft_it_b << " ";
+	}
 	std::cout << std::endl << "std :: ";
 	for(; std_it_b != std_it_e ; ++std_it_b)
 		std:: cout << *std_it_b << " ";;
 	std::cout << std::endl;
 }
 
-// void print_rev(std::vector<int>::reverse_iterator std_it_rb, std::vector<int>::reverse_iterator std_it_re,
-// ft::vector<int>::reverse_iterator ft_it_rb, ft::vector<int>::reverse_iterator ft_it_re)
-// {
-// 	std::cout << "Printing vector using reverse_iterator !" << std::endl;
-// 	std::cout << "ft  :: ";
-// 	for(; ft_it_rb != ft_it_re ; ++ft_it_rb)
-// 		std:: cout << *ft_it_rb << " ";;
-// 	std::cout << std::endl << "std :: ";
-// 	for(; std_it_rb != std_it_re ; ++std_it_rb)
-// 		std:: cout << *std_it_rb << " ";;
-// 	std::cout << std::endl; 
-// }
+void print_rev(std::vector<int>::reverse_iterator std_it_rb, std::vector<int>::reverse_iterator std_it_re,
+ft::vector<int>::reverse_iterator ft_it_rb, ft::vector<int>::reverse_iterator ft_it_re)
+{
+	std::cout << "Printing vector using reverse_iterator !" << std::endl;
+	std::cout << "ft  :: ";
+	for(; ft_it_rb != ft_it_re ; ++ft_it_rb)
+		std:: cout << *ft_it_rb << " ";;
+	std::cout << std::endl << "std :: ";
+	for(; std_it_rb != std_it_re ; ++std_it_rb)
+		std:: cout << *std_it_rb << " ";;
+	std::cout << std::endl; 
+}
 
 bool mypredicate (int i, int j) 
 	{return (i==j);}
@@ -51,8 +51,6 @@ bool mycomp (char c1, char c2)
 int main()
 {
 
-
-	//should fix copy constructor when iterators are done !!!
 	std::cout << "	======================>\033[1;31m init and iterators tests \033[0m<============================ " << std::endl;
 	// Creating vects of diffrent types
 	std::vector<int> std_vect_int; 
@@ -102,8 +100,7 @@ int main()
 	
 	print_vector(std_vect_int2.begin(),std_vect_int2.end(),
 	ft_vect_int2.begin(), ft_vect_int2.end());
-	
-	// std::cout <<" size  :"<< ft_vect_int2.end() - ft_vect_int2.begin() << std::endl;
+
 	ft_vect_int2.reserve(50);
 	std_vect_int2.reserve(50);
 
@@ -138,12 +135,6 @@ int main()
 
 	std::vector<int> std_new(25, 0);
 	ft::vector<int> ft_new(25, 0);
-
-	// std_new.push_back(100);
-	// std_new.push_back(200);
-	// std_new.push_back(300);
-	// std_new.push_back(300);
-	// std_new.push_back(300);
 
 	std::cout << "capacity : " << std_new.capacity() << std::endl;
 	std::cout << "size :" << std_new.size() << std::endl;
@@ -230,16 +221,16 @@ int main()
 	ft_new2.insert(ft_it2, 900);
 	std_it2++;
 	ft_it2++;
-	std::cout << '\n';
+	std::cout << std::endl;
 	std_it2 = std_new2.begin();
 	ft_it2 = ft_new2.begin();
 	std_new2.insert(std_it2, 100);
 	ft_new2.insert(ft_it2, 100);
-		std_it2 = std_new2.begin();
+	std_it2 = std_new2.begin();
 	ft_it2 = ft_new2.begin();
 	std_new2.insert(std_it2, 10);
 	ft_new2.insert(ft_it2, 10);
-		std_it2 = std_new2.begin();
+	std_it2 = std_new2.begin();
 	ft_it2 = ft_new2.begin();
 	std_new2.insert(std_it2, 20);
 	ft_new2.insert(ft_it2, 20);

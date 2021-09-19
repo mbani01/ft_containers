@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:04:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/15 16:36:06 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/19 12:33:32 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,19 @@ namespace ft
 {
 			
 	/*	======================> enable_if && is_integral implementation <============================  */
-	template<typename> struct is_integral {static const bool value = false;};
-	template<> struct is_integral<bool> {static const bool value = true;};
-	template<> struct is_integral<char> {static const bool value = true;};
-	template<> struct is_integral<signed char> {static const bool value = true;};
-	template<> struct is_integral<short int> {static const bool value = true;};
-	template<> struct is_integral<int> {static const bool value = true;};
-	template<> struct is_integral<long int> {static const bool value = true;};
-	template<> struct is_integral<long long int> {static const bool value = true;};
-	template<> struct is_integral<unsigned char> {static const bool value = true;};
-	template<> struct is_integral<unsigned short int> {static const bool value = true;};
-	template<> struct is_integral<unsigned int> {static const bool value = true;};
-	template<> struct is_integral<unsigned long int> {static const bool value = true;};
-	template<> struct is_integral<unsigned long long int> {static const bool value = true;};
+	template<typename>	struct is_integral {static const bool value = false;};
+	template<> 			struct is_integral<bool> {static const bool value = true;};
+	template<> 			struct is_integral<char> {static const bool value = true;};
+	template<> 			struct is_integral<signed char> {static const bool value = true;};
+	template<> 			struct is_integral<short int> {static const bool value = true;};
+	template<> 			struct is_integral<int> {static const bool value = true;};
+	template<> 			struct is_integral<long int> {static const bool value = true;};
+	template<> 			struct is_integral<long long int> {static const bool value = true;};
+	template<> 			struct is_integral<unsigned char> {static const bool value = true;};
+	template<> 			struct is_integral<unsigned short int> {static const bool value = true;};
+	template<> 			struct is_integral<unsigned int> {static const bool value = true;};
+	template<> 			struct is_integral<unsigned long int> {static const bool value = true;};
+	template<> 			struct is_integral<unsigned long long int> {static const bool value = true;};
 
 	template<bool Condition, typename TC = void>
 	struct enable_if
@@ -40,6 +40,7 @@ namespace ft
 	{
 		typedef TC type;
 	};
+
 template < class T, class Alloc = std::allocator<T> >
 class vector
 {
@@ -51,10 +52,10 @@ class vector
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
-		typedef ft::random_access_iterator<T>								iterator;
-		typedef ft::random_access_iterator<const T>							const_iterator;
-		typedef ft::reverse_iterator<iterator>		  					reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>					const_reverse_iterator;
+		typedef ft::random_access_iterator<T>				iterator;
+		typedef ft::random_access_iterator<const T>			const_iterator;
+		typedef ft::reverse_iterator<iterator>		  		reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 		typedef  ptrdiff_t									difference_type;
 		typedef  size_t										size_type;
 
@@ -72,7 +73,6 @@ class vector
 		void allocate_arr(size_t n, const T& val)
 		{
 			this->_ptr = _alloc.allocate(n + 2);
-			// _alloc.construct(_ptr);
 			_ptr[n + 1] = val;
 			_ptr[0] = val;
 			if (!_ptr)
@@ -85,13 +85,8 @@ class vector
 		template <class InputIterator>
 		void allocate_range(InputIterator first, InputIterator last)
 		{
-			/* 
-						DOES NOT SET SIZE && CAPACITY 
-
-			*/
-			
+		// DOES NOT SET SIZE && CAPACITY 	
 			this->_ptr = _alloc.allocate(_size + 2);
-			// _alloc.construct(_ptr);
 			_ptr[_size + 1] = *first;
 			_ptr[0] = *first;
 			if (!_ptr)
@@ -106,8 +101,45 @@ class vector
 		void free_vect()
 		{
 			_alloc.deallocate(_ptr, _capacity + 2);
-			// _alloc.destroy(_ptr);
 			_ptr = nullptr;
+		}
+		void reserve_and_insert (size_type n, iterator postion, const value_type& val)
+		{
+			if (n > _capacity)
+			{
+				vector<T> tmp(this->begin(), this->end());
+				int size = tmp.size();
+				free_vect();
+				allocate_arr(n, T());
+				this->_size = size;
+				int j = 1;
+				for(size_t i = 1; i <= _size; ++i)
+				{
+					if (j == postion.get_pos())
+						this->_ptr[j++] = val;
+					this->_ptr[j] = tmp[i - 1];
+					++j;
+				}
+			}
+		}
+		void reserve_and_insert (size_type n, iterator position, size_type nbr, const value_type& val)
+		{
+			if (n > _capacity)
+			{
+				vector<T> tmp(this->begin(), this->end());
+				int size = tmp.size();
+				free_vect();
+				allocate_arr(n, val);
+				_size = size + nbr;
+				int j = 0;
+				for(unsigned long i = 1; i <= _size; ++i)
+				{
+					if (i == (unsigned long)position.get_pos())
+						i += nbr;
+					_ptr[i] = tmp[j];
+					++j;
+				}
+			}
 		}
 		template <class InputIterator>
 		void reserve_and_insert (size_type n, iterator position, size_type nbr, InputIterator itr, 
@@ -184,7 +216,6 @@ class vector
 		}
 		vector& operator= (const vector& x)
 		{
-			// vector<T> tmp(x);
 			const_iterator last(x.end());
 			const_iterator first(x.begin());
 			if (x.size() > _capacity)
@@ -193,7 +224,6 @@ class vector
 				this->_size = x.size();
 				this->_capacity = _size;
 				this->_ptr = _alloc.allocate(_size + 2);
-				// _alloc.construct(_ptr);
 				_ptr[_size + 1] = *first;
 				_ptr[0] = *first;
 				if (!_ptr)
@@ -228,23 +258,11 @@ class vector
 				return (iterator(&_ptr[1], _size, 1));
 			return (iterator());
 		}
-		reverse_iterator rbegin(void)
-		{
-			if (_capacity != 0)
-				return (reverse_iterator(end()));
-			return (reverse_iterator());
-		}
 		const_iterator begin(void) const
 		{
 			if (_capacity != 0)
 				return (const_iterator(&_ptr[1], _size, 1));
 			return (const_iterator());
-		}
-		const_reverse_iterator rbegin(void) const
-		{
-			if (_capacity != 0)
-				return (reverse_iterator(end()));
-			return (reverse_iterator());
 		}
 		iterator end(void)
 		{
@@ -252,17 +270,29 @@ class vector
 				return (iterator(&_ptr[_size + 1], _size, _size + 1));
 			return (iterator());
 		}
-		reverse_iterator rend(void)
-		{
-			if (_capacity != 0)
-				return (reverse_iterator(begin()));
-			return (reverse_iterator());
-		}
 		const_iterator end(void) const
 		{
 			if (_capacity != 0)
 				return (const_iterator(_ptr, _size, _capacity));
 			return (const_iterator());
+		}
+		reverse_iterator rbegin(void)
+		{
+			if (_capacity != 0)
+				return (reverse_iterator(end()));
+			return (reverse_iterator());
+		}
+		const_reverse_iterator rbegin(void) const
+		{
+			if (_capacity != 0)
+				return (reverse_iterator(end()));
+			return (reverse_iterator());
+		}
+		reverse_iterator rend(void)
+		{
+			if (_capacity != 0)
+				return (reverse_iterator(begin()));
+			return (reverse_iterator());
 		}
 		const_reverse_iterator rend(void) const
 		{
@@ -429,44 +459,6 @@ class vector
 		void pop_back()
 		{
 			_size--;
-		}
-		void reserve_and_insert (size_type n, iterator postion, const value_type& val)
-		{
-			if (n > _capacity)
-			{
-				vector<T> tmp(this->begin(), this->end());
-				int size = tmp.size();
-				free_vect();
-				allocate_arr(n, T());
-				this->_size = size;
-				int j = 1;
-				for(size_t i = 1; i <= _size; ++i)
-				{
-					if (j == postion.get_pos())
-						this->_ptr[j++] = val;
-					this->_ptr[j] = tmp[i - 1];
-					++j;
-				}
-			}
-		}
-		void reserve_and_insert (size_type n, iterator position, size_type nbr, const value_type& val)
-		{
-			if (n > _capacity)
-			{
-				vector<T> tmp(this->begin(), this->end());
-				int size = tmp.size();
-				free_vect();
-				allocate_arr(n, val);
-				_size = size + nbr;
-				int j = 0;
-				for(unsigned long i = 1; i <= _size; ++i)
-				{
-					if (i == (unsigned long)position.get_pos())
-						i += nbr;
-					_ptr[i] = tmp[j];
-					++j;
-				}
-			}
 		}
 		iterator insert (iterator position, const value_type& val)
 		{
@@ -672,7 +664,7 @@ template <class InputIterator1, class InputIterator2>
 bool equal ( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2 )
 {
   while (first1!=last1) {
-    if (!(*first1 == *first2))   // or: if (!pred(*first1,*first2)), for version 2
+    if (!(*first1 == *first2))
       return false;
     ++first1; ++first2;
   }
