@@ -6,22 +6,22 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:20:19 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/19 11:25:47 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/21 12:59:56 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
-	#include <map>
+#if 0 //CREATE A REAL STL EXAMPLE
+	// #include <map>
 	#include <stack>
 	#include <vector>
 	namespace ft = std;
 #else
-	#include <map.hpp>
-	#include <stack.hpp>
-	#include <vector.hpp>
+	// #include <map.hpp>
+	#include "stack/stack.hpp"
+	#include "vector/vector.hpp"
 #endif
 
 #include <stdlib.h>
@@ -55,7 +55,7 @@ public:
 	iterator begin() { return this->c.begin(); }
 	iterator end() { return this->c.end(); }
 };
-#include "./vector/vector.hpp"
+// #include "./vector/vector.hpp"
 int main(int argc, char** argv) 
 {
 	if (argc != 2)
@@ -72,8 +72,8 @@ int main(int argc, char** argv)
 	ft::vector<int> vector_int;
 	ft::stack<int> stack_int;
 	ft::vector<Buffer> vector_buffer;
-	ft::stack<Buffer, std::deque<int> > stack_deq_buffer;
-	ft::map<int, int> map_int;
+	// ft::stack<Buffer, std::deque<int> > stack_deq_buffer;
+	// ft::map<int, int> map_int;
 
 	for (int i = 0; i < COUNT; i++)
 	{
@@ -101,22 +101,22 @@ int main(int argc, char** argv)
 		//NORMAL ! :P
 	}
 	
-	for (int i = 0; i < COUNT; ++i)
-	{
-		map_int.insert(ft::make_pair(rand(), rand()));
-	}
+	// for (int i = 0; i < COUNT; ++i)
+	// {
+	// 	map_int.insert(ft::make_pair(rand(), rand()));
+	// }
 
 	int sum = 0;
-	for (int i = 0; i < 10000; i++)
-	{
-		int access = rand();
-		sum += map_int[access];
-	}
+	// for (int i = 0; i < 10000; i++)
+	// {
+	// 	int access = rand();
+	// 	sum += map_int[access];
+	// }
 	std::cout << "should be constant with the same seed: " << sum << std::endl;
 
-	{
-		ft::map<int, int> copy = map_int;
-	}
+	// {
+	// 	ft::map<int, int> copy = map_int;
+	// }
 	MutantStack<char> iterable_stack;
 	for (char letter = 'a'; letter <= 'z'; letter++)
 		iterable_stack.push(letter);

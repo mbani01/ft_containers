@@ -6,10 +6,11 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:04:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/19 12:33:32 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/21 12:09:45 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
 #include <iostream>
 #include "iterators.hpp"
 
@@ -70,15 +71,17 @@ class vector
 			std::cerr << "fatal error !" << std::endl;
 			exit(1);
 		}
-		void allocate_arr(size_t n, const T& val)
+		void allocate_arr(size_t n, const T val)
 		{
 			this->_ptr = _alloc.allocate(n + 2);
-			_ptr[n + 1] = val;
-			_ptr[0] = val;
+			// _ptr[n + 1] = val;
+			// _ptr[0] = val;
 			if (!_ptr)
 				fatal_error();
 			for(size_t i = 1 ; i <= n; i++)
+			{
 				_ptr[i] = val;
+			}
 			_size = n;
 			_capacity = n;
 		}
@@ -100,6 +103,8 @@ class vector
 		}
 		void free_vect()
 		{
+			for(size_t i = 1; i <= _size; ++i)
+				_ptr[i].~T();
 			_alloc.deallocate(_ptr, _capacity + 2);
 			_ptr = nullptr;
 		}
@@ -436,17 +441,23 @@ class vector
 		}
 		void push_back (const value_type& val)
 		{
-	
+			
 			if (_size == _capacity)
 			{
 				if (_capacity == 0)
 				{
-					reserve(1);
+					this->_ptr = _alloc.allocate(3);
 					_capacity = 1;
 				}
 				else 
 				{
-					reserve(_capacity * 2);
+					int size = _size;
+					T* tmp = _alloc.allocate((_capacity * 2) + 2);
+					for(size_t i = 1; i <= _size ; ++i)
+						tmp[i] = _ptr[i];
+					free_vect();
+					this->_ptr = tmp;
+					_size = size;
 					_capacity = _size * 2;
 				}
 				_size++;
@@ -458,6 +469,7 @@ class vector
 		}
 		void pop_back()
 		{
+			_ptr[_size].~T();
 			_size--;
 		}
 		iterator insert (iterator position, const value_type& val)
@@ -544,7 +556,10 @@ class vector
 		iterator erase (iterator position)
 		{
 			for(int i = position.get_pos(); i < _size + 1; ++i)
-				_ptr[i] = _ptr[i + 1];
+				{
+					_ptr[i].~value_type();
+					_ptr[i] = _ptr[i + 1];
+				}
 			_size--;
 			return iterator(&_ptr[position.get_pos()], _size, position.get_pos());
 		}
@@ -553,10 +568,9 @@ class vector
 			int len = last - first;
 			for(int i = first.get_pos(); i < last.get_pos(); ++i)
 			{
+				this->_ptr[i].~value_type();
 				if (_ptr[i + len])
-				{
 					_ptr[i] = _ptr[i + len];
-				}
 			}
 			_size -= len;
 			return iterator(&_ptr[first.get_pos()], _size, first.get_pos());
