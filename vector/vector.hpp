@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:04:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/21 12:09:45 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/22 12:13:48 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -622,6 +622,8 @@ bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 template <class T, class Alloc>
 bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
+	if (lhs.size() > rhs.size())
+		return false;
 	for(size_t i = 0; i < lhs.size() &&  i < rhs.size(); ++i)
 	{
 		if (lhs[i] < rhs[i])
@@ -633,7 +635,7 @@ bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 template <class T, class Alloc>
 bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
-	if (lhs.size() != rhs.size())
+	if (lhs.size() > rhs.size())
 		return false;
 	for(size_t i = 0; i < lhs.size(); ++i)
 	{
@@ -646,26 +648,13 @@ bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 template <class T, class Alloc>
 bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
-	for(size_t i = 0; i < lhs.size() &&  i < rhs.size(); ++i)
-	{
-		if (lhs[i] > rhs[i])
-			continue;
-		return false;
-	}
-	return true;
+	return !(lhs <= rhs);
 }
 template <class T, class Alloc>
 bool operator>=  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
-	if (lhs.size() != rhs.size())
-		return false;
-	for(size_t i = 0; i < lhs.size(); ++i)
-	{
-		if (lhs[i] >= rhs[i])
-			continue;
-		return false;
-	}
-	return true;	
+
+	return !(lhs < rhs);
 }
 
 template <class T, class Alloc>

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/21 13:18:58 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/22 12:14:12 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -408,16 +408,22 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 	st.push(400);
 
 	for(size_t i = 0; i < st.size(); ++i)
-	{
 		std::cout << st.top()<< std::endl;
-	}
+
 	std::cout << std::endl;
+
 	std::cout << (st2 == st) << std::endl;
+
 	std::cout << (st2 != st) << std::endl;
+
 	std::cout << (st2 > st) << std::endl;
 	std::cout << (st2 >= st) << std::endl;
 	std::cout << (st2 < st) << std::endl;
 	std::cout << (st2 <= st) << std::endl;
 
+	std::cout << (st > st2) << std::endl;
+	std::cout << (st >= st2) << std::endl;
+	std::cout << (st < st2) << std::endl;
+	std::cout << (st <= st2) << std::endl;
 	// system("leaks a.out");
 }
