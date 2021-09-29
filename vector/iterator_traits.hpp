@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 10:50:03 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/20 11:27:11 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/28 10:59:02 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 namespace ft
 {
+
 struct input_iterator_tag {};
 struct output_iterator_tag {};
 struct forward_iterator_tag {};
@@ -33,11 +34,6 @@ struct iterator_traits
 template <class U>
 struct iterator_traits<U*>
 {
-	struct input_iterator_tag {};
-	struct output_iterator_tag {};
-	struct forward_iterator_tag {};
-	struct bidirectional_iterator_tag {};
-	struct random_access_iterator_tag {};
 
    typedef U							value_type;
    typedef ptrdiff_t					difference_type;
@@ -48,16 +44,11 @@ struct iterator_traits<U*>
 
 template <class U> class iterator_traits<const U*>
 {
- 	struct input_iterator_tag {};
-	struct output_iterator_tag {};
-	struct forward_iterator_tag {};
-	struct bidirectional_iterator_tag {};
-	struct random_access_iterator_tag {};
 
-   typedef const U							value_type;
-   typedef ptrdiff_t					      difference_type;
-   typedef const U*							pointer;
-   typedef const U&							reference;
+   typedef const U						value_type;
+   typedef ptrdiff_t					difference_type;
+   typedef const U*						pointer;
+   typedef const U&						reference;
    typedef random_access_iterator_tag	iterator_category;
 };
 
