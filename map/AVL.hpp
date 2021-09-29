@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/29 12:37:51 by mbani            ###   ########.fr       */
+/*   Updated: 2021/09/29 13:20:49 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,46 @@ class  AVL
 			// if (node->left && node->right)
 			if (std::abs((int)((height(node->left))-(height(node->right) ))) > 1)
 			{
-				// the node caused inbalance we should rebalance the tree
+				// the node caused inbalance, we should rebalance the tree
+				
 				std::cout << "inbalanced tree !!\n";
 			}
 			if (node->parent == nullptr) // it's the root the whole tree is balanced 
 				return ;
 			check_balance(node->parent); // rebalance from the current node to the root recursively
-			
+		}
+		void rebalance(Node *node)
+		{
+			if (height(node->left) > height(node->right))
+			{
+				//inbalance is in the left child
+				if (height(node->left->left) > height(node->left->right))
+				{
+						//left child left subtree (Right Rotation)
+					// node = right_rot(node);
+				}
+				else 
+				{
+						//left child right subtree (LeftRight Rotation)
+					// node = leftRight_rot(node);
+				}
+			}
+			else
+			{
+				//inbalance in the right child
+				if (height(node->right->right) > height(node->right->left))
+				{
+						//right child right subtree (Left Rotation)
+					// node = left_rot(node);
+				}
+				else
+				{
+						//right child left subtree (RightLeft Rotation)
+					// node = rightLeft_rot(node);
+				}
+			}
+			if (node->parent == nullptr) // it's the root
+				root = node;
 		}
 		void add(const type &obj)
 		{
