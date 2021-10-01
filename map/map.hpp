@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/29 12:39:04 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/01 11:15:29 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,33 +17,32 @@
 namespace ft
 {
 
-// template <class Key, class T, class Compare, class Alloc>
-	// class ft::map<Key,T,Compare,Alloc>::value_compare
-	// {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
-	// friend class map;
-	// protected:
-	// Compare comp;
-	// value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
-	// public:
-	// typedef bool result_type;
-	// typedef value_type first_argument_type;
-	// typedef value_type second_argument_type;
-	// bool operator() (const value_type& x, const value_type& y) const
-	// {
-	// 	return comp(x.first, y.first);
-	// }
-	// };
-
 
 template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key,T> > >
 class map
 {
+
+	class value_compare
+	{   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
+	friend class map;
+	protected:
+	Compare comp;
+	value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+	public:
+	typedef bool result_type;
+	typedef T first_argument_type;
+	typedef T second_argument_type;
+	bool operator() (const T& x, const T& y) const
+	{
+		return comp(x.first, y.first);
+	}
+	};
 	public:
 	typedef Key		key_type;
 	typedef	T		mapped_type;
 	typedef typename ft::pair<const key_type,mapped_type>		value_type;
 	typedef Compare												key_compare;
-	// typedef	typename ft::value_comp() const;				value_compare;
+	typedef	value_compare										value_comp;
 	typedef Alloc												allocator_type;
 	typedef value_type &										reference;
 	typedef	const value_type &									const_reference;
@@ -61,15 +60,15 @@ class map
 	public:
 		map()
 		{
-			int ind = 2;
+			int ind = 1;
 			std::string val = "value";
 			ft::pair<int, std::string> tst(ind, val);
 			avl.add(tst);
-			int ind2 = 3;
+			int ind2 = 2;
 			std::string val2 = "value 02";
 			ft::pair<int, std::string> tst2(ind2, val2);
 			avl.add(tst2);
-			int ind0 = 0;
+			int ind0 = 3;
 			std::string val0 = "value 00";
 			ft::pair<int, std::string> tst0(ind0, val0);
 			avl.add(tst0);
@@ -77,14 +76,18 @@ class map
 			std::string val5 = "value 55";
 			ft::pair<int, std::string> tst5(ind5, val5);
 			avl.add(tst5);
-			int ind3 = 1;
+			int ind3 = 5;
 			std::string val3 = "value 03";
 			ft::pair<int, std::string> tst3(ind3, val3);
 			avl.add(tst3);
-			int ind9 = 8;
+			int ind9 = 6;
 			std::string val9 = "value 09";
 			ft::pair<int, std::string> tst9(ind9, val9);
 			avl.add(tst9);
+			int ind18 = 7;
+			std::string val18 = "value 018";
+			ft::pair<int, std::string> tst18(ind18, val18);
+			avl.add(tst18);
 			std::cout << "height :" << avl.height() << std::endl;
 		}
 

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/29 13:20:49 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/01 11:03:02 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,9 @@ class  AVL
 			if (std::abs((int)((height(node->left))-(height(node->right) ))) > 1)
 			{
 				// the node caused inbalance, we should rebalance the tree
-				
-				std::cout << "inbalanced tree !!\n";
+				// std::cout << "this node cause inbalance " << node->data->first << " parent " << ((node->parent) ? node->parent->data->first : node->data->first) << std::endl;
+				rebalance(node);
+				// std::cout << "node after balance " << node->data->first << " parent " << ((node->parent) ? node->parent->data->first : node->data->first) << std::endl;
 			}
 			if (node->parent == nullptr) // it's the root the whole tree is balanced 
 				return ;
@@ -96,12 +97,14 @@ class  AVL
 				if (height(node->left->left) > height(node->left->right))
 				{
 						//left child left subtree (Right Rotation)
-					// node = right_rot(node);
+					std::cout << "right rotation of node " << node->data->first << std::endl;
+					node = right_rot(node);
 				}
 				else 
 				{
 						//left child right subtree (LeftRight Rotation)
-					// node = leftRight_rot(node);
+					std::cout << "leftright rotation of node " << node->data->first << std::endl;
+					node = leftRight_rot(node);
 				}
 			}
 			else
@@ -110,23 +113,55 @@ class  AVL
 				if (height(node->right->right) > height(node->right->left))
 				{
 						//right child right subtree (Left Rotation)
-					// node = left_rot(node);
+					std::cout << "left rotation of node " << node->data->first << std::endl;
+					node = left_rot(node);
 				}
 				else
 				{
 						//right child left subtree (RightLeft Rotation)
-					// node = rightLeft_rot(node);
+					std::cout << "rightleft rotation of node " << node->data->first << std::endl;
+					node = rightLeft_rot(node);
 				}
 			}
-			if (node->parent == nullptr) // it's the root
+			if (node->parent == nullptr) // set root to node
 				root = node;
+		}
+		Node *left_rot(Node *node)
+		{
+			// std::cout << node->parent->right->data->first << std::endl;
+			Node *tmp = node->right;
+			tmp->parent = node->parent;
+			node->right = tmp->left;
+			tmp->left = node;
+			node->parent = tmp;
+			return tmp;
+		}
+		Node *right_rot(Node *node)
+		{
+			Node *tmp = node->left;
+			tmp->parent = node->parent;
+			node->left = tmp->right;
+			node->parent = tmp;
+			tmp->right = node;
+			return tmp;
+		}
+		Node *leftRight_rot(Node *node)
+		{
+			node->left = left_rot(node->left);
+			return right_rot(node);
+			
+		}
+		Node *rightLeft_rot(Node *node)
+		{
+			node->right = right_rot(node->right);
+			return right_rot(node);
 		}
 		void add(const type &obj)
 		{
 			Node *new_node = newNode(obj);
 			if (this->root == nullptr)
 			{
-				std::cout << "Root :" << new_node->data->second << std::endl;
+				std::cout << "Root :" << new_node->data->first << std::endl;
 				this->root = new_node;
 				this->size++;
 				return ;
@@ -142,34 +177,38 @@ class  AVL
 					std::cout << "freed\n";
 				return ;
 			}
-			if (comp(parent->data->first, new_node->data->first)) // if parent->key < new_node->key 
+			if (!comp(parent->data->first, new_node->data->first)) // if parent->key < new_node->key 
 			{
 				//  add to parent left
+				// std::cout << "compar is new greater than parent " << comp(parent->data->first, new_node->data->first) << std::endl;
 				if (parent->left == nullptr)
 				{
-					std::cout << "Left: " << new_node->data->second << std::endl; 
 					parent->left = new_node;
 					new_node->parent = parent;
+					// std::cout << "Left: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) << std::endl; 
 					this->size++;
 					// return ;
 				}
 				else
 					add(parent->left, new_node);
 			}
-			else if (!comp(parent->data->first, new_node->data->first)) // check if parent->key > new_node->key
+			else if (comp(parent->data->first, new_node->data->first)) // check if parent->key > new_node->key
 			{
 				// add to parent right
-				std::cout << "Right: " << new_node->data->second << std::endl;
 				if (parent->right == nullptr)
 				{
 					parent->right = new_node;
 					new_node->parent = parent;
-					size++;
+					// std::cout << "Right: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) <<  std::endl;
+					this->size++;
 					// return ;
 				}
 				else 
 					add(parent->right, new_node);
 			}
-			check_balance(new_node);
+			if (new_node)
+				check_balance(new_node);
+			else
+				return;
 		}
 };
