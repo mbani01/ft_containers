@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/01 12:44:45 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/01 12:52:26 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ class map
 			avl.add(tst18);
 			std::cout << "Height :" << avl.height() << std::endl;
 			std::cout << avl.size() <<std::endl;
-			while(1);
 		}
 };
 
