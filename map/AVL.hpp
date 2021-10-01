@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/01 12:26:53 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/01 12:44:36 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,14 @@ class  AVL
 			right_height = height(tmp->right) + 1;
 			return std::max(left_height, right_height);
 		}
-		void check_balance(Node *node)
+		Node *check_balance(Node *node)
 		{
 			// if (node->left && node->right)
 			if (std::abs((int)((height(node->left))-(height(node->right) ))) > 1)
 			{
 				// the node caused inbalance, we should rebalance the tree
 				// std::cout << "this node cause inbalance " << node->data->first << " parent " << ((node->parent) ? node->parent->data->first : node->data->first) << std::endl;
-				rebalance(node);
+				return rebalance(node);
 				// std::cout << "node after balance " << node->data->first << " parent " << ((node->parent) ? node->parent->data->first : node->data->first) << std::endl;
 				// if (node->parent)
 				// {
@@ -98,10 +98,10 @@ class  AVL
 				// }
 			}
 			if (node->parent == nullptr) // it's the root the whole tree is balanced 
-				return ;
-			check_balance(node->parent); // rebalance from the current node to the root recursively
+				return node;
+			return check_balance(node->parent); // rebalance from the current node to the root recursively
 		}
-		void rebalance(Node *node)
+		Node *rebalance(Node *node)
 		{
 			if (height(node->left) > height(node->right))
 			{
@@ -137,6 +137,7 @@ class  AVL
 			}
 			if (node->parent == nullptr) // set root to node
 					root = node;
+			return node;
 		}
 		Node *left_rot(Node *node)
 		{
@@ -173,6 +174,7 @@ class  AVL
 		}
 		void add(const type &obj)
 		{
+			bool is_inserted;
 			Node *new_node = newNode(obj);
 			if (this->root == nullptr)
 			{
@@ -181,16 +183,19 @@ class  AVL
 				this->_size++;
 				return ;
 			}
-			add(this->root, new_node);
+			add(this->root, new_node, is_inserted);
+			if (!is_inserted)
+				freeNode(&new_node);
 		}
-		void add(Node *parent, Node *new_node)
+		Node *add(Node *parent, Node *new_node, bool &is_inserted)
 		{
 			if (!(comp(parent->data->first, new_node->data->first)) && !(comp(new_node->data->first, parent->data->first)))
 			{
 				// duplicate key :should free new node && return the existing one
-				freeNode(&new_node);
-					std::cout << "freed\n";
-				return ;
+				// freeNode(&new_node);
+				// 	std::cout << "freed\n";
+				is_inserted = false;
+				return parent;
 			}
 			if (!comp(parent->data->first, new_node->data->first)) // if parent->key < new_node->key 
 			{
@@ -202,10 +207,11 @@ class  AVL
 					new_node->parent = parent;
 					// std::cout << "Left: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) << std::endl; 
 					this->_size++;
-					// return ;
+					is_inserted = true;
+					return new_node;
 				}
 				else
-					add(parent->left, new_node);
+					add(parent->left, new_node, is_inserted);
 			}
 			else if (comp(parent->data->first, new_node->data->first)) // check if parent->key > new_node->key
 			{
@@ -214,16 +220,14 @@ class  AVL
 				{
 					parent->right = new_node;
 					new_node->parent = parent;
+					is_inserted = true;
 					// std::cout << "Right: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) <<  std::endl;
 					this->_size++;
-					// return ;
+					return new_node;
 				}
 				else 
-					add(parent->right, new_node);
+					add(parent->right, new_node, is_inserted);
 			}
-			// if (new_node)
-				check_balance(new_node);
-			// else
-				// return;
+			return check_balance(new_node);
 		}
 };
