@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/01 11:15:29 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/01 12:24:10 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,9 @@ class map
 			std::string val18 = "value 018";
 			ft::pair<int, std::string> tst18(ind18, val18);
 			avl.add(tst18);
-			std::cout << "height :" << avl.height() << std::endl;
+			std::cout << "Height :" << avl.height() << std::endl;
+			std::cout << avl.size() <<std::endl;
 		}
-
 };
 
 }

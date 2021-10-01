@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/01 11:03:02 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/01 12:26:53 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class  AVL
 		allocator 		pair_alloc;
 		node_all 		node_alloc;
 		type 			*data;
-		size_t 			size;
+		size_t 			_size;
 		Node			*root;
 		Node			*left;
 		Node			*right;
@@ -37,7 +37,7 @@ class  AVL
 		AVL()
 		{
 			root = right = left = parent = nullptr;
-			size = 0;
+			_size = 0;
 		}
 		// AVL(const type & obj = type()):data(obj), size(0)
 		// {
@@ -60,6 +60,10 @@ class  AVL
 			node_alloc.deallocate(tmp[0], 1);
 			tmp[0] = nullptr;
 		}
+		size_t size()
+		{
+			return this->_size;
+		}
 		size_t height()
 		{
 			if (root == nullptr)
@@ -71,8 +75,10 @@ class  AVL
 			if(tmp == nullptr)
 				return 0;
 			// going to the most left/right node and then coming back && increasing height val recursively 
-			size_t left_height = height(tmp->left) + 1; 
-			size_t right_height = height(tmp->right) + 1;
+			size_t left_height;
+			size_t right_height ;
+			left_height = height(tmp->left) + 1; 
+			right_height = height(tmp->right) + 1;
 			return std::max(left_height, right_height);
 		}
 		void check_balance(Node *node)
@@ -84,6 +90,12 @@ class  AVL
 				// std::cout << "this node cause inbalance " << node->data->first << " parent " << ((node->parent) ? node->parent->data->first : node->data->first) << std::endl;
 				rebalance(node);
 				// std::cout << "node after balance " << node->data->first << " parent " << ((node->parent) ? node->parent->data->first : node->data->first) << std::endl;
+				// if (node->parent)
+				// {
+				// 	std::cout << "left " << node->parent->left->data->first << std::endl;
+				// 	std::cout << "right " << node->parent->right->data->first << std::endl;
+				// 	// std::cout << "parent" << node->parent->parent->data->first << std::endl;
+				// }
 			}
 			if (node->parent == nullptr) // it's the root the whole tree is balanced 
 				return ;
@@ -97,13 +109,13 @@ class  AVL
 				if (height(node->left->left) > height(node->left->right))
 				{
 						//left child left subtree (Right Rotation)
-					std::cout << "right rotation of node " << node->data->first << std::endl;
+					// std::cout << "right rotation of node " << node->data->first << std::endl;
 					node = right_rot(node);
 				}
 				else 
 				{
 						//left child right subtree (LeftRight Rotation)
-					std::cout << "leftright rotation of node " << node->data->first << std::endl;
+					// std::cout << "leftright rotation of node " << node->data->first << std::endl;
 					node = leftRight_rot(node);
 				}
 			}
@@ -113,23 +125,25 @@ class  AVL
 				if (height(node->right->right) > height(node->right->left))
 				{
 						//right child right subtree (Left Rotation)
-					std::cout << "left rotation of node " << node->data->first << std::endl;
+					// std::cout << "left rotation of node " << node->data->first << std::endl;
 					node = left_rot(node);
 				}
 				else
 				{
 						//right child left subtree (RightLeft Rotation)
-					std::cout << "rightleft rotation of node " << node->data->first << std::endl;
+					// std::cout << "rightleft rotation of node " << node->data->first << std::endl;
 					node = rightLeft_rot(node);
 				}
 			}
 			if (node->parent == nullptr) // set root to node
-				root = node;
+					root = node;
 		}
 		Node *left_rot(Node *node)
 		{
-			// std::cout << node->parent->right->data->first << std::endl;
+			std::cout << node->data->first << std::endl;
 			Node *tmp = node->right;
+			if (node->parent)
+				node->parent->right = tmp;
 			tmp->parent = node->parent;
 			node->right = tmp->left;
 			tmp->left = node;
@@ -139,6 +153,8 @@ class  AVL
 		Node *right_rot(Node *node)
 		{
 			Node *tmp = node->left;
+			if (node->parent)
+				node->parent->left = tmp;
 			tmp->parent = node->parent;
 			node->left = tmp->right;
 			node->parent = tmp;
@@ -149,7 +165,6 @@ class  AVL
 		{
 			node->left = left_rot(node->left);
 			return right_rot(node);
-			
 		}
 		Node *rightLeft_rot(Node *node)
 		{
@@ -163,7 +178,7 @@ class  AVL
 			{
 				std::cout << "Root :" << new_node->data->first << std::endl;
 				this->root = new_node;
-				this->size++;
+				this->_size++;
 				return ;
 			}
 			add(this->root, new_node);
@@ -186,7 +201,7 @@ class  AVL
 					parent->left = new_node;
 					new_node->parent = parent;
 					// std::cout << "Left: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) << std::endl; 
-					this->size++;
+					this->_size++;
 					// return ;
 				}
 				else
@@ -200,15 +215,15 @@ class  AVL
 					parent->right = new_node;
 					new_node->parent = parent;
 					// std::cout << "Right: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) <<  std::endl;
-					this->size++;
+					this->_size++;
 					// return ;
 				}
 				else 
 					add(parent->right, new_node);
 			}
-			if (new_node)
+			// if (new_node)
 				check_balance(new_node);
-			else
-				return;
+			// else
+				// return;
 		}
 };
