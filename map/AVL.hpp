@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/01 12:52:17 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/02 12:54:51 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ class  AVL
 	private:
 		allocator 		pair_alloc;
 		node_all 		node_alloc;
-		type 			*data;
 		size_t 			_size;
+		type 			*data;
 		Node			*root;
 		Node			*left;
 		Node			*right;
@@ -43,6 +43,12 @@ class  AVL
 		// {
 		// 	root = parent = right = left = nullptr;
 		// }
+		Node &operator=(const type &obj)
+		{
+			freeNode(this);
+			this = newNode(obj);
+			return *this;
+		}
 		Node *newNode(const type&obj)
 		{
 			AVL *new_node = node_alloc.allocate(1); // allocate node
@@ -53,12 +59,22 @@ class  AVL
 		}
 		void freeNode(Node **tmp)
 		{
-			pair_alloc.destroy(tmp[0]->data);
-			pair_alloc.deallocate(tmp[0]->data, 1);
+			if (tmp[0]->data)
+			{
+				pair_alloc.destroy(tmp[0]->data);
+				pair_alloc.deallocate(tmp[0]->data, 1);
+			}
 			tmp[0]->data = nullptr;
-			node_alloc.destroy(tmp[0]);
-			node_alloc.deallocate(tmp[0], 1);
+			if (tmp[0])
+			{
+				node_alloc.destroy(tmp[0]);
+				node_alloc.deallocate(tmp[0], 1);
+			}
 			tmp[0] = nullptr;
+		}
+		type *get_pair()
+		{
+			return this->data;
 		}
 		size_t size()
 		{
@@ -81,14 +97,14 @@ class  AVL
 			right_height = height(tmp->right) + 1;
 			return std::max(left_height, right_height);
 		}
-		Node *check_balance(Node *node)
+		void check_balance(Node *node)
 		{
 			// if (node->left && node->right)
 			if (std::abs((int)((height(node->left))-(height(node->right) ))) > 1)
 			{
 				// the node caused inbalance, we should rebalance the tree
 				// std::cout << "this node cause inbalance " << node->data->first << " parent " << ((node->parent) ? node->parent->data->first : node->data->first) << std::endl;
-				return rebalance(node);
+				rebalance(node);
 				// std::cout << "node after balance " << node->data->first << " parent " << ((node->parent) ? node->parent->data->first : node->data->first) << std::endl;
 				// if (node->parent)
 				// {
@@ -98,11 +114,12 @@ class  AVL
 				// }
 			}
 			if (node->parent == nullptr) // it's the root the whole tree is balanced 
-				return node;
-			return check_balance(node->parent); // rebalance from the current node to the root recursively
+				return ;
+			check_balance(node->parent); // rebalance from the current node to the root recursively
 		}
-		Node *rebalance(Node *node)
+		void rebalance(Node *node)
 		{
+			// Node *tmp
 			if (height(node->left) > height(node->right))
 			{
 				//inbalance is in the left child
@@ -111,8 +128,9 @@ class  AVL
 						//left child left subtree (Right Rotation)
 					// std::cout << "right rotation of node " << node->data->first << std::endl;
 					node = right_rot(node);
+					// return node->left;
 				}
-				else 
+				else
 				{
 						//left child right subtree (LeftRight Rotation)
 					// std::cout << "leftright rotation of node " << node->data->first << std::endl;
@@ -127,6 +145,7 @@ class  AVL
 						//right child right subtree (Left Rotation)
 					// std::cout << "left rotation of node " << node->data->first << std::endl;
 					node = left_rot(node);
+					// return node->right;
 				}
 				else
 				{
@@ -137,11 +156,10 @@ class  AVL
 			}
 			if (node->parent == nullptr) // set root to node
 					root = node;
-			return node;
+			// return tmp;
 		}
 		Node *left_rot(Node *node)
 		{
-			std::cout << node->data->first << std::endl;
 			Node *tmp = node->right;
 			if (node->parent)
 				node->parent->right = tmp;
@@ -172,30 +190,35 @@ class  AVL
 			node->right = right_rot(node->right);
 			return right_rot(node);
 		}
-		void add(const type &obj)
+		T *add(const type &obj)
 		{
 			bool is_inserted;
 			Node *new_node = newNode(obj);
 			if (this->root == nullptr)
 			{
-				std::cout << "Root :" << new_node->data->first << std::endl;
+				// std::cout << "Root :" << new_node->data->first << std::endl;
 				this->root = new_node;
 				this->_size++;
-				return ;
+				return new_node->data;
 			}
-			add(this->root, new_node, is_inserted);
+			T *result = add(this->root, new_node, is_inserted);
 			if (!is_inserted)
+			{
 				freeNode(&new_node);
+				return nullptr;
+			}
+			return result;
 		}
-		Node *add(Node *parent, Node *new_node, bool &is_inserted)
+		type *add(Node *parent, Node *new_node, bool &is_inserted)
 		{
+			type *tmp = new_node->data;
 			if (!(comp(parent->data->first, new_node->data->first)) && !(comp(new_node->data->first, parent->data->first)))
 			{
 				// duplicate key :should free new node && return the existing one
 				// freeNode(&new_node);
 				// 	std::cout << "freed\n";
 				is_inserted = false;
-				return parent;
+				return parent->data;
 			}
 			if (!comp(parent->data->first, new_node->data->first)) // if parent->key < new_node->key 
 			{
@@ -208,7 +231,7 @@ class  AVL
 					// std::cout << "Left: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) << std::endl; 
 					this->_size++;
 					is_inserted = true;
-					return new_node;
+					return new_node->data;
 				}
 				else
 					add(parent->left, new_node, is_inserted);
@@ -223,11 +246,12 @@ class  AVL
 					is_inserted = true;
 					// std::cout << "Right: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) <<  std::endl;
 					this->_size++;
-					return new_node;
+					return new_node->data;
 				}
 				else 
 					add(parent->right, new_node, is_inserted);
 			}
-			return check_balance(new_node);
+			check_balance(new_node);
+			return tmp;
 		}
 };
