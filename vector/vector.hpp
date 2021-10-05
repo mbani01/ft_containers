@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:04:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/22 12:13:48 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/05 10:44:38 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -555,7 +555,7 @@ class vector
 		}
 		iterator erase (iterator position)
 		{
-			for(int i = position.get_pos(); i < _size + 1; ++i)
+			for(size_t i = position.get_pos(); i < _size + 1; ++i)
 				{
 					_ptr[i].~value_type();
 					_ptr[i] = _ptr[i + 1];

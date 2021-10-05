@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/02 12:54:51 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/05 12:03:26 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ class  AVL
 		Node			*root;
 		Node			*left;
 		Node			*right;
-		Node			*parent;
 		Compare			comp;
 	public:
+		Node			*parent;
 		AVL()
 		{
 			root = right = left = parent = nullptr;
@@ -78,6 +78,9 @@ class  AVL
 		}
 		size_t size()
 		{
+			// for(; root; root = root->left)
+			// 	std::cout << "Key " << root->data->first << "Parent " << (root->parent ? root->parent->data->first : root->data->first) << std::endl;
+			// std::cout << root->parent->right->parent->data->first << std::endl;
 			return this->_size;
 		}
 		size_t height()
@@ -160,9 +163,13 @@ class  AVL
 		}
 		Node *left_rot(Node *node)
 		{
+
+			
 			Node *tmp = node->right;
 			if (node->parent)
 				node->parent->right = tmp;
+			if (tmp->left)
+				tmp->left->parent = node;
 			tmp->parent = node->parent;
 			node->right = tmp->left;
 			tmp->left = node;
@@ -174,6 +181,8 @@ class  AVL
 			Node *tmp = node->left;
 			if (node->parent)
 				node->parent->left = tmp;
+			if (tmp->right)
+				tmp->right->parent = node;
 			tmp->parent = node->parent;
 			node->left = tmp->right;
 			node->parent = tmp;
@@ -188,9 +197,9 @@ class  AVL
 		Node *rightLeft_rot(Node *node)
 		{
 			node->right = right_rot(node->right);
-			return right_rot(node);
+			return left_rot(node);
 		}
-		T *add(const type &obj)
+		Node *add(const type &obj)
 		{
 			bool is_inserted;
 			Node *new_node = newNode(obj);
@@ -199,26 +208,24 @@ class  AVL
 				// std::cout << "Root :" << new_node->data->first << std::endl;
 				this->root = new_node;
 				this->_size++;
-				return new_node->data;
+				return new_node;
 			}
-			T *result = add(this->root, new_node, is_inserted);
+			add(this->root, new_node, is_inserted);
 			if (!is_inserted)
 			{
 				freeNode(&new_node);
 				return nullptr;
 			}
-			return result;
+			return new_node;
 		}
-		type *add(Node *parent, Node *new_node, bool &is_inserted)
+		void add(Node *parent, Node *new_node, bool &is_inserted)
 		{
-			type *tmp = new_node->data;
 			if (!(comp(parent->data->first, new_node->data->first)) && !(comp(new_node->data->first, parent->data->first)))
 			{
 				// duplicate key :should free new node && return the existing one
 				// freeNode(&new_node);
 				// 	std::cout << "freed\n";
 				is_inserted = false;
-				return parent->data;
 			}
 			if (!comp(parent->data->first, new_node->data->first)) // if parent->key < new_node->key 
 			{
@@ -231,7 +238,7 @@ class  AVL
 					// std::cout << "Left: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) << std::endl; 
 					this->_size++;
 					is_inserted = true;
-					return new_node->data;
+					// return new_node->data;
 				}
 				else
 					add(parent->left, new_node, is_inserted);
@@ -246,12 +253,36 @@ class  AVL
 					is_inserted = true;
 					// std::cout << "Right: " << new_node->data->first << " parent " << (new_node->parent ? new_node->parent->data->first : new_node->data->first) <<  std::endl;
 					this->_size++;
-					return new_node->data;
+					// return new_node->data;
 				}
 				else 
 					add(parent->right, new_node, is_inserted);
 			}
 			check_balance(new_node);
-			return tmp;
+			// return tmp;
+		}
+		Node *find(type pair)
+		{
+			if (!(comp(root->data->first, pair.first)) && !(comp(pair.first, root->data->first)))
+				return root;
+			return find(this->root, pair);
+		}
+		Node *find(Node* parent, type pair)
+		{
+			if (!(comp(parent->data->first, pair.first)) && !(comp(pair.first, parent->data->first)))
+			{
+				// key's are equal
+				return parent;
+			}
+			else if (!comp(parent->data->first, pair.first)) //parent key < pair.key
+			{
+				return find(parent->left, pair);
+			}
+			else
+				return find(parent->right, pair);
+		}
+		void remove(Node *node)
+		{
+			
 		}
 };

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/28 10:15:15 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/05 10:44:12 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,8 +193,8 @@ int main(void)
 	std::cout << "ft capacity : " << ft_new3.capacity() << std::endl;
 	std::cout << "ft size :" << ft_new3.size() << std::endl << std::endl;
 
-	// std::cout << *(ft_new3.erase(ft_new3.end()  - 3)) << std::endl;
-	// std::cout << *(ft_new3.erase(ft_new3.begin() + 3, ft_new3.end())) << std::endl;
+	std::cout << *(ft_new3.erase(ft_new3.end()  - 3)) << std::endl;
+	std::cout << *(ft_new3.erase(ft_new3.begin() + 3, ft_new3.end())) << std::endl;
 
 	print_vector(ft_new3.begin(), ft_new3.end());
 	std::cout << "ft capacity : " << ft_new3.capacity() << std::endl;
