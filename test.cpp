@@ -6,31 +6,31 @@
 #include "stack/stack.hpp"
 #include "map/map.hpp"
 #include <map>
-class test
-{
-	private:
-		int *ptr;
-	public:
-	test(){
-		ptr = (int *)malloc(10);
-		std::cout << "construction \n";
-		};
-	test(test const &obj)
-	{
-		this->ptr = (int *)malloc(10);
-	}
-	void operator=(test const &obj){
-		this->ptr = (int *)malloc(10);
-	}
-	// void operator!=(test const &obj)
-	// {
-	// 	return ptr != obj.ptr;
-	// }
-	void hello(){std::cout << "hello world \n";}
-	~test(){
-		free(ptr);
-		std::cout << "Destructed \n";}
-};
+// class test
+// {
+// 	private:
+// 		int *ptr;
+// 	public:
+// 	test(){
+// 		ptr = (int *)malloc(10);
+// 		std::cout << "construction \n";
+// 		};
+// 	test(test const &obj)
+// 	{
+// 		this->ptr = (int *)malloc(10);
+// 	}
+// 	void operator=(test const &obj){
+// 		this->ptr = (int *)malloc(10);
+// 	}
+// 	// void operator!=(test const &obj)
+// 	// {
+// 	// 	return ptr != obj.ptr;
+// 	// }
+// 	void hello(){std::cout << "hello world \n";}
+// 	~test(){
+// 		free(ptr);
+// 		std::cout << "Destructed \n";}
+// };
 
 
 int main()

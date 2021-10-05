@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/05 12:03:26 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/05 12:36:41 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,9 @@ class  AVL
 				pair_alloc.deallocate(tmp[0]->data, 1);
 			}
 			tmp[0]->data = nullptr;
+			tmp[0]->parent = nullptr;
+			tmp[0]->left = nullptr;
+			tmp[0]->right = nullptr;
 			if (tmp[0])
 			{
 				node_alloc.destroy(tmp[0]);
@@ -269,6 +272,8 @@ class  AVL
 		}
 		Node *find(Node* parent, type pair)
 		{
+			if (!parent)
+				return nullptr;
 			if (!(comp(parent->data->first, pair.first)) && !(comp(pair.first, parent->data->first)))
 			{
 				// key's are equal
@@ -281,8 +286,16 @@ class  AVL
 			else
 				return find(parent->right, pair);
 		}
-		void remove(Node *node)
+		size_t remove(Node *node)
 		{
-			
+			Node *res = find(node->data);
+			if (!res)
+				return 0;
+			if (!height(res->right) && !height(res->left)) // node has no child
+			{
+				freeNode(node);
+				check_balance(node);
+				return 1;
+			}
 		}
 };
