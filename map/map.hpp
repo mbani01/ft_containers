@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/05 12:49:12 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/05 13:20:13 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,16 +100,18 @@ class map
 			ft::pair<int, std::string> tst18(ind18, val18);
 			res = avl.add(tst18);
 			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			std::cout << "Height :" << avl.height() << std::endl;
-			int ind50 = 50;
-			std::string val50 = "value 050";
-			ft::pair<int, std::string> tst50(ind50, val50);
-			res = avl.find(tst50);
-			avl.remove()
+			res = avl.find(tst18);
 			if (res)
 				std::cout << "found " << res->parent->get_pair()->first << std::endl;
 			else
 				std::cout << "Not found \n";
+			std::cout << (avl.remove(res)) << std::endl;
+			res = avl.find(tst18);
+			if (res)
+				std::cout << "found " << res->parent->get_pair()->first << std::endl;
+			else
+				std::cout << "Not found \n";
+			std::cout << "Height :" << avl.height() << std::endl;
 			std::cout << avl.size() <<std::endl;
 		}
 };
