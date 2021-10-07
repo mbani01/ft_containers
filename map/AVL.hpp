@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/05 13:21:11 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/07 12:20:29 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class  AVL
 		allocator 		pair_alloc;
 		node_all 		node_alloc;
 		size_t 			_size;
+		int				_height;
 		type 			*data;
 		Node			*root;
 		Node			*left;
@@ -36,12 +37,12 @@ class  AVL
 		Node			*parent;
 		AVL()
 		{
-			root = right = left = parent = nullptr;
-			_size = 0;
+			root = right = left = parent = NULL;
+			_size = _height = 0;
 		}
 		// AVL(const type & obj = type()):data(obj), size(0)
 		// {
-		// 	root = parent = right = left = nullptr;
+		// 	root = parent = right = left = NULL;
 		// }
 		Node &operator=(const type &obj)
 		{
@@ -60,24 +61,24 @@ class  AVL
 		void freeNode(Node **tmp)
 		{
 			if (tmp[0]->parent && tmp[0]->parent->right == tmp[0])
-					tmp[0]->parent->right = nullptr;
+					tmp[0]->parent->right = NULL;
 			else if (tmp[0]->parent && tmp[0]->parent->left == tmp[0])
-					tmp[0]->parent->left = nullptr;
+					tmp[0]->parent->left = NULL;
 			if (tmp[0]->data)
 			{
 				pair_alloc.destroy(tmp[0]->data);
 				pair_alloc.deallocate(tmp[0]->data, 1);
 			}
-			tmp[0]->data = nullptr;
-			tmp[0]->parent = nullptr;
-			tmp[0]->left = nullptr;
-			tmp[0]->right = nullptr;
+			tmp[0]->data = NULL;
+			tmp[0]->parent = NULL;
+			tmp[0]->left = NULL;
+			tmp[0]->right = NULL;
 			if (tmp[0])
 			{
 				node_alloc.destroy(tmp[0]);
 				node_alloc.deallocate(tmp[0], 1);
 			}
-			tmp[0] = nullptr;
+			tmp[0] = NULL;
 		}
 		type *get_pair()
 		{
@@ -90,27 +91,21 @@ class  AVL
 			// std::cout << root->parent->right->parent->data->first << std::endl;
 			return this->_size;
 		}
-		size_t height()
+		int height()
 		{
-			if (root == nullptr)
-				return 0;
-			return height(root) - 1;
+			return get_height(this->root);
 		}
-		size_t height(Node *tmp)
+		int get_height(Node *node)
 		{
-			if(tmp == nullptr)
-				return 0;
-			// going to the most left/right node and then coming back && increasing height val recursively 
-			size_t left_height;
-			size_t right_height ;
-			left_height = height(tmp->left) + 1; 
-			right_height = height(tmp->right) + 1;
-			return std::max(left_height, right_height);
+			if (!node)
+				return -1;
+			return std::max(get_height(node->left), get_height(node->right)) + 1;
 		}
 		void check_balance(Node *node)
 		{
-			// if (node->left && node->right)
-			if (std::abs((int)((height(node->left))-(height(node->right) ))) > 1)
+			// check if balance factor > 1 || < -1 
+			// int bf = get_bf(node)	
+			if (std::abs((int)((get_height(node->left))-(get_height(node->right) ))) > 1)
 			{
 				// the node caused inbalance, we should rebalance the tree
 				// std::cout << "this node cause inbalance " << node->data->first << " parent " << ((node->parent) ? node->parent->data->first : node->data->first) << std::endl;
@@ -123,17 +118,17 @@ class  AVL
 				// 	// std::cout << "parent" << node->parent->parent->data->first << std::endl;
 				// }
 			}
-			if (node->parent == nullptr) // it's the root the whole tree is balanced 
+			if (node->parent == NULL) // it's the root the whole tree is balanced 
 				return ;
 			check_balance(node->parent); // rebalance from the current node to the root recursively
 		}
 		void rebalance(Node *node)
 		{
 			// Node *tmp
-			if (height(node->left) > height(node->right))
+			if (get_height(node->left) > get_height(node->right))
 			{
 				//inbalance is in the left child
-				if (height(node->left->left) > height(node->left->right))
+				if (get_height(node->left->left) > get_height(node->left->right))
 				{
 						//left child left subtree (Right Rotation)
 					// std::cout << "right rotation of node " << node->data->first << std::endl;
@@ -150,7 +145,7 @@ class  AVL
 			else
 			{
 				//inbalance in the right child
-				if (height(node->right->right) > height(node->right->left))
+				if (get_height(node->right->right) > get_height(node->right->left))
 				{
 						//right child right subtree (Left Rotation)
 					// std::cout << "left rotation of node " << node->data->first << std::endl;
@@ -164,7 +159,7 @@ class  AVL
 					node = rightLeft_rot(node);
 				}
 			}
-			if (node->parent == nullptr) // set root to node
+			if (node->parent == NULL) // set root to node
 					root = node;
 			// return tmp;
 		}
@@ -210,7 +205,7 @@ class  AVL
 		{
 			bool is_inserted;
 			Node *new_node = newNode(obj);
-			if (this->root == nullptr)
+			if (this->root == NULL)
 			{
 				// std::cout << "Root :" << new_node->data->first << std::endl;
 				this->root = new_node;
@@ -221,7 +216,7 @@ class  AVL
 			if (!is_inserted)
 			{
 				freeNode(&new_node);
-				return nullptr;
+				return NULL;
 			}
 			return new_node;
 		}
@@ -238,7 +233,7 @@ class  AVL
 			{
 				//  add to parent left
 				// std::cout << "compar is new greater than parent " << comp(parent->data->first, new_node->data->first) << std::endl;
-				if (parent->left == nullptr)
+				if (parent->left == NULL)
 				{
 					parent->left = new_node;
 					new_node->parent = parent;
@@ -253,7 +248,7 @@ class  AVL
 			else if (comp(parent->data->first, new_node->data->first)) // check if parent->key > new_node->key
 			{
 				// add to parent right
-				if (parent->right == nullptr)
+				if (parent->right == NULL)
 				{
 					parent->right = new_node;
 					new_node->parent = parent;
@@ -265,6 +260,7 @@ class  AVL
 				else 
 					add(parent->right, new_node, is_inserted);
 			}
+			new_node->_height = 1 + std::max(get_height(new_node->left), get_height(new_node->right));
 			check_balance(new_node);
 			// return tmp;
 		}
@@ -277,7 +273,7 @@ class  AVL
 		Node *find(Node* parent, type pair)
 		{
 			if (!parent)
-				return nullptr;
+				return NULL;
 			if (!(comp(parent->data->first, pair.first)) && !(comp(pair.first, parent->data->first)))
 			{
 				// key's are equal
@@ -295,7 +291,7 @@ class  AVL
 			Node *res = this->find(*(node->data));
 			if (!res)
 				return 0;
-			if (!height(res->right) && !height(res->left)) // node has no child
+			if (!get_height(res->right) && !get_height(res->left)) // node has no child
 			{
 				res = node->parent;
 				freeNode(&node);
