@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/08 17:02:49 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/09 11:18:36 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,10 @@ class  AVL
 		}
 		int height()
 		{
-			return get_height(root);
+			std::cout << "Root " << root->data->first << std::endl;
+			std::cout << "left " << root->left->data->first << std::endl;
+			std::cout << "right " << root->right->data->first << std::endl;
+			return root->_height;
 		}
 		int get_height(Node *node)
 		{
@@ -117,35 +120,46 @@ class  AVL
 			return ;
 		}
 
+		void update_parent(Node *node, Node *tmp)
+		{
+			int is_left_child = -1;
+			if (node && node->parent && node->parent->left == node)
+				is_left_child = 1;
+			else if (node && node->parent && node->parent->right == node)
+				is_left_child = 0;
+			switch (is_left_child)
+			{
+			case 1:
+				/* code */
+				node->parent->left = tmp;
+				break;
+			case 0:
+				node->parent->right = tmp;
+				break;
+			default:
+				break;
+			}
+			tmp->parent = node->parent;
+			node->parent = tmp;
+		}
 		Node *left_rot(Node *node)
 		{
-
 			Node *tmp = node->right;
-			if (node->parent)
-				node->parent->right = tmp;
-			if (tmp->left)
-				tmp->left->parent = node;
-			tmp->parent = node->parent;
 			node->right = tmp->left;
 			tmp->left = node;
-			node->parent = tmp;
+			update_height(node);
 			update_height(tmp);
-			update_height(tmp->parent);
+			update_parent(node, tmp);
 			return tmp;
 		}
 		Node *right_rot(Node *node)
 		{
 			Node *tmp = node->left;
-			if (node->parent)
-				node->parent->left = tmp;
-			if (tmp->right)
-				tmp->right->parent = node;
-			tmp->parent = node->parent;
 			node->left = tmp->right;
-			node->parent = tmp;
 			tmp->right = node;
+			update_height(node);
 			update_height(tmp);
-			update_height(tmp->parent);
+			update_parent(node, tmp);
 			return tmp;
 		}
 		Node *leftRight_rot(Node *node)
@@ -158,68 +172,39 @@ class  AVL
 			node->right = right_rot(node->right);
 			return left_rot(node);
 		}
+		Node *rebalance(Node *node)
+		{
+			// std::cout << "balanced \n";
+			if (node->bf > 1)
+			{
+				//inbalance is in the left child
+				if (node->bf == 2 && node->left->bf == 1) //left child left subtree (Right Rotation)
+					return  right_rot(node);
+				else if (node->bf == 2 && node->left->bf == -1) //left child right subtree (LeftRight Rotation)
+					return  leftRight_rot(node);
+			}
+			else if (node->bf < -1)
+			{
+				//inbalance in the right child
+				if (node->bf == -2 && node->right->bf == -1) //right child right subtree (Left Rotation)
+					return  left_rot(node);
+				else if (node->bf == -2 && node->right->bf == 1) //right child left subtree (RightLeft Rotation)
+					return  rightLeft_rot(node);
+			}
+			return node;
+		}
 		Node *add(const type &obj)
 		{
 			bool is_inserted;
 			Node *new_node = newNode(obj);
-			// if (this->root == NULL)
-			// {
-			// 	// std::cout << "Root :" << new_node->data->first << std::endl;
-			// 	this->root = new_node;
-			// 	this->_size++;
-			// 	return new_node;
-			// }
 			root = add(this->root, new_node, is_inserted, NULL);
 			if (!is_inserted)
 			{
 				freeNode(&new_node);
 				return NULL;
 			}
+			
 			return new_node;
-		}
-		// void update_height(Node *node)
-		// {	
-		// 	if (!node)
-		// 		return ;
-		// 	node->_height = get_height(node);
-		// 	std::cout << "Node : " << node->data->first << " height : " << node->_height << std::endl;
-		// 	update_height(node->parent);
-		// }
-		// Node balance(Node *node)
-		// {
-
-		// }
-		Node *check_balance(Node *node)
-		{
-			// check if balance factor > 1 || < -1 
-			if (node->bf != 1 && node->bf != 0 && node->bf != -1)
-				node = rebalance(node);
-			// if (node->parent == NULL) // it's the root the whole tree is balanced 
-			// 	return node;
-			return node;
-			// return check_balance(node->parent); // rebalance from the current node to the root recursively
-		}
-		Node *rebalance(Node *node)
-		{
-			if (node->bf > 1)
-			{
-				//inbalance is in the left child
-				if (node->bf == 2 && node->left->bf == 1) //left child left subtree (Right Rotation)
-					node = right_rot(node);
-				else if (node->bf == 2 && node->right->bf == -1) //left child right subtree (LeftRight Rotation)
-					node = leftRight_rot(node);
-			}
-			else if (node->bf < -1)
-			{
-				//inbalance in the right child
-				if (node->bf == -2 && node->right->bf == -1) //right child right subtree (Left Rotation)
-					node = left_rot(node);
-				else if (node->bf == -2 && node->right->bf == 1) //right child left subtree (RightLeft Rotation)
-					node = rightLeft_rot(node);
-			}
-			if (node->parent == NULL) // set root to node
-					root = node;
-			return node;
 		}
 		Node *add(Node *current, Node *new_node, bool &is_inserted, Node *parent)
 		{
@@ -240,9 +225,10 @@ class  AVL
 				current->left = add(current->left, new_node, is_inserted, current); 	//	add to parent left
 			else if (comp(current->data->first, new_node->data->first)) 				//	check if parent->key < new_node->key
 				current->right = add(current->right, new_node, is_inserted, current);	//	add to parent right
-			// update_height(new_node);
-			current->_height = get_height(current);
-			return check_balance(current);
+			update_height(current);
+			// std::cout << "node : " << new_node->data->first << " added !\n";
+			// std::cout << "current node : " << current->data->first << " height : " << current->_height << std::endl;
+			return rebalance(current);
 		}
 		Node *find(type pair)
 		{

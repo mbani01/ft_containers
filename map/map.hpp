@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/08 16:45:49 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/09 11:20:28 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,24 @@ class map
 	public:
 		map()
 		{
-			int ind = 10;
+			int ind = 90;
 			std::string val = "value";
 			ft::pair<int, std::string> tst(ind, val);
 			AVL<value_type, allocator_type, key_compare> *res = (avl.add(tst));
-			std::cout << res->get_pair()->first << std::endl;
+			// std::cout << res->get_pair()->first << std::endl;
 			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			int ind2 = 15;
+			int ind2 = 5;
 			std::string val2 = "value 02";
 			ft::pair<int, std::string> tst2(ind2, val2);
 			res = avl.add(tst2);
-			std::cout << res->get_pair()->first << std::endl;
+			// std::cout << res->get_pair()->first << std::endl;
 
 			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			int ind0 = 12;
+			int ind0 = 6;
 			std::string val0 = "value 00";
 			ft::pair<int, std::string> tst0(ind0, val0);
 			res = avl.add(tst0);
-			std::cout << res->get_pair()->first << std::endl;
+			// std::cout << res->get_pair()->first << std::endl;
 
 			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
 			// int ind5 = 4;
