@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/09 11:18:36 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/09 11:44:10 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,9 @@ class  AVL
 		}
 		int height()
 		{
-			std::cout << "Root " << root->data->first << std::endl;
-			std::cout << "left " << root->left->data->first << std::endl;
-			std::cout << "right " << root->right->data->first << std::endl;
+			// std::cout << "Root " << root->data->first << std::endl;
+			// std::cout << "left " << root->left->data->first << std::endl;
+			// std::cout << "right " << root->right->data->first << std::endl;
 			return root->_height;
 		}
 		int get_height(Node *node)
@@ -174,7 +174,6 @@ class  AVL
 		}
 		Node *rebalance(Node *node)
 		{
-			// std::cout << "balanced \n";
 			if (node->bf > 1)
 			{
 				//inbalance is in the left child
@@ -219,7 +218,7 @@ class  AVL
 			if (!(comp(current->data->first, new_node->data->first)) && !(comp(new_node->data->first, current->data->first))) // duplicate key :should free new node && return the existing one
 			{
 				is_inserted = false;
-				return new_node; 
+				return current; 
 			}
 			if (!comp(current->data->first, new_node->data->first))						//	if parent->key > new_node->key 
 				current->left = add(current->left, new_node, is_inserted, current); 	//	add to parent left
@@ -262,7 +261,7 @@ class  AVL
 				res = node->parent;
 				freeNode(&node);
 				--_size;
-				check_balance(res);
+				rebalance(res);
 				return 1;
 			}
 			return 100;
