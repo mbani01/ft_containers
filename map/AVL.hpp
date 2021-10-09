@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/09 11:44:10 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/09 12:15:09 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,9 @@ class  AVL
 		}
 		int height()
 		{
-			// std::cout << "Root " << root->data->first << std::endl;
-			// std::cout << "left " << root->left->data->first << std::endl;
-			// std::cout << "right " << root->right->data->first << std::endl;
+			std::cout << "Root " << root->data->first << std::endl;
+			std::cout << "left " << root->left->data->first << std::endl;
+			std::cout << "right " << root->right->data->first << std::endl;
 			return root->_height;
 		}
 		int get_height(Node *node)
@@ -178,18 +178,20 @@ class  AVL
 			{
 				//inbalance is in the left child
 				if (node->bf == 2 && node->left->bf == 1) //left child left subtree (Right Rotation)
-					return  right_rot(node);
+					node = right_rot(node);
 				else if (node->bf == 2 && node->left->bf == -1) //left child right subtree (LeftRight Rotation)
-					return  leftRight_rot(node);
+					node = leftRight_rot(node);
 			}
 			else if (node->bf < -1)
 			{
 				//inbalance in the right child
 				if (node->bf == -2 && node->right->bf == -1) //right child right subtree (Left Rotation)
-					return  left_rot(node);
+					node = left_rot(node);
 				else if (node->bf == -2 && node->right->bf == 1) //right child left subtree (RightLeft Rotation)
-					return  rightLeft_rot(node);
+					node = rightLeft_rot(node);
 			}
+			if (!node->parent)
+				root = node;
 			return node;
 		}
 		Node *add(const type &obj)
@@ -251,17 +253,20 @@ class  AVL
 			else
 				return find(parent->right, pair);
 		}
-		size_t remove(Node *node)
+		int remove(Node *node)
 		{
+			if (!node)
+				return -1;
 			Node *res = this->find(*(node->data));
 			if (!res)
 				return 0;
-			if (!get_height(res->right) && !get_height(res->left)) // node has no child
+			if (res->_height == 0) // node has no child
 			{
 				res = node->parent;
 				freeNode(&node);
 				--_size;
-				rebalance(res);
+				update_height(res);
+				res = rebalance(res);
 				return 1;
 			}
 			return 100;
