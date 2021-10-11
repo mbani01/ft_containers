@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/09 12:06:32 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/11 12:55:10 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,18 +102,21 @@ class map
 			// res = avl.add(tst18);
 			// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
 			std::cout << "Height :" << avl.height() << std::endl;
-			std::cout << "After remove\n";
 			res = avl.find(tst0);
 			if (res)
-				std::cout << "found " << res->get_pair()->first << std::endl;
+				{
+					std::cout << "found " << res->get_pair()->first << std::endl;
+					std::cout << "parent " << res->_height << std::endl;
+				}
 			else
 				std::cout << "Not found \n";
 			std::cout << (avl.remove(res)) << std::endl;
-			res = avl.find(tst0);
-			if (res)
-				std::cout << "found " << res->get_pair()->first << std::endl;
-			else
-				std::cout << "Not found \n";
+			std::cout << "After remove\n";
+			// res = avl.find(tst0);
+			// if (res)
+			// 	std::cout << "found " << res->get_pair()->first << std::endl;
+			// else
+			// 	std::cout << "Not found \n";
 			std::cout << "Height :" << avl.height() << std::endl;
 			
 			// std::cout << avl.remove(tst0);

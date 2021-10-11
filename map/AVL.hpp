@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/09 12:15:09 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/11 13:24:54 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ class  AVL
 		allocator 		pair_alloc;
 		node_all 		node_alloc;
 		size_t 			_size;
-		int				_height;
 		int				bf;
 		type 			*data;
 		Node			*root;
@@ -35,6 +34,7 @@ class  AVL
 		Node			*right;
 		Compare			comp;
 	public:
+		int				_height;
 		Node			*parent;
 		AVL()
 		{
@@ -94,17 +94,20 @@ class  AVL
 		}
 		int height()
 		{
+			
 			std::cout << "Root " << root->data->first << std::endl;
 			std::cout << "left " << root->left->data->first << std::endl;
 			std::cout << "right " << root->right->data->first << std::endl;
-			return root->_height;
+			if (root)
+				return root->_height;
+			return -1;
 		}
-		int get_height(Node *node)
-		{
-			if (!node)
-				return -1;
-			return std::max(get_height(node->left), get_height(node->right)) + 1;
-		}
+		// int get_height(Node *node)
+		// {
+		// 	if (!node)
+		// 		return -1;
+		// 	return std::max(get_height(node->left), get_height(node->right)) + 1;
+		// }
 		void update_height(Node *node)
 		{
 			if (!node)
@@ -214,7 +217,6 @@ class  AVL
 				new_node->parent = parent;
 				this->_size++;
 				is_inserted = true;
-				// std::cout << "Node : " << new_node->data->first << " its parent : " << parent->data->first << std::endl;
 				return new_node;
 			}
 			if (!(comp(current->data->first, new_node->data->first)) && !(comp(new_node->data->first, current->data->first))) // duplicate key :should free new node && return the existing one
@@ -227,14 +229,10 @@ class  AVL
 			else if (comp(current->data->first, new_node->data->first)) 				//	check if parent->key < new_node->key
 				current->right = add(current->right, new_node, is_inserted, current);	//	add to parent right
 			update_height(current);
-			// std::cout << "node : " << new_node->data->first << " added !\n";
-			// std::cout << "current node : " << current->data->first << " height : " << current->_height << std::endl;
 			return rebalance(current);
 		}
 		Node *find(type pair)
 		{
-			if (!(comp(root->data->first, pair.first)) && !(comp(pair.first, root->data->first)))
-				return root;
 			return find(this->root, pair);
 		}
 		Node *find(Node* parent, type pair)
@@ -255,20 +253,72 @@ class  AVL
 		}
 		int remove(Node *node)
 		{
+			bool is_deleted = false;
 			if (!node)
-				return -1;
-			Node *res = this->find(*(node->data));
-			if (!res)
 				return 0;
-			if (res->_height == 0) // node has no child
+			root = remove(this->root, node, is_deleted);
+			std::cout << "Remove root " << root->data->first << std::endl;
+			return is_deleted;
+		}
+		Node *remove(Node *current, Node *to_delete, bool &is_deleted)
+		{
+			if(!current) // 404 Not found
 			{
-				res = node->parent;
-				freeNode(&node);
-				--_size;
-				update_height(res);
-				res = rebalance(res);
-				return 1;
+				is_deleted = false;
+				return NULL;
 			}
-			return 100;
+			if(!(comp(current->data->first, to_delete->data->first)) && !(comp(to_delete->data->first, current->data->first)))
+			{
+				is_deleted = true;
+				current = remove_node(to_delete);
+			}
+			else if (!comp(current->data->first, to_delete->data->first))	// current > to_delete
+				current->left = remove(current->left, to_delete, is_deleted);
+			else if (comp(current->data->first, to_delete->data->first)) // current < to_delete
+				current->right = remove(current->right, to_delete, is_deleted);
+			update_height(current);
+			if (current)
+				return rebalance(current);
+			return NULL;
+		}
+		Node *remove_leaf_node(Node *to_delete)
+		{	
+			Node *tmp = to_delete->parent;
+			freeNode(&to_delete);
+			update_height(tmp);
+			--_size;
+			return NULL;
+		}
+		Node *remove_node_with_one_child(Node *to_delete)
+		{
+			Node *tmp = to_delete->parent;
+			if (to_delete->bf == -1) // node has right child
+			{
+				if (to_delete == root)
+				{
+					root = to_delete->right;
+					root->parent = NULL;
+					freeNode(&to_delete);
+					update_height(root);
+					return root;
+				}
+				tmp->right = to_delete->right;
+				tmp->right->parent = tmp;
+				freeNode(&to_delete);
+				update_height(tmp);
+				--_size;
+				return tmp;
+			}
+			return to_delete;
+		}
+		Node *remove_node(Node *to_delete)
+		{
+			
+			if (to_delete->_height == 0) // remove leaf node
+				return remove_leaf_node(to_delete);
+			else if (to_delete->_height == 1)
+				return remove_node_with_one_child(to_delete);
+			// return 100;
+			return to_delete;
 		}
 };
