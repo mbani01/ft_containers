@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/11 13:24:54 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/11 18:08:04 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ class  AVL
 		int height()
 		{
 			
-			std::cout << "Root " << root->data->first << std::endl;
-			std::cout << "left " << root->left->data->first << std::endl;
-			std::cout << "right " << root->right->data->first << std::endl;
+			// std::cout << "Root " << root->data->first << std::endl;
+			// std::cout << "left " << root->left->data->first << std::endl;
+			// std::cout << "right " << root->right->data->first << std::endl;
 			if (root)
 				return root->_height;
 			return -1;
@@ -119,7 +119,7 @@ class  AVL
 			if (node->right)
 				right_height = node->right->_height;
 			node->_height = 1 + std::max(left_height, right_height);
-			node->bf = left_height - right_height;
+			node->bf = right_height - left_height;
 			return ;
 		}
 
@@ -177,22 +177,36 @@ class  AVL
 		}
 		Node *rebalance(Node *node)
 		{
-			if (node->bf > 1)
+			if (node->bf == -2) // node is left heavy
 			{
-				//inbalance is in the left child
-				if (node->bf == 2 && node->left->bf == 1) //left child left subtree (Right Rotation)
+				if (node->left->bf <= 0)
 					node = right_rot(node);
-				else if (node->bf == 2 && node->left->bf == -1) //left child right subtree (LeftRight Rotation)
+				else
 					node = leftRight_rot(node);
 			}
-			else if (node->bf < -1)
+			else if (node->bf == 2) // node is right heavy
 			{
-				//inbalance in the right child
-				if (node->bf == -2 && node->right->bf == -1) //right child right subtree (Left Rotation)
+				if (node->right->bf >= 0)
 					node = left_rot(node);
-				else if (node->bf == -2 && node->right->bf == 1) //right child left subtree (RightLeft Rotation)
+				else
 					node = rightLeft_rot(node);
 			}
+			// if (node->bf > 1)
+			// {
+			// 	//inbalance is in the left child
+			// 	if (node->bf == 2 && node->left->bf >= 0) //left child left subtree (Right Rotation)
+			// 		node = right_rot(node);
+			// 	else if (node->bf == 2 && node->left->bf <= 0) //left child right subtree (LeftRight Rotation)
+			// 		node = leftRight_rot(node);
+			// }
+			// else if (node->bf < -1)
+			// {
+			// 	//inbalance in the right child
+			// 	if (node->bf == -2 && node->right->bf <= 0) //right child right subtree (Left Rotation)
+			// 		node = left_rot(node);
+			// 	else if (node->bf == -2 && node->right->bf >= 0) //right child left subtree (RightLeft Rotation)
+			// 		node = rightLeft_rot(node);
+			// }
 			if (!node->parent)
 				root = node;
 			return node;
@@ -257,7 +271,7 @@ class  AVL
 			if (!node)
 				return 0;
 			root = remove(this->root, node, is_deleted);
-			std::cout << "Remove root " << root->data->first << std::endl;
+			// std::cout << "Remove root " << root->data->first << std::endl;
 			return is_deleted;
 		}
 		Node *remove(Node *current, Node *to_delete, bool &is_deleted)
@@ -313,12 +327,32 @@ class  AVL
 		}
 		Node *remove_node(Node *to_delete)
 		{
-			
 			if (to_delete->_height == 0) // remove leaf node
 				return remove_leaf_node(to_delete);
 			else if (to_delete->_height == 1)
 				return remove_node_with_one_child(to_delete);
 			// return 100;
 			return to_delete;
+		}
+		 void printBT(const std::string& prefix, const Node* node1, bool isLeft)
+		{
+			if( node1 != nullptr )
+			{
+				std::cout << prefix;
+
+				std::cout << (isLeft ? "├──" : "└──" );
+
+				// print the value of the node1
+				std::cout << node1->data->first << " ";
+				std::cout << (isLeft ? "(L)" : "(R)") << std::endl;
+				// enter the next tree level - left and right branch
+				printBT( prefix + (isLeft ? "│   " : "    "), node1->left, true);
+				printBT( prefix + (isLeft ? "│   " : "    "), node1->right, false);
+			}
+		}
+
+		void printBT()
+		{
+			printBT("", root, false);
 		}
 };
