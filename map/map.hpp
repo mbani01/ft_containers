@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/11 18:11:29 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/12 12:35:19 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,24 +78,24 @@ class map
 			std::string val0 = "value 00";
 			ft::pair<int, std::string> tst0(ind0, val0);
 			res = avl.add(tst0);
-			// std::cout << res->get_pair()->first << std::endl;
+			// // std::cout << res->get_pair()->first << std::endl;
 
-			// // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
+			// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
 			int ind5 = 18;
 			std::string val5 = "value 55";
 			ft::pair<int, std::string> tst5(ind5, val5);
 			res = avl.add(tst5);
-			// // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
+			// // // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
 			int ind3 = 25;
 			std::string val3 = "value 03";
 			ft::pair<int, std::string> tst3(ind3, val3);
 			res = avl.add(tst3);
-			// // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
+			// // // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
 			int ind9 = 23;
 			std::string val9 = "value 09";
 			ft::pair<int, std::string> tst9(ind9, val9);
 			res = avl.add(tst9);
-			// // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
+			// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
 			int ind18 = 21;
 			std::string val18 = "value 018";
 			ft::pair<int, std::string> tst18(ind18, val18);
@@ -106,7 +106,7 @@ class map
 			std::cout << std::endl;
 			std::cout << "Height :" << avl.height() << std::endl;
 			std::cout << "Size : " << avl.size() <<std::endl;
-			std::cout << "removed Nodes : " << (avl.remove(avl.find(tst))) << std::endl;
+			std::cout << "removed Nodes : " << (avl.remove(avl.find(tst9))) << std::endl;
 			std::cout << "After remove\n\n\n";
 			
 			avl.printBT();
@@ -120,39 +120,23 @@ class map
 			avl.printBT();
 			std::cout << std::endl;
 			std::cout << "Height :" << avl.height() << std::endl;
-			// std::cout << "Size : " << avl.size() <<std::endl;
+			std::cout << "Size : " << avl.size() <<std::endl;
 
-			// res = avl.find(tst18);
-			// avl.remove(res);
-			// avl.printBT();
-			// std::cout << std::endl;
-			// std::cout << "Height :" << avl.height() << std::endl;
-			// std::cout << "Size : " << avl.size() <<std::endl;
+			res = avl.find(tst);
+			avl.remove(res);
+			avl.printBT();
+			std::cout << std::endl;
+			std::cout << "Height :" << avl.height() << std::endl;
+			std::cout << "Size : " << avl.size() <<std::endl;
+
+			res = avl.find(tst5);
+			avl.remove(res);
+			avl.printBT();
+			std::cout << std::endl;
+			std::cout << "Height :" << avl.height() << std::endl;
+			std::cout << "Size : " << avl.size() <<std::endl;
 		}
 };
-
-/*Node *rebalance(Node *node)
-		{
-			if (node->bf > 1)
-			{
-				//inbalance is in the left child
-				// if (node->bf == 2 && node->left->bf == 1) //left child left subtree (Right Rotation)
-				if(node->bf > 1 && comp(node->data->first, node->left->data->first))
-					return right_rot(node);
-				else if (node->bf > 1 && !comp(node->data->first, node->left->data->first)) //left child right subtree (LeftRight Rotation)
-					return leftRight_rot(node);
-			}
-			else if (node->bf < -1)
-			{
-				//inbalance in the right child
-				if (node->bf < -1 && !comp(node->data->first, node->right->data->first)) //right child right subtree (Left Rotation)
-					return left_rot(node);
-				else if (node->bf < -1 && !comp(node->data->first, node->right->data->first)) //right child left subtree (RightLeft Rotation)
-					return rightLeft_rot(node);
-			}
-			// if (!node->parent)
-			// 	root = node;
-			return node;
-		}*/
-
 }
+
+// 100,50,20,18,25,23,21

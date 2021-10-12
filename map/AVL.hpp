@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/11 18:08:04 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/12 12:04:56 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,27 +87,14 @@ class  AVL
 		}
 		size_t size()
 		{
-			// for(; root; root = root->left)
-			// 	std::cout << "Key " << root->data->first << "Parent " << (root->parent ? root->parent->data->first : root->data->first) << std::endl;
-			// std::cout << root->parent->right->parent->data->first << std::endl;
 			return this->_size;
 		}
 		int height()
 		{
-			
-			// std::cout << "Root " << root->data->first << std::endl;
-			// std::cout << "left " << root->left->data->first << std::endl;
-			// std::cout << "right " << root->right->data->first << std::endl;
 			if (root)
 				return root->_height;
 			return -1;
 		}
-		// int get_height(Node *node)
-		// {
-		// 	if (!node)
-		// 		return -1;
-		// 	return std::max(get_height(node->left), get_height(node->right)) + 1;
-		// }
 		void update_height(Node *node)
 		{
 			if (!node)
@@ -122,7 +109,6 @@ class  AVL
 			node->bf = right_height - left_height;
 			return ;
 		}
-
 		void update_parent(Node *node, Node *tmp)
 		{
 			int is_left_child = -1;
@@ -149,6 +135,8 @@ class  AVL
 		{
 			Node *tmp = node->right;
 			node->right = tmp->left;
+			if (tmp->left)
+				tmp->left->parent = node;
 			tmp->left = node;
 			update_height(node);
 			update_height(tmp);
@@ -159,6 +147,8 @@ class  AVL
 		{
 			Node *tmp = node->left;
 			node->left = tmp->right;
+			if (tmp->right)
+				tmp->right->parent = node;
 			tmp->right = node;
 			update_height(node);
 			update_height(tmp);
@@ -180,7 +170,7 @@ class  AVL
 			if (node->bf == -2) // node is left heavy
 			{
 				if (node->left->bf <= 0)
-					node = right_rot(node);
+					node = right_rot(node); 
 				else
 					node = leftRight_rot(node);
 			}
@@ -191,22 +181,6 @@ class  AVL
 				else
 					node = rightLeft_rot(node);
 			}
-			// if (node->bf > 1)
-			// {
-			// 	//inbalance is in the left child
-			// 	if (node->bf == 2 && node->left->bf >= 0) //left child left subtree (Right Rotation)
-			// 		node = right_rot(node);
-			// 	else if (node->bf == 2 && node->left->bf <= 0) //left child right subtree (LeftRight Rotation)
-			// 		node = leftRight_rot(node);
-			// }
-			// else if (node->bf < -1)
-			// {
-			// 	//inbalance in the right child
-			// 	if (node->bf == -2 && node->right->bf <= 0) //right child right subtree (Left Rotation)
-			// 		node = left_rot(node);
-			// 	else if (node->bf == -2 && node->right->bf >= 0) //right child left subtree (RightLeft Rotation)
-			// 		node = rightLeft_rot(node);
-			// }
 			if (!node->parent)
 				root = node;
 			return node;
@@ -253,15 +227,10 @@ class  AVL
 		{
 			if (!parent)
 				return NULL;
-			if (!(comp(parent->data->first, pair.first)) && !(comp(pair.first, parent->data->first)))
-			{
-				// key's are equal
+			if (!(comp(parent->data->first, pair.first)) && !(comp(pair.first, parent->data->first))) // key's are equal
 				return parent;
-			}
 			else if (!comp(parent->data->first, pair.first)) //parent key < pair.key
-			{
 				return find(parent->left, pair);
-			}
 			else
 				return find(parent->right, pair);
 		}
@@ -271,7 +240,6 @@ class  AVL
 			if (!node)
 				return 0;
 			root = remove(this->root, node, is_deleted);
-			// std::cout << "Remove root " << root->data->first << std::endl;
 			return is_deleted;
 		}
 		Node *remove(Node *current, Node *to_delete, bool &is_deleted)
@@ -303,16 +271,28 @@ class  AVL
 			--_size;
 			return NULL;
 		}
-		Node *remove_node_with_one_child(Node *to_delete)
+		bool is_right_child(Node *node, Node *parent)
 		{
-			Node *tmp = to_delete->parent;
-			if (to_delete->bf == -1) // node has right child
+			if (node && parent && parent->right && parent->right == node)
+				return true;
+			return false;
+		}
+		bool is_left_child(Node *node, Node *parent)
+		{
+			if (node && parent && parent->left && parent->left == node)
+				return true;
+			return false;
+		}
+		Node *remove_right_child(Node *to_delete, Node *tmp)
+		{
+			if (to_delete->bf == 1) // has right child
 			{
 				if (to_delete == root)
 				{
 					root = to_delete->right;
 					root->parent = NULL;
 					freeNode(&to_delete);
+					--_size;
 					update_height(root);
 					return root;
 				}
@@ -321,15 +301,145 @@ class  AVL
 				freeNode(&to_delete);
 				update_height(tmp);
 				--_size;
-				return tmp;
+				return tmp->right;
 			}
-			return to_delete;
+			else if (to_delete->bf == -1)
+			{
+				if (to_delete == root)
+				{
+					root = to_delete->left;
+					root->parent = NULL;
+					freeNode(&to_delete);
+					--_size;
+					update_height(root);
+					return root;
+				}
+				tmp->right = to_delete->left;
+				tmp->left->parent = tmp;
+				freeNode(&to_delete);
+				update_height(tmp);
+				--_size;
+				return tmp->right;
+			}
+			return NULL;
+		}
+		Node *remove_left_child(Node *to_delete, Node *tmp)
+		{
+			if (to_delete->bf == 1) //has right child
+			{
+				if (to_delete == root)
+				{
+					root = to_delete->right;
+					root->parent = NULL;
+					freeNode(&to_delete);
+					--_size;
+					update_height(root);
+					return root;
+				}
+				tmp->left = to_delete->right;
+				tmp->left->parent = tmp;
+				freeNode(&to_delete);
+				update_height(tmp);
+				--_size;
+				return tmp->left;
+			}
+			else if (to_delete->bf == -1) // has left child
+			{
+				if (to_delete == root)
+				{
+					root = to_delete->left;
+					root->parent = NULL;
+					freeNode(&to_delete);
+					--_size;
+					update_height(root);
+					return root;
+				}
+				tmp->left = to_delete->left;
+				tmp->left->parent = tmp;
+				freeNode(&to_delete);
+				update_height(tmp);
+				--_size;
+				return tmp->left;
+			}
+			return NULL;
+		}
+		Node *remove_node_with_one_child(Node *to_delete)
+		{
+			std::cout << "Node to be deleted: " << to_delete->data->first << " it's parent : " << to_delete->parent->data->first << std::endl;
+			Node *tmp = to_delete->parent; // save node's parent
+			if (is_right_child(to_delete, tmp))
+				return remove_right_child(to_delete, tmp);
+			else if (is_left_child(to_delete, tmp))
+				return remove_left_child(to_delete, tmp);
+			// if (to_delete->bf == 1) // node has right child
+			// {
+				// if (to_delete == root)
+				// {
+				// 	root = to_delete->right;
+				// 	root->parent = NULL;
+				// 	freeNode(&to_delete);
+				// 	--_size;
+				// 	update_height(root);
+				// 	return root;
+				// }
+			// 	if (is_right_child(to_delete, tmp)) // is located at parent right
+			// 	{
+			// 		// is right child and has right child
+			// 		tmp->right = to_delete->right;
+			// 		tmp->right->parent = tmp;
+			// 		freeNode(&to_delete);
+			// 		update_height(tmp);
+			// 		--_size;
+			// 		return tmp->right;	
+			// 	}
+			// 	else if (is_left_child(to_delete, tmp)) // is located at parent left
+			// 	{
+			// 		// is left child and has right child
+			// 		tmp->left = to_delete->right;
+			// 		tmp->left->parent = tmp;
+			// 		freeNode(&to_delete);
+			// 		update_height(tmp);
+			// 		--_size;
+			// 		return tmp->left;					
+			// 	}
+			// }
+			// else if (to_delete->bf == -1) //node has left child
+			// {
+			// 	if (to_delete == root)
+			// 	{
+			// 		root = to_delete->left;
+			// 		root->parent = NULL;
+			// 		freeNode(&to_delete);
+			// 		--_size;
+			// 		update_height(root);
+			// 		return root;
+			// 	}
+			// 	if (is_left_child(to_delete, tmp)) // is locatad at parent left
+			// 	{
+			// 		tmp->left = to_delete->left;
+			// 		tmp->left->parent = tmp;
+			// 		freeNode(&to_delete);
+			// 		update_height(tmp);
+			// 		--_size;
+			// 		return tmp->left;
+			// 	}
+			// 	if (is_right_child(to_delete, tmp)) // is located at parent's left
+			// 	{
+			// 		tmp->right = to_delete->left;
+			// 		tmp->left->parent = tmp;
+			// 		freeNode(&to_delete);
+			// 		update_height(tmp);
+			// 		--_size;
+			// 		return tmp->right;
+			// 	}
+			// }
+			return NULL;
 		}
 		Node *remove_node(Node *to_delete)
 		{
 			if (to_delete->_height == 0) // remove leaf node
 				return remove_leaf_node(to_delete);
-			else if (to_delete->_height == 1)
+			else if (to_delete->_height == 1 && (to_delete->bf == 1 || to_delete->bf == -1))
 				return remove_node_with_one_child(to_delete);
 			// return 100;
 			return to_delete;
@@ -350,7 +460,6 @@ class  AVL
 				printBT( prefix + (isLeft ? "│   " : "    "), node1->right, false);
 			}
 		}
-
 		void printBT()
 		{
 			printBT("", root, false);
