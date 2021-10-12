@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/12 12:04:56 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/12 12:46:15 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,13 +273,13 @@ class  AVL
 		}
 		bool is_right_child(Node *node, Node *parent)
 		{
-			if (node && parent && parent->right && parent->right == node)
+			if ((node && parent && parent->right && parent->right == node) || node == root)
 				return true;
 			return false;
 		}
 		bool is_left_child(Node *node, Node *parent)
 		{
-			if (node && parent && parent->left && parent->left == node)
+			if ((node && parent && parent->left && parent->left == node) || node == root)
 				return true;
 			return false;
 		}
@@ -365,7 +365,6 @@ class  AVL
 		}
 		Node *remove_node_with_one_child(Node *to_delete)
 		{
-			std::cout << "Node to be deleted: " << to_delete->data->first << " it's parent : " << to_delete->parent->data->first << std::endl;
 			Node *tmp = to_delete->parent; // save node's parent
 			if (is_right_child(to_delete, tmp))
 				return remove_right_child(to_delete, tmp);
