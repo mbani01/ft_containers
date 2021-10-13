@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/13 09:36:44 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/13 13:03:08 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,57 @@ class  AVL
 		Node			*left;
 		Node			*right;
 		Compare			comp;
-	public:
 		int				_height;
 		Node			*parent;
+	public:
 		AVL()
 		{
+			// std::cout << "constructed \n";
 			root = right = left = parent = NULL;
 			_size = _height = bf = 0;
 		}
-		// AVL(const type & obj = type()):data(obj), size(0)
-		// {
-		// 	root = parent = right = left = NULL;
-		// }
-		Node &operator=(const type &obj)
+		Node *getptr()
 		{
-			freeNode(this);
-			this = newNode(obj);
-			return *this;
+			return this;
 		}
+		void clear()
+		{
+			clear(root);
+			root = NULL;
+			_size = 0;
+		}
+		void clear(Node *node)
+		{
+			if (node != NULL)
+			{
+				clear(node->left);
+				clear(node->right);
+				freeNode(&node);
+			}
+		}
+		void assign1(Node *obj)
+		{
+			if (!obj)
+				return ;
+			add(*(obj->data), false);
+			assign1(obj->right);
+			assign1(obj->left);
+		}
+		void assign(Node *obj)
+		{
+			this->clear();
+			root = NULL;
+			obj = obj->root;
+			assign1(obj);
+		}
+		// Node &operator=(const type &obj)
+		// {
+		// 	std::cout << "Called !\n"; 
+		// 	freeNode(this);
+		// 	this = newNode(obj);
+		// 	return *this;
+		// }
+		// Node
 		Node *newNode(const type&obj)
 		{
 			AVL *new_node = node_alloc.allocate(1); // allocate node
@@ -185,11 +218,11 @@ class  AVL
 				root = node;
 			return node;
 		}
-		Node *add(const type &obj)
+		Node *add(const type &obj, bool balance = true)
 		{
 			bool is_inserted;
 			Node *new_node = newNode(obj);
-			root = add(this->root, new_node, is_inserted, NULL);
+			root = add(this->root, new_node, is_inserted, NULL, balance);
 			if (!is_inserted)
 			{
 				freeNode(&new_node);
@@ -198,7 +231,7 @@ class  AVL
 			
 			return new_node;
 		}
-		Node *add(Node *current, Node *new_node, bool &is_inserted, Node *parent)
+		Node *add(Node *current, Node *new_node, bool &is_inserted, Node *parent, bool balance = true)
 		{
 			if (current == NULL)
 			{
@@ -217,7 +250,9 @@ class  AVL
 			else if (comp(current->data->first, new_node->data->first)) 				//	check if parent->key < new_node->key
 				current->right = add(current->right, new_node, is_inserted, current);	//	add to parent right
 			update_height(current);
-			return rebalance(current);
+			if (balance)
+				return rebalance(current);
+			return current;
 		}
 		Node *find(type pair)
 		{

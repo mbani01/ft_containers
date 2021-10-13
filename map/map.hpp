@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/13 09:15:22 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/13 13:04:37 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,85 +58,136 @@ class map
 	private:
 		AVL<value_type, allocator_type, key_compare> avl;
 	public:
-		map()
-		{
-			int ind = 25;
+	explicit map (const key_compare& comp = key_compare(),
+            const allocator_type& alloc = allocator_type()):avl()
+			{
+				(void)comp;
+				(void)alloc;
+
+			int ind = 50;
 			std::string val = "value";
 			ft::pair<int, std::string> tst(ind, val);
+		AVL<value_type, allocator_type, key_compare> avl1;
 			AVL<value_type, allocator_type, key_compare> *res;
 			res = (avl.add(tst));
 			// std::cout << res->get_pair()->first << std::endl;
 			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			int ind2 = 12;
+			int ind2 = 100;
 			std::string val2 = "value 02";
 			ft::pair<int, std::string> tst2(ind2, val2);
 			res = avl.add(tst2);
 			// std::cout << res->get_pair()->first << std::endl;
 
 			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			int ind0 = 10;
+			int ind0 = 60;
 			std::string val0 = "value 00";
 			ft::pair<int, std::string> tst0(ind0, val0);
 			res = avl.add(tst0);
 			// // std::cout << res->get_pair()->first << std::endl;
 
 			// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			int ind5 = 14;
+			int ind5 = 55;
 			std::string val5 = "value 55";
 			ft::pair<int, std::string> tst5(ind5, val5);
 			res = avl.add(tst5);
 			// // // // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			int ind3 = 54;
+			int ind3 = 40;
 			std::string val3 = "value 03";
 			ft::pair<int, std::string> tst3(ind3, val3);
 			res = avl.add(tst3);
 			// // // // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			int ind9 = 32;
+			int ind9 = 37;
 			std::string val9 = "value 09";
 			ft::pair<int, std::string> tst9(ind9, val9);
 			res = avl.add(tst9);
 			// // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			int ind18 = 84;
+			int ind18 = 45;
 			std::string val18 = "value 018";
 			ft::pair<int, std::string> tst18(ind18, val18);
 			res = avl.add(tst18);
+
+
+			int ind07 = 25;
+			std::string val07 = "value 007";
+			ft::pair<int, std::string> tst07(ind07, val07);
+			res = avl.add(tst07);
+
+
+			int ind99 = 20;
+			std::string val99 = "value 099";
+			ft::pair<int, std::string> tst99(ind99, val99);
+			res = avl.add(tst99);
 			// res = avl.find(tst9);
 			// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
+			avl1.assign(&avl);
 			avl.printBT();
 			std::cout << std::endl;
 			std::cout << "Height :" << avl.height() << std::endl;
-			std::cout << "Size : " << avl.size() <<std::endl;
-			std::cout << "removed Nodes : " << (avl.remove(avl.find(tst))) << std::endl;
-			// std::cout << "After remove\n\n\n";
+		// 	std::cout << "Size : " << avl.size() <<std::endl;
+		// 	std::cout << "removed Nodes : " << (avl.remove(avl.find(tst07))) << std::endl;
+		// 	// // std::cout << "After remove\n\n\n";
+			avl.clear();
+			avl1.printBT();
+			// while(1);
+		// 	std::cout << std::endl;
+		// 	std::cout << "Height :" << avl.height() << std::endl;
+		// 	std::cout << "Size : " << avl.size() <<std::endl;
 			
-			avl.printBT();
-			std::cout << std::endl;
-			std::cout << "Height :" << avl.height() << std::endl;
-			std::cout << "Size : " << avl.size() <<std::endl;
-			
 
-			// res = avl.find(tst2);
-			// avl.remove(res);
-			// avl.printBT();
-			// std::cout << std::endl;
-			// std::cout << "Height :" << avl.height() << std::endl;
-			// std::cout << "Size : " << avl.size() <<std::endl;
+		// 	res = avl.find(tst0);
+		// 	avl.remove(res);
+		// 	avl.printBT();
+		// 	std::cout << std::endl;
+		// 	std::cout << "Height :" << avl.height() << std::endl;
+		// 	std::cout << "Size : " << avl.size() <<std::endl;
 
-			// res = avl.find(tst);
-			// avl.remove(res);
-			// avl.printBT();
-			// std::cout << std::endl;
-			// std::cout << "Height :" << avl.height() << std::endl;
-			// std::cout << "Size : " << avl.size() <<std::endl;
+		// 	res = avl.find(tst);
+		// 	avl.remove(res);
+		// 	avl.printBT();
+		// 	std::cout << std::endl;
+		// 	std::cout << "Height :" << avl.height() << std::endl;
+		// 	std::cout << "Size : " << avl.size() <<std::endl;
 
-			// res = avl.find(tst5);
-			// avl.remove(res);
-			// avl.printBT();
-			// std::cout << std::endl;
-			// std::cout << "Height :" << avl.height() << std::endl;
-			// std::cout << "Size : " << avl.size() <<std::endl;
-		}
+		// 	res = avl.find(tst5);
+		// 	avl.remove(res);
+		// 	avl.printBT();
+		// 	std::cout << std::endl;
+		// 	std::cout << "Height :" << avl.height() << std::endl;
+		// 	std::cout << "Size : " << avl.size() <<std::endl;
+
+		// 	res = avl.find(tst3);
+		// 	avl.remove(res);
+		// 	avl.printBT();
+		// 	std::cout << std::endl;
+		// 	std::cout << "Height :" << avl.height() << std::endl;
+		// 	std::cout << "Size : " << avl.size() <<std::endl;
+		
+		// 	res = avl.find(tst2);
+		// 	avl.remove(res);
+		// 	avl.printBT();
+		// 	std::cout << std::endl;
+		// 	std::cout << "Height :" << avl.height() << std::endl;
+		// 	std::cout << "Size : " << avl.size() <<std::endl;
+
+
+				
+			};
+	// template <class InputIterator>
+  	// map (InputIterator first, InputIterator last,
+    //    const key_compare& comp = key_compare(),
+    //    const allocator_type& alloc = allocator_type())
+	// {};
+	map (const map& x)
+	{
+		*this = x;
+	}
+	map& operator= (const map& x)
+	{
+		this->avl.assign(x.avl);
+	}
 };
 }
+
+
 
 // 100,50,20,18,25,23,21
