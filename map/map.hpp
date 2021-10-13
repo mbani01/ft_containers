@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/12 12:46:55 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/13 09:15:22 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,59 +60,59 @@ class map
 	public:
 		map()
 		{
-			int ind = 100;
+			int ind = 25;
 			std::string val = "value";
 			ft::pair<int, std::string> tst(ind, val);
 			AVL<value_type, allocator_type, key_compare> *res;
 			res = (avl.add(tst));
 			// std::cout << res->get_pair()->first << std::endl;
 			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			int ind2 = 50;
+			int ind2 = 12;
 			std::string val2 = "value 02";
 			ft::pair<int, std::string> tst2(ind2, val2);
 			res = avl.add(tst2);
 			// std::cout << res->get_pair()->first << std::endl;
 
 			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			// int ind0 = 52;
-			// std::string val0 = "value 00";
-			// ft::pair<int, std::string> tst0(ind0, val0);
-			// res = avl.add(tst0);
+			int ind0 = 10;
+			std::string val0 = "value 00";
+			ft::pair<int, std::string> tst0(ind0, val0);
+			res = avl.add(tst0);
 			// // std::cout << res->get_pair()->first << std::endl;
 
 			// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			// int ind5 = 18;
-			// std::string val5 = "value 55";
-			// ft::pair<int, std::string> tst5(ind5, val5);
-			// res = avl.add(tst5);
+			int ind5 = 14;
+			std::string val5 = "value 55";
+			ft::pair<int, std::string> tst5(ind5, val5);
+			res = avl.add(tst5);
 			// // // // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			// int ind3 = 25;
-			// std::string val3 = "value 03";
-			// ft::pair<int, std::string> tst3(ind3, val3);
-			// res = avl.add(tst3);
+			int ind3 = 54;
+			std::string val3 = "value 03";
+			ft::pair<int, std::string> tst3(ind3, val3);
+			res = avl.add(tst3);
 			// // // // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			// int ind9 = 23;
-			// std::string val9 = "value 09";
-			// ft::pair<int, std::string> tst9(ind9, val9);
-			// res = avl.add(tst9);
+			int ind9 = 32;
+			std::string val9 = "value 09";
+			ft::pair<int, std::string> tst9(ind9, val9);
+			res = avl.add(tst9);
 			// // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			// int ind18 = 21;
-			// std::string val18 = "value 018";
-			// ft::pair<int, std::string> tst18(ind18, val18);
-			// res = avl.add(tst18);
+			int ind18 = 84;
+			std::string val18 = "value 018";
+			ft::pair<int, std::string> tst18(ind18, val18);
+			res = avl.add(tst18);
 			// res = avl.find(tst9);
 			// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
 			avl.printBT();
 			std::cout << std::endl;
 			std::cout << "Height :" << avl.height() << std::endl;
 			std::cout << "Size : " << avl.size() <<std::endl;
-			// std::cout << "removed Nodes : " << (avl.remove(avl.find(tst9))) << std::endl;
+			std::cout << "removed Nodes : " << (avl.remove(avl.find(tst))) << std::endl;
 			// std::cout << "After remove\n\n\n";
 			
-			// avl.printBT();
-			// std::cout << std::endl;
-			// std::cout << "Height :" << avl.height() << std::endl;
-			// std::cout << "Size : " << avl.size() <<std::endl;
+			avl.printBT();
+			std::cout << std::endl;
+			std::cout << "Height :" << avl.height() << std::endl;
+			std::cout << "Size : " << avl.size() <<std::endl;
 			
 
 			// res = avl.find(tst2);
@@ -122,12 +122,12 @@ class map
 			// std::cout << "Height :" << avl.height() << std::endl;
 			// std::cout << "Size : " << avl.size() <<std::endl;
 
-			res = avl.find(tst);
-			avl.remove(res);
-			avl.printBT();
-			std::cout << std::endl;
-			std::cout << "Height :" << avl.height() << std::endl;
-			std::cout << "Size : " << avl.size() <<std::endl;
+			// res = avl.find(tst);
+			// avl.remove(res);
+			// avl.printBT();
+			// std::cout << std::endl;
+			// std::cout << "Height :" << avl.height() << std::endl;
+			// std::cout << "Size : " << avl.size() <<std::endl;
 
 			// res = avl.find(tst5);
 			// avl.remove(res);
