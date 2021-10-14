@@ -48,8 +48,29 @@ int main()
 
 	ft::map<int, std::string> ft_mp;
 	ft::map<int, std::string>::iterator ft_itr;
-	ft_mp.begin();
-	(void)ft_itr;
+	ft_itr = ft_mp.begin();
+	// (void)ft_itr;
+	ft::pair<ft::map<int, std::string>::iterator,bool> result;
+	for (int i = 0; i < 10 ; ++i)
+	{
+		result = ft_mp.insert(ft::make_pair<int, std::string>(i, "val"));
+	}
+	ft_itr = ft_mp.begin();
+	ft::map<int, std::string>::iterator ft_it1 = ft_mp.end();
+	for(; ft_itr != ft_it1; ++ft_itr)
+	{
+		std::cout<< ft_itr->first << std::endl;
+	}
+	// std::cout << "value : " << result.first->first << std::endl;
+	// std::cout << "inserted : " << result.second << std::endl;
+	// result = ft_mp.insert(ft::make_pair<int, std::string>(5, "val"));
+	
+	// std::cout << "value : " << result.first->first << std::endl;
+	// std::cout << "inserted : " << result.second << std::endl;
+	// std::cout << ft_itr->first << std::endl;
+	// std::cout << ft_mp.empty() << std::endl;
+	// std::cout << ft_mp.size() << std::endl;
+	// std::cout << ft_mp.max_size() << std::endl;
 	// // test inst;
 	// // test obj;
 	// ft::stack<int > cnt;

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/14 13:14:03 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/14 17:44:16 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,10 @@ class  AVL
 			obj = obj->root;
 			assign1(obj);
 		}
+		// bool operator==(const Node* obj)
+		// {
+		// 	return  (this->parent == obj->parent && this->left == obj->left && this->right == obj->right && *(this->data) == *(obj->data));
+		// }
 		// Node &operator=(const type &obj)
 		// {
 		// 	std::cout << "Called !\n"; 
@@ -121,7 +125,7 @@ class  AVL
 		{
 			return this->data;
 		}
-		size_t size()
+		size_t size() const
 		{
 			return this->_size;
 		}
@@ -221,36 +225,31 @@ class  AVL
 				root = node;
 			return node;
 		}
-		Node *add(const type &obj, bool balance = true)
+		Node *add(const type &obj, bool &is_inserted, bool balance = true)
 		{
-			bool is_inserted;
 			Node *new_node = newNode(obj);
-			root = add(this->root, new_node, is_inserted, NULL, balance);
-			if (!is_inserted)
-			{
-				freeNode(&new_node);
-				return NULL;
-			}
-			
+			root = add(this->root, &new_node, is_inserted, NULL, balance);
 			return new_node;
 		}
-		Node *add(Node *current, Node *new_node, bool &is_inserted, Node *parent, bool balance = true)
+		Node *add(Node *current, Node **new_node, bool &is_inserted, Node *parent, bool balance = true)
 		{
 			if (current == NULL)
 			{
-				new_node->parent = parent;
+				new_node[0]->parent = parent;
 				this->_size++;
 				is_inserted = true;
-				return new_node;
+				return new_node[0];
 			}
-			if (!(comp(current->data->first, new_node->data->first)) && !(comp(new_node->data->first, current->data->first))) // duplicate key :should free new node && return the existing one
+			if (!(comp(current->data->first, new_node[0]->data->first)) && !(comp(new_node[0]->data->first, current->data->first))) // duplicate key :should free new node && return the existing one
 			{
 				is_inserted = false;
+				freeNode(new_node);
+				new_node[0] = current;
 				return current; 
 			}
-			if (!comp(current->data->first, new_node->data->first))						//	if parent->key > new_node->key 
+			if (!comp(current->data->first, new_node[0]->data->first))						//	if parent->key > new_node->key 
 				current->left = add(current->left, new_node, is_inserted, current); 	//	add to parent left
-			else if (comp(current->data->first, new_node->data->first)) 				//	check if parent->key < new_node->key
+			else if (comp(current->data->first, new_node[0]->data->first)) 				//	check if parent->key < new_node->key
 				current->right = add(current->right, new_node, is_inserted, current);	//	add to parent right
 			update_height(current);
 			if (balance)
@@ -448,6 +447,12 @@ class  AVL
 				node = node->left;
 			return node;
 		}
+		Node *findMax(Node *node)
+		{
+			while (node->right)
+				node = node->right;
+			return node;
+		}
 		Node *get_successor(Node *node)
 		{
 			if (!node)
@@ -456,16 +461,40 @@ class  AVL
 				return findMinimum(node->right);
 			else
 			{
-				node = node->parent;
-				while(is_right_child(node, node->parent))
+				Node *parent = node->parent;
+				while(parent && node == parent->right)
 				{
-					if(node->parent)
-						node = node->parent;
-					else
-						break;				
+					node = parent;
+					parent = parent->parent;
 				}
-				return node;
+				// std::cout << "Val : " << parent->data->first << std::endl;
+				if (parent == NULL)
+					return root;
+				return parent;
 			}
+		}
+		Node *get_predecessor(Node *node)
+		{
+			if (!node)
+				return node;
+			if (node->left)
+				return findMax(node->left);
+			else
+			{
+				Node *parent = node->parent;
+				while(parent && node == parent->left)
+				{
+					node = parent;
+					parent = parent->parent;
+				}
+				if (!parent)
+					return NULL;
+				return parent;
+			}
+		}
+		size_t max_size() const
+		{
+			return node_alloc.max_size();
 		}
 		void printBT(const std::string& prefix, const Node* node1, bool isLeft)
 		{

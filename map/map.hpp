@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/14 13:14:18 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/14 17:24:56 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,34 +67,47 @@ class map
 				(void)comp;
 				(void)alloc;
 			// int ind = 50;
-			std::string val = "value";
-			ft::pair<int, std::string> tst;
+						// std::string val = "value";
+						// ft::pair<int, std::string> tst;
 		// AVL<value_type, allocator_type, key_compare> avl1;
-			AVL<value_type, allocator_type, key_compare> *res;
-		// 	res = (avl.add(tst));
-		// 	// std::cout << res->get_pair()->first << std::endl;
-		// 	// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-		// 	int ind2 = 100;
-		// 	std::string val2 = "value 02";
-		// 	ft::pair<int, std::string> tst2(ind2, val2);
-		// 	res = avl.add(tst2);
-		// 	// std::cout << res->get_pair()->first << std::endl;
-		for(int i = 3; i < 10; ++i)
-		{
-			tst = ft::make_pair(i, val);
-			res = avl.add(tst);
-		}
-		avl.printBT();
-		res = avl.find(ft::make_pair(9, val));
-		res = avl.get_successor(res);
+						// AVL<value_type, allocator_type, key_compare> *res;
+			// res = (avl.add(tst));
+			// std::cout << res->get_pair()->first << std::endl;
+			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
+			// int ind2 = 100;
+			// std::string val2 = "value 02";
+			// ft::pair<int, std::string> tst2(ind2, val2);
+			// res = avl.add(tst2);
+			// std::cout << res->get_pair()->first << std::endl;
+						// bool is_inserted = false;
+						// for(int i = 3; i < 10; ++i)
+						// {
+						// 	tst = ft::make_pair(i, val);
+						// 	res = avl.add(tst, is_inserted);
+						// 	std:: cout << is_inserted;
+						// }
+						// std::cout << std::endl;
+						// res = avl.add(tst, is_inserted); 
+						// std:: cout <<"inserted: " << is_inserted << std::endl;
+						// if (res)
+						// 	std::cout << "value :" << res->get_pair()->first << std::endl;
+						// std::cout << "Root :" << std::endl;
+						// avl.printBT();
+						// while(1);
+		// res = avl.find(ft::make_pair(7, val));
+			// AVL<value_type, allocator_type, key_compare> *tmp;
 
+		// tmp = avl.get_successor(res);
+		// res = avl.get_predecessor(res);
 		// 	// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
 		// 	int ind0 = 60;
 		// 	std::string val0 = "value 00";
 		// 	ft::pair<int, std::string> tst0(ind0, val0);
 		// 	res = avl.add(tst0);
-			std::cout << res->get_pair()->first << std::endl;
-
+		// 	std::cout << tmp->get_pair()->first << std::endl;
+		// 	std::cout << res->get_pair()->first << std::endl;
+		// if (tmp == res)
+		// 	std::cout << "This node doesn't have a successor \n";
 		// 	// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
 		// 	int ind5 = 55;
 		// 	std::string val5 = "value 55";
@@ -197,11 +210,15 @@ class map
 	}
 	iterator begin()
 	{
-		return iterator(avl.findMinimum(avl.get_root()));
+		if (avl.size())
+			return iterator(avl.findMinimum(avl.get_root()));
+		return iterator();
 	}
 	// const_iterator begin() const
 	// {
-	// 	return const_iterator(avl.findMinimum(avl.get_root()));
+	// if (avl.size())
+		// 	return const_iterator(avl.findMinimum(avl.get_root()));
+		// return const_iterator()
 	// }
 	iterator end()
 	{
@@ -211,6 +228,24 @@ class map
 	// {
 	// 	return const_iterator(NULL);
 	// }
+	bool empty() const
+	{
+		return (avl.size() == 0);
+	}
+	size_type size() const
+	{
+		return avl.size();
+	}
+	size_type max_size() const
+	{
+		return avl.max_size();
+	}
+	ft::pair<iterator,bool> insert (const value_type& val)
+	{
+		bool is_inserted = false;
+		Node *res =	avl.add(val, is_inserted);
+		return ft::make_pair(iterator(res), is_inserted);
+	}
 };
 }
 
