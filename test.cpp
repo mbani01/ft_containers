@@ -47,6 +47,9 @@ int main()
 
 
 	ft::map<int, std::string> ft_mp;
+	ft::map<int, std::string>::iterator ft_itr;
+	ft_mp.begin();
+	(void)ft_itr;
 	// // test inst;
 	// // test obj;
 	// ft::stack<int > cnt;

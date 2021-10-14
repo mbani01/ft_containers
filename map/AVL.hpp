@@ -6,22 +6,22 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/13 13:03:08 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/14 13:14:03 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iostream>
-#include "pair.hpp"
+#include "../tools/pair.hpp"
 #include <cstdlib>
 
 template <class T, class Alloc, class Compare>
 class  AVL
 {
 	public:
-		typedef T 				type;
-		typedef AVL<T, Alloc, Compare> 	Node;
-		typedef Alloc 			allocator;
+		typedef T 											type;
+		typedef AVL<T, Alloc, Compare> 						Node;
+		typedef Alloc 										allocator;
 		typedef typename Alloc::template rebind<AVL>::other node_all;
 	private:
 		allocator 		pair_alloc;
@@ -38,7 +38,6 @@ class  AVL
 	public:
 		AVL()
 		{
-			// std::cout << "constructed \n";
 			root = right = left = parent = NULL;
 			_size = _height = bf = 0;
 		}
@@ -91,6 +90,10 @@ class  AVL
 			new_node->data = pair_alloc.allocate(1); // allocate pair <key, value>
 			pair_alloc.construct(new_node->data, obj); //assing pair to data
 			return new_node;
+		}
+		Node *get_root()const
+		{
+			return this->root;
 		}
 		void freeNode(Node **tmp)
 		{
@@ -444,6 +447,25 @@ class  AVL
 			while (node->left)
 				node = node->left;
 			return node;
+		}
+		Node *get_successor(Node *node)
+		{
+			if (!node)
+				return node;
+			if (node->right)
+				return findMinimum(node->right);
+			else
+			{
+				node = node->parent;
+				while(is_right_child(node, node->parent))
+				{
+					if(node->parent)
+						node = node->parent;
+					else
+						break;				
+				}
+				return node;
+			}
 		}
 		void printBT(const std::string& prefix, const Node* node1, bool isLeft)
 		{

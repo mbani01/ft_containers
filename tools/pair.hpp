@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 14:56:10 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/13 09:17:52 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/13 14:50:37 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,8 @@ template <class T1, class T2> struct pair
 	pair& operator= (const pair& pr)
 	{
 		
-		// if(this == &pr)
-		// 	return *this;
-		std::cout << "called \n";
+		if(this == &pr)
+			return *this;
 		this->first = pr.first;
 		this->second = pr.second;
 		return *this;
