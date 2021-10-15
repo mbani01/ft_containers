@@ -6,14 +6,13 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/15 11:23:06 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/15 12:46:30 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iostream>
 #include "../tools/pair.hpp"
-#include <cstdlib>
 
 template <class T, class Alloc, class Compare>
 class  AVL
@@ -121,7 +120,7 @@ class  AVL
 			}
 			tmp[0] = NULL;
 		}
-		type *get_pair()
+		type *get_pair() const
 		{
 			return this->data;
 		}

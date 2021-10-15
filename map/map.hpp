@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/15 10:53:15 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/15 12:46:24 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,18 @@ class map
 	}
 	};
 	public:
-	typedef Key													key_type;
-	typedef	T													mapped_type;
-	typedef typename ft::pair<const key_type,mapped_type>		value_type;
-	typedef Compare												key_compare;
-	typedef	value_compare										value_comp;
-	typedef Alloc												allocator_type;
-	typedef value_type &										reference;
-	typedef	const value_type &									const_reference;
-	typedef value_type *										pointer;
-	typedef const value_type *									const_pointer;
-	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare> , value_type >		iterator;
-	// typedef ft::bidirectional_access_iterator<const value_type>	const_iterator;
+	typedef Key																					key_type;
+	typedef	T																					mapped_type;
+	typedef typename ft::pair<const key_type,mapped_type>										value_type;
+	typedef Compare																				key_compare;
+	typedef	value_compare																		value_comp;
+	typedef Alloc																				allocator_type;
+	typedef value_type &																		reference;
+	typedef	const value_type &																	const_reference;
+	typedef value_type *																		pointer;
+	typedef const value_type *																	const_pointer;
+	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare> >			iterator;
+	typedef ft::bidirectional_iterator<const AVL<value_type, allocator_type, key_compare> >		const_iterator;
 	// typedef ft::reverse<value_type>								reverse_iterator;
 	// typedef ft::reverse<const value_type>						const_reverse_iterator;
 	typedef ptrdiff_t										difference_type;
@@ -98,20 +98,20 @@ class map
 			return iterator(avl.findMinimum(avl.get_root()), NULL);
 		return iterator();
 	}
-	// const_iterator begin() const
-	// {
-	// if (avl.size())
-		// 	return const_iterator(avl.findMinimum(avl.get_root()));
-		// return const_iterator()
-	// }
+	const_iterator begin() const
+	{
+		if (avl.size())
+			return const_iterator(avl.findMinimum(avl.get_root()), NULL);
+		return const_iterator();
+	}
 	iterator end()
 	{
 		return iterator(NULL, avl.findMax(avl.get_root()));
 	}
-	// const_iterator end() const
-	// {
-	// 	return const_iterator(NULL);
-	// }
+	const_iterator end() const
+	{
+		return const_iterator(NULL, avl.findMax(avl.get_root()));
+	}
 	bool empty() const
 	{
 		return (avl.size() == 0);

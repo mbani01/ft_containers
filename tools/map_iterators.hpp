@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 09:45:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/14 18:23:58 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/15 12:40:30 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 namespace ft
 {
 
-template<typename Tp, typename U>
+template<typename Tp>
 class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_tag, Tp>
 {
 	public:
@@ -27,7 +27,7 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::difference_type		difference_type;
 		typedef Tp*																				node_pointer;
 		typedef Tp&																				reference;
-		typedef U																				pair;
+		typedef typename Tp::type																			pair;
 	private:
 		node_pointer _iter;
 		node_pointer _last;
@@ -82,20 +82,25 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 			operator--();
 			return tmp;
 		}
-		template<typename T, typename P>
-		friend bool operator!=(bidirectional_iterator<T, P> &rhs, bidirectional_iterator<T, P> &lhs);
-		template<typename T, typename P>
-		friend bool operator==(bidirectional_iterator<T, P> &rhs, bidirectional_iterator<T, P> &lhs);
+		operator bidirectional_iterator<const Tp>() const
+		{
+			return bidirectional_iterator<const Tp>(_iter, _last);
+		}
+		
+		template<typename T>
+		friend bool operator!=(bidirectional_iterator<T> &rhs, bidirectional_iterator<T> &lhs);
+		template<typename T>
+		friend bool operator==(bidirectional_iterator<T> &rhs, bidirectional_iterator<T> &lhs);
 };
 
-template<typename T, typename P>
-bool operator==(bidirectional_iterator<T, P> &rhs, bidirectional_iterator<T, P> &lhs)
+template<typename T>
+bool operator==(bidirectional_iterator<T> &rhs, bidirectional_iterator<T> &lhs)
 		{
 			return &(*rhs._iter) == &(*lhs._iter);
 		}
 
-template<typename T, typename P>
-bool operator!=(bidirectional_iterator<T, P> &rhs, bidirectional_iterator<T, P> &lhs)
+template<typename T>
+bool operator!=(bidirectional_iterator<T> &rhs, bidirectional_iterator<T> &lhs)
 		{
 			return &(*rhs._iter) != &(*lhs._iter);
 		}

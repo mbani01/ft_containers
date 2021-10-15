@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/15 11:28:31 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/15 12:47:55 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -449,7 +449,22 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 	for(;ft_iter != ft_iter1; ++ft_iter)
 		std::cout << ft_iter->first << " ";
 	std::cout << std::endl;
-std::cout.precision(10);
+	
+	ft_iter = ft_map.end();
+	--ft_iter;
+	ft::map<int, std::string>::const_iterator ft_citer(ft_iter);
+	const ft::map<int, std::string>::iterator ft_citer1(ft_map.end());
+	// ft_citer++;
+	// ft_citer1--;
+	// (void)ft_citer;
+	(void)ft_citer1;
+	std::cout << ft_citer->first << std::endl;
+	
+	std::cout << ft_map.empty() << std::endl;
+	// std::cout << ft_map.max_size() << std::endl;
+	
+	
+	std::cout.precision(10);
 	std::cout << NAMESPACE << std::fixed <<  float(clock() - start)/CLOCKS_PER_SEC  << std::endl;
 	// system("leaks a.out");
 }
