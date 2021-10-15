@@ -6,18 +6,22 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/08 12:04:03 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/15 11:28:31 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <time.h>
 #if NS
+#define NAMESPACE "FT  : "
 #include "vector/vector.hpp"
 #include "stack/stack.hpp"
+#include "map/map.hpp"
 #else
+#define NAMESPACE "STD : "
 #include <vector>
 #include <stack>
+#include <map>
 namespace ft = std;
 #endif
 
@@ -209,11 +213,6 @@ int main(void)
 	std::cout << "ft capacity : " << ft_new4.capacity() << std::endl;
 	std::cout << "ft size :" << ft_new4.size() << std::endl;
 
-
-
-
-
-
 	ft_new3.push_back(3333);
 	ft_new3.push_back(20);
 	ft_new3.push_back(30);
@@ -379,8 +378,7 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 	std::cout << ft_new3.rbegin() - ft_new3.rend() << std::endl;
 
 
-	std::cout.precision(10);
-	std::cout << std::fixed <<  float(clock() - start)/CLOCKS_PER_SEC  << std::endl;
+	
 
 
 	std::cout << "	======================>\033[1;31m STACK tests \033[0m<============================ " << std::endl << std::endl;
@@ -425,5 +423,33 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 	std::cout << (st >= st2) << std::endl;
 	std::cout << (st < st2) << std::endl;
 	std::cout << (st <= st2) << std::endl;
+
+	std::cout << "	======================>\033[1;31m MAP tests \033[0m<============================ " << std::endl << std::endl;
+
+
+	ft::map<int, std::string> ft_map;
+
+	for(int i = 0; i < 10e3; ++i)
+		ft_map.insert(ft::make_pair<int, std::string>(i, "value"));
+	ft::map<int, std::string>::iterator ft_iter(ft_map.begin());
+	ft::map<int, std::string>::iterator ft_iter1(ft_map.end());
+
+	ft::map<int, std::string> ft_map1(ft_iter, ft_iter1);
+
+	ft_iter = ft_map1.begin();
+	ft_iter1 = ft_map1.end();
+	for(;ft_iter != ft_iter1; ++ft_iter)
+		std::cout << ft_iter->first << " ";
+	std::cout << std::endl;
+
+
+	ft::map<int, std::string> ft_map3(ft_map1);
+	ft_iter = ft_map3.begin();
+	ft_iter1 = ft_map3.end();
+	for(;ft_iter != ft_iter1; ++ft_iter)
+		std::cout << ft_iter->first << " ";
+	std::cout << std::endl;
+std::cout.precision(10);
+	std::cout << NAMESPACE << std::fixed <<  float(clock() - start)/CLOCKS_PER_SEC  << std::endl;
 	// system("leaks a.out");
 }

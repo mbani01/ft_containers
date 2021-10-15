@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/19 16:15:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/14 11:40:39 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/15 11:30:05 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ class reverse_iterator
 	}
 	reverse_iterator& operator++()
 	{
-		this->_it -= 1;
+		this->_it.operator--();
 		return *this;
 	}
 	reverse_iterator operator++(int)
@@ -251,7 +251,7 @@ class reverse_iterator
 	}
 	reverse_iterator& operator--()
 	{
-		this->_it += 1;
+		this->_it.operator++();
 		return *this;
 	}
 	reverse_iterator operator--(int) 
@@ -271,7 +271,7 @@ class reverse_iterator
 	}
 	reference operator[] (difference_type n) const
 	{
-		return this->_it[-n - 1];
+		return this->_it.operator[](-n - 1);
 	}
 	operator reverse_iterator<const Iterator>() const 
 	{

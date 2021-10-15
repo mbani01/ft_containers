@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/14 17:24:56 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/15 10:53:15 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,84 @@ class map
 	private:
 		typedef AVL<value_type, allocator_type, key_compare> Node;
 		Node avl;
+		const Node *get_avl() const
+		{
+			const Node *ptr = &avl;
+			return ptr;
+		}
 	public:
 	explicit map (const key_compare& comp = key_compare(),
             const allocator_type& alloc = allocator_type()):avl()
 			{
 				(void)comp;
-				(void)alloc;
+				(void)alloc;		
+			};
+	template <class InputIterator>
+  	map (InputIterator first, InputIterator last,
+       const key_compare& comp = key_compare(),
+       const allocator_type& alloc = allocator_type()):avl()
+	{
+		(void)comp;
+		(void)alloc;
+		bool is_inserted = false;
+		for(; first != last; ++first)
+			avl.add((*first), is_inserted);
+	};
+	map (const map& x)
+	{
+		*this = x;
+	}
+	map& operator= (const map& x)
+	{
+		avl.assign(x.get_avl());
+		return *this;
+	}
+	iterator begin()
+	{
+		if (avl.size())
+			return iterator(avl.findMinimum(avl.get_root()), NULL);
+		return iterator();
+	}
+	// const_iterator begin() const
+	// {
+	// if (avl.size())
+		// 	return const_iterator(avl.findMinimum(avl.get_root()));
+		// return const_iterator()
+	// }
+	iterator end()
+	{
+		return iterator(NULL, avl.findMax(avl.get_root()));
+	}
+	// const_iterator end() const
+	// {
+	// 	return const_iterator(NULL);
+	// }
+	bool empty() const
+	{
+		return (avl.size() == 0);
+	}
+	size_type size() const
+	{
+		return avl.size();
+	}
+	size_type max_size() const
+	{
+		return avl.max_size();
+	}
+	ft::pair<iterator,bool> insert (const value_type& val)
+	{
+		bool is_inserted = false;
+		Node *res =	avl.add(val, is_inserted);
+		return ft::make_pair(iterator(res, NULL), is_inserted);
+	}
+};
+}
+
+
+
+// 100,50,20,18,25,23,21
+
+
 			// int ind = 50;
 						// std::string val = "value";
 						// ft::pair<int, std::string> tst;
@@ -193,62 +265,4 @@ class map
 		// 	std::cout << "Size : " << avl.size() <<std::endl;
 
 
-				
-			};
-	// template <class InputIterator>
-  	// map (InputIterator first, InputIterator last,
-    //    const key_compare& comp = key_compare(),
-    //    const allocator_type& alloc = allocator_type())
-	// {};
-	map (const map& x)
-	{
-		*this = x;
-	}
-	map& operator= (const map& x)
-	{
-		this->avl.assign(x.avl);
-	}
-	iterator begin()
-	{
-		if (avl.size())
-			return iterator(avl.findMinimum(avl.get_root()));
-		return iterator();
-	}
-	// const_iterator begin() const
-	// {
-	// if (avl.size())
-		// 	return const_iterator(avl.findMinimum(avl.get_root()));
-		// return const_iterator()
-	// }
-	iterator end()
-	{
-		return iterator(NULL);
-	}
-	// const_iterator end() const
-	// {
-	// 	return const_iterator(NULL);
-	// }
-	bool empty() const
-	{
-		return (avl.size() == 0);
-	}
-	size_type size() const
-	{
-		return avl.size();
-	}
-	size_type max_size() const
-	{
-		return avl.max_size();
-	}
-	ft::pair<iterator,bool> insert (const value_type& val)
-	{
-		bool is_inserted = false;
-		Node *res =	avl.add(val, is_inserted);
-		return ft::make_pair(iterator(res), is_inserted);
-	}
-};
-}
-
-
-
-// 100,50,20,18,25,23,21
+		

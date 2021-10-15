@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/14 17:44:16 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/15 11:23:06 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,20 @@ class  AVL
 				freeNode(&node);
 			}
 		}
-		void assign1(Node *obj)
+		void assign1(const Node *obj)
 		{
 			if (!obj)
 				return ;
-			add(*(obj->data), false);
+			bool is_inserted = false;
+			this->add(*(obj->data), is_inserted, false);
 			assign1(obj->right);
 			assign1(obj->left);
 		}
-		void assign(Node *obj)
+		void assign(const Node *obj)
 		{
 			this->clear();
 			root = NULL;
-			obj = obj->root;
-			assign1(obj);
+			assign1(obj->root);
 		}
 		// bool operator==(const Node* obj)
 		// {
