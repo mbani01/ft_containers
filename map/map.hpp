@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 11:26:58 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 13:25:05 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ class map
 		for(; first != last; ++first)
 			avl.add((*first), is_inserted);
 	};
-	map (const map& x)
+	map (const map& x):avl()
 	{
 		*this = x;
 	}
@@ -153,8 +153,11 @@ class map
 			keys.push_back((first)->first);
 			++first;
 		}
-		for(size_t i = 0; i < keys.size(); ++i)
-			erase(keys[i]);
+		for(size_t i = 0; i <= keys.size(); ++i)
+			{
+				this->erase(keys[i]);
+				// std::cout << this->size() << std::endl;			
+			}
 	}
 };
 }

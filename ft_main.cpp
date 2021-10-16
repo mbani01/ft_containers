@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 11:36:16 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 13:17:38 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -472,7 +472,8 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 
 	// std::cout << ft_map.max_size() << std::endl;
 	
-	std::cout << (ft_map3.erase(500)) << std::endl;
+	std::cout << (ft_map3.erase(1)) << std::endl;
+	std::cout << (ft_map3.erase(2)) << std::endl;
 	std::cout << ft_map.size() << std::endl;
 
 	// ft_iter1 = ft_map.end();
@@ -480,7 +481,7 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 
 	std::cout << ft_map.size() << std::endl;
 	ft_map.erase(ft_map.begin(), ft_map.end());
-	// std::cout << ft_map.size() << std::endl;
+	std::cout << ft_map.size() << std::endl;
 
 	// ft_iter = ft_map.begin();
 	// ft_iter1 = ft_map.end();

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 11:29:58 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 13:25:33 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,6 +276,8 @@ class  AVL
 			if (!node)
 				return 0;
 			root = remove(this->root, node, is_deleted);
+			if (is_deleted)
+				--_size;
 			return is_deleted;
 		}
 		int remove(type &pair)
@@ -285,6 +287,8 @@ class  AVL
 			if (!node)
 				return 0;
 			root = remove(this->root, node, is_deleted);
+			if (is_deleted)
+				--_size;
 			return is_deleted;
 		}
 		Node *remove(Node *current, Node *to_delete, bool &is_deleted)
@@ -297,7 +301,7 @@ class  AVL
 			if(!(comp(current->data->first, to_delete->data->first)) && !(comp(to_delete->data->first, current->data->first)))
 			{
 				is_deleted = true;
-				current = remove_node(to_delete);
+				current = remove_node(current);
 			}
 			else if (!comp(current->data->first, to_delete->data->first))	// current > to_delete
 				current->left = remove(current->left, to_delete, is_deleted);
@@ -313,7 +317,7 @@ class  AVL
 			Node *tmp = to_delete->parent;
 			freeNode(&to_delete);
 			update_height(tmp);
-			--_size;
+			// --_size;
 			return NULL;
 		}
 		bool is_right_child(Node *node, Node *parent)
@@ -337,7 +341,7 @@ class  AVL
 					root = to_delete->right;
 					root->parent = NULL;
 					freeNode(&to_delete);
-					--_size;
+					// --_size;
 					update_height(root);
 					return root;
 				}
@@ -345,7 +349,7 @@ class  AVL
 				tmp->right->parent = tmp;
 				freeNode(&to_delete);
 				update_height(tmp);
-				--_size;
+				// --_size;
 				return tmp->right;
 			}
 			else if (to_delete->bf == -1)
@@ -355,7 +359,7 @@ class  AVL
 					root = to_delete->left;
 					root->parent = NULL;
 					freeNode(&to_delete);
-					--_size;
+					// --_size;
 					update_height(root);
 					return root;
 				}
@@ -363,7 +367,7 @@ class  AVL
 				tmp->left->parent = tmp;
 				freeNode(&to_delete);
 				update_height(tmp);
-				--_size;
+				// --_size;
 				return tmp->right;
 			}
 			return NULL;
@@ -377,7 +381,7 @@ class  AVL
 					root = to_delete->right;
 					root->parent = NULL;
 					freeNode(&to_delete);
-					--_size;
+					// --_size;
 					update_height(root);
 					return root;
 				}
@@ -385,7 +389,7 @@ class  AVL
 				tmp->left->parent = tmp;
 				freeNode(&to_delete);
 				update_height(tmp);
-				--_size;
+				// --_size;
 				return tmp->left;
 			}
 			else if (to_delete->bf == -1) // has left child
@@ -395,7 +399,7 @@ class  AVL
 					root = to_delete->left;
 					root->parent = NULL;
 					freeNode(&to_delete);
-					--_size;
+					// --_size;
 					update_height(root);
 					return root;
 				}
@@ -403,7 +407,7 @@ class  AVL
 				tmp->left->parent = tmp;
 				freeNode(&to_delete);
 				update_height(tmp);
-				--_size;
+				// --_size;
 				return tmp->left;
 			}
 			return NULL;
