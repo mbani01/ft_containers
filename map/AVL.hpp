@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/15 12:46:30 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 11:29:58 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,6 +273,15 @@ class  AVL
 		int remove(Node *node)
 		{
 			bool is_deleted = false;
+			if (!node)
+				return 0;
+			root = remove(this->root, node, is_deleted);
+			return is_deleted;
+		}
+		int remove(type &pair)
+		{
+			bool is_deleted = false;
+			Node *node = newNode(pair);
 			if (!node)
 				return 0;
 			root = remove(this->root, node, is_deleted);

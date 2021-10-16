@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 09:45:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/15 12:40:30 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 10:17:33 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		{
 			return _iter->get_pair();	
 		}
-		bidirectional_iterator operator++()
+		bidirectional_iterator& operator++()
 		{
 			this->_iter = _iter->get_successor(_iter);
 			return *this;
@@ -63,10 +63,10 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		bidirectional_iterator operator++(int)
 		{
 			bidirectional_iterator tmp(*this);
-			operator++();
+			++(*this);
 			return tmp;
 		}
-		bidirectional_iterator operator--()
+		bidirectional_iterator& operator--()
 		{
 			if (this->_iter == NULL && _last != NULL)
 			{
@@ -79,14 +79,17 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		bidirectional_iterator operator--(int)
 		{
 			bidirectional_iterator tmp(*this);
-			operator--();
+			--(*this);
 			return tmp;
 		}
 		operator bidirectional_iterator<const Tp>() const
 		{
 			return bidirectional_iterator<const Tp>(_iter, _last);
 		}
-		
+		node_pointer get_node()const
+		{
+			return _iter;
+		}
 		template<typename T>
 		friend bool operator!=(bidirectional_iterator<T> &rhs, bidirectional_iterator<T> &lhs);
 		template<typename T>

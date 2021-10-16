@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/15 12:46:24 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 11:26:58 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "../tools/make_pair.hpp"
 #include "AVL.hpp"
 #include "../tools/map_iterators.hpp"
+#include "../vector/vector.hpp"
 
 namespace ft
 {
@@ -129,6 +130,31 @@ class map
 		bool is_inserted = false;
 		Node *res =	avl.add(val, is_inserted);
 		return ft::make_pair(iterator(res, NULL), is_inserted);
+	}
+	mapped_type& operator[] (const key_type& k)
+	{
+		return (this->insert(ft::make_pair(k, mapped_type())).first)->second;
+	}
+	void erase(iterator position)
+	{
+		avl.remove(position.get_node());
+		(void)position;
+	}
+	size_type erase (const key_type& k)
+	{
+		value_type pair0 = ft::make_pair(k, mapped_type());
+		return avl.remove(pair0);
+	}
+	void erase (iterator first, iterator last)
+	{
+		ft::vector<key_type> keys;
+		while (first != last)
+		{
+			keys.push_back((first)->first);
+			++first;
+		}
+		for(size_t i = 0; i < keys.size(); ++i)
+			erase(keys[i]);
 	}
 };
 }

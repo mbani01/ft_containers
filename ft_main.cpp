@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/15 12:47:55 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 11:36:16 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -429,7 +429,7 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 
 	ft::map<int, std::string> ft_map;
 
-	for(int i = 0; i < 10e3; ++i)
+	for(int i = 0; i < 10; ++i)
 		ft_map.insert(ft::make_pair<int, std::string>(i, "value"));
 	ft::map<int, std::string>::iterator ft_iter(ft_map.begin());
 	ft::map<int, std::string>::iterator ft_iter1(ft_map.end());
@@ -461,8 +461,44 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 	std::cout << ft_citer->first << std::endl;
 	
 	std::cout << ft_map.empty() << std::endl;
+
+	ft_iter = ft_map3.begin();
+	ft_iter1 = ft_map3.end();
+
+	std::cout << ft_iter->first << std::endl;
+	ft_map3.erase(ft_iter);
+	ft_iter = ft_map3.begin();
+	std::cout << ft_iter->first << std::endl;
+
 	// std::cout << ft_map.max_size() << std::endl;
 	
+	std::cout << (ft_map3.erase(500)) << std::endl;
+	std::cout << ft_map.size() << std::endl;
+
+	// ft_iter1 = ft_map.end();
+	// --ft_iter1;
+
+	std::cout << ft_map.size() << std::endl;
+	ft_map.erase(ft_map.begin(), ft_map.end());
+	// std::cout << ft_map.size() << std::endl;
+
+	// ft_iter = ft_map.begin();
+	// ft_iter1 = ft_map.end();
+	// for(;ft_iter != ft_iter1; ++ft_iter)
+	// 	std::cout << ft_iter->first << " ";
+	// std::cout << std::endl;
+
+	ft::map<char,std::string> mymap;
+	mymap['a']="an element";
+	mymap['b']="another element";
+	mymap['c']=mymap['b'];
+
+	std::cout << "mymap['a'] is " << mymap['a'] << '\n';
+	std::cout << "mymap['b'] is " << mymap['b'] << '\n';
+	std::cout << "mymap['c'] is " << mymap['c'] << '\n';
+	std::cout << "mymap['d'] is " << mymap['d'] << '\n';
+
+	std::cout << "mymap now contains " << mymap.size() << " elements.\n";
 	
 	std::cout.precision(10);
 	std::cout << NAMESPACE << std::fixed <<  float(clock() - start)/CLOCKS_PER_SEC  << std::endl;
