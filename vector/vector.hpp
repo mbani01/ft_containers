@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:04:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/14 10:43:55 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 15:20:16 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,8 +290,8 @@ class vector
 		const_reverse_iterator rbegin(void) const
 		{
 			if (_capacity != 0)
-				return (reverse_iterator(end()));
-			return (reverse_iterator());
+				return (const_reverse_iterator(end()));
+			return (const_reverse_iterator());
 		}
 		reverse_iterator rend(void)
 		{
@@ -302,8 +302,8 @@ class vector
 		const_reverse_iterator rend(void) const
 		{
 			if (_capacity != 0)
-				return (reverse_iterator(begin()));
-			return (reverse_iterator());
+				return (const_reverse_iterator(begin()));
+			return (const_reverse_iterator());
 		}
 		size_type size() const
 		{

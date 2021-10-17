@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 13:25:05 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 16:08:27 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ class map
 	typedef const value_type *																	const_pointer;
 	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare> >			iterator;
 	typedef ft::bidirectional_iterator<const AVL<value_type, allocator_type, key_compare> >		const_iterator;
-	// typedef ft::reverse<value_type>								reverse_iterator;
+	typedef ft::reverse_iterator<iterator>								reverse_iterator;
 	// typedef ft::reverse<const value_type>						const_reverse_iterator;
 	typedef ptrdiff_t										difference_type;
 	typedef size_t											size_type;
@@ -61,6 +61,7 @@ class map
 	private:
 		typedef AVL<value_type, allocator_type, key_compare> Node;
 		Node avl;
+		key_compare comp_key;
 		const Node *get_avl() const
 		{
 			const Node *ptr = &avl;
@@ -70,7 +71,7 @@ class map
 	explicit map (const key_compare& comp = key_compare(),
             const allocator_type& alloc = allocator_type()):avl()
 			{
-				(void)comp;
+				comp_key = comp;
 				(void)alloc;		
 			};
 	template <class InputIterator>
@@ -78,7 +79,7 @@ class map
        const key_compare& comp = key_compare(),
        const allocator_type& alloc = allocator_type()):avl()
 	{
-		(void)comp;
+		comp_key = comp;
 		(void)alloc;
 		bool is_inserted = false;
 		for(; first != last; ++first)
@@ -91,6 +92,7 @@ class map
 	map& operator= (const map& x)
 	{
 		avl.assign(x.get_avl());
+		this->comp_key = x.comp_key;
 		return *this;
 	}
 	iterator begin()
@@ -113,6 +115,22 @@ class map
 	{
 		return const_iterator(NULL, avl.findMax(avl.get_root()));
 	}
+	reverse_iterator rbegin()
+	{
+		return reverse_iterator(end());
+	}
+	// reverse_iterator rbegin() const
+	// {
+	// 	return const_reverse_iterator(end());
+	// }
+	reverse_iterator rend()
+	{
+		return reverse_iterator(begin());
+	}
+	// reverse_iterator rend() const
+	// {
+	// 	return const_reverse_iterator(begin());
+	// }
 	bool empty() const
 	{
 		return (avl.size() == 0);
@@ -158,6 +176,20 @@ class map
 				this->erase(keys[i]);
 				// std::cout << this->size() << std::endl;			
 			}
+	}
+	void swap (map& x)
+	{
+		Node tmp = this->avl;
+		this->avl = x.avl;
+		x.avl = tmp;
+	}
+	void clear()
+	{
+		avl.clear();
+	}
+	key_compare key_comp() const
+	{
+		return comp_key;
 	}
 };
 }

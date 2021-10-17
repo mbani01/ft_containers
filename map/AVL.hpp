@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 13:25:33 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 13:54:58 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -455,13 +455,13 @@ class  AVL
 		}
 		Node* findMinimum(Node* node) // returns most left node
 		{
-			while (node->left)
+			while (node && node->left)
 				node = node->left;
 			return node;
 		}
 		Node *findMax(Node *node)
 		{
-			while (node->right)
+			while (node && node->right)
 				node = node->right;
 			return node;
 		}

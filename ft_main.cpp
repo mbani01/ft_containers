@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 13:17:38 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 17:11:32 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -476,15 +476,16 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 	std::cout << (ft_map3.erase(2)) << std::endl;
 	std::cout << ft_map.size() << std::endl;
 
-	// ft_iter1 = ft_map.end();
-	// --ft_iter1;
+	ft_iter1 = ft_map.end();
+	--ft_iter1;
 
 	std::cout << ft_map.size() << std::endl;
 	ft_map.erase(ft_map.begin(), ft_map.end());
 	std::cout << ft_map.size() << std::endl;
 
-	// ft_iter = ft_map.begin();
-	// ft_iter1 = ft_map.end();
+	ft_iter = ft_map.begin();
+	ft_iter1 = ft_map.end();
+	// ft_iter = ft_map2.end();
 	// for(;ft_iter != ft_iter1; ++ft_iter)
 	// 	std::cout << ft_iter->first << " ";
 	// std::cout << std::endl;
@@ -500,6 +501,72 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 	std::cout << "mymap['d'] is " << mymap['d'] << '\n';
 
 	std::cout << "mymap now contains " << mymap.size() << " elements.\n";
+	
+	ft::map<char,int> foo12,bar12;
+
+	foo12['x']=100;
+	foo12['y']=200;
+
+	bar12['a']=11;
+	bar12['b']=22;
+	bar12['c']=33;
+
+	foo12.swap(bar12);
+
+	std::cout << "foo12 contains:\n";
+	for (ft::map<char,int>::iterator it=foo12.begin(); it!=foo12.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+
+	std::cout << "bar12 contains:\n";
+	for (ft::map<char,int>::iterator it=bar12.begin(); it!=bar12.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+	
+	  ft::map<char,int> mymap5;
+
+  mymap5['x']=100;
+  mymap5['y']=200;
+  mymap5['z']=300;
+
+  std::cout << "mymap5 contains:\n";
+  for (ft::map<char,int>::iterator it=mymap5.begin(); it!=mymap5.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+  mymap5.clear();
+  mymap5['a']=1101;
+  mymap5['b']=2202;
+
+  std::cout << "mymap5 contains:\n";
+  for (ft::map<char,int>::iterator it=mymap5.begin(); it!=mymap5.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+	std::cout << mymap5.size() << std::endl;
+
+
+ ft::map<char,int> mymap10;
+
+//   ft::map<char,int>::key_compare mycomp = mymap10.key_comp();
+
+  mymap10['a']=100;
+  mymap10['b']=200;
+  mymap10['c']=300;
+
+  std::cout << "mymap10 contains:\n";
+
+ft::map<char, int>::reverse_iterator rev_iter(mymap10.rbegin());
+(void)rev_iter;
+  char highest = (--mymap10.end())->first;     // key value of last element
+	// (void)highest;
+  ft::map<char,int>::iterator it = mymap10.begin();
+  do {
+    std::cout << it->first << " => " << it->second << '\n';
+  } while ( mycomp((*it++).first, highest) );
+
+//   it = mymap10.begin();
+//   do {
+//     std::cout << it->first << " => " << it->second << '\n';
+//   } while ( mymap.value_comp()(*it++, highest) );
+
+//   std::cout << '\n';
 	
 	std::cout.precision(10);
 	std::cout << NAMESPACE << std::fixed <<  float(clock() - start)/CLOCKS_PER_SEC  << std::endl;

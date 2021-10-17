@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 10:50:03 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/28 10:59:02 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 14:29:37 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ struct iterator_traits
 {
    typedef typename Iterator::value_type		value_type;
    typedef typename Iterator::difference_type	difference_type;
-   typedef typename Iterator::pointer			pointer;
+   typedef typename Iterator::pointer			   pointer;
    typedef typename Iterator::reference			reference;
    typedef typename Iterator::iterator_category	iterator_category;
 };

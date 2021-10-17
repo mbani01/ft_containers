@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 09:45:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 10:17:33 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/16 17:15:00 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,16 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::iterator_category	iterator_category;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::value_type			value_type;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::difference_type		difference_type;
-		typedef Tp*																				node_pointer;
+		typedef Tp*																				pointer;
 		typedef Tp&																				reference;
-		typedef typename Tp::type																			pair;
+		typedef typename Tp::type																pair;
 	private:
-		node_pointer _iter;
-		node_pointer _last;
+		pointer _iter;
+		pointer _last;
 	public:
 		bidirectional_iterator():_iter(NULL), _last(NULL)
 		{};
-		bidirectional_iterator(node_pointer avl, node_pointer last):_iter(avl), _last(last)
+		bidirectional_iterator(pointer avl, pointer last):_iter(avl), _last(last)
 		{};
 		bidirectional_iterator(const bidirectional_iterator &obj)
 		{
@@ -47,6 +47,10 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 			this->_last = obj._last;
 			return *this;
 		}
+		bidirectional_iterator base()
+		{
+			return (*this);
+		}
 		pair operator*()const
 		{
 			return *(_iter->get_pair());
@@ -57,6 +61,7 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		}
 		bidirectional_iterator& operator++()
 		{
+			if (_iter == NULL && last)
 			this->_iter = _iter->get_successor(_iter);
 			return *this;
 		}
@@ -86,24 +91,24 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		{
 			return bidirectional_iterator<const Tp>(_iter, _last);
 		}
-		node_pointer get_node()const
+		pointer get_node()const
 		{
 			return _iter;
 		}
 		template<typename T>
-		friend bool operator!=(bidirectional_iterator<T> &rhs, bidirectional_iterator<T> &lhs);
+		friend bool operator!=(bidirectional_iterator<T> rhs, bidirectional_iterator<T> lhs);
 		template<typename T>
-		friend bool operator==(bidirectional_iterator<T> &rhs, bidirectional_iterator<T> &lhs);
+		friend bool operator==(bidirectional_iterator<T> rhs, bidirectional_iterator<T> lhs);
 };
 
 template<typename T>
-bool operator==(bidirectional_iterator<T> &rhs, bidirectional_iterator<T> &lhs)
+bool operator==(bidirectional_iterator<T> rhs, bidirectional_iterator<T> lhs)
 		{
 			return &(*rhs._iter) == &(*lhs._iter);
 		}
 
 template<typename T>
-bool operator!=(bidirectional_iterator<T> &rhs, bidirectional_iterator<T> &lhs)
+bool operator!=(bidirectional_iterator<T> rhs, bidirectional_iterator<T> lhs)
 		{
 			return &(*rhs._iter) != &(*lhs._iter);
 		}
