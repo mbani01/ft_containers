@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 09:45:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 17:15:00 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/17 14:05:26 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		}
 		bidirectional_iterator& operator++()
 		{
-			if (_iter == NULL && last)
 			this->_iter = _iter->get_successor(_iter);
 			return *this;
 		}

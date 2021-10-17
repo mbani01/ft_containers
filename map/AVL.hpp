@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 13:54:58 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/17 14:39:47 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,11 +255,11 @@ class  AVL
 				return rebalance(current);
 			return current;
 		}
-		Node *find(type pair)
+		Node *find(type pair) const
 		{
 			return find(this->root, pair);
 		}
-		Node *find(Node* parent, type pair)
+		Node *find(Node* parent, type pair) const
 		{
 			if (!parent)
 				return NULL;

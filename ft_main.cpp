@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 17:11:32 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/17 15:36:49 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -561,13 +561,78 @@ ft::map<char, int>::reverse_iterator rev_iter(mymap10.rbegin());
     std::cout << it->first << " => " << it->second << '\n';
   } while ( mycomp((*it++).first, highest) );
 
-//   it = mymap10.begin();
-//   do {
-//     std::cout << it->first << " => " << it->second << '\n';
-//   } while ( mymap.value_comp()(*it++, highest) );
+{
+  ft::map<char,int> mymap;
 
-//   std::cout << '\n';
-	
+  mymap['x']=1001;
+  mymap['y']=2002;
+  mymap['z']=3003;
+
+  std::cout << "mymap contains:\n";
+
+	ft::map<char,int>::iterator iter(mymap.end());
+	iter--;
+  ft::pair<char,int> highest = *iter;          // last element
+
+  ft::map<char,int>::iterator it = mymap.begin();
+  do {
+    std::cout << it->first << " => " << it->second << '\n';
+  } while ( mymap.value_comp()((*it++), highest) );
+
+}	
+
+	ft::map<char,int> mymap99;
+	ft::map<char,int>::iterator it99;
+
+	mymap99['a']=50;
+	mymap99['b']=100;
+	mymap99['c']=150;
+	mymap99['d']=200;
+
+	it99 = mymap99.find('b');
+	if (it99 != mymap99.end())
+	mymap99.erase (it99);
+
+	// print content:
+	std::cout << "elements in mymap99:" << '\n';
+	std::cout << "a => " << mymap99.find('a')->second << '\n';
+	std::cout << "c => " << mymap99.find('c')->second << '\n';
+	std::cout << "d => " << mymap99.find('d')->second << '\n';
+
+{
+  ft::map<char,int> mymap;
+  char c;
+
+  mymap ['a']=101;
+  mymap ['c']=202;
+  mymap ['f']=303;
+
+  for (c='a'; c<'h'; c++)
+  {
+    std::cout << c;
+    if (mymap.count(c)>0)
+      std::cout << " is an element of mymap.\n";
+    else 
+      std::cout << " is not an element of mymap.\n";
+  }
+}
+{
+  int psize;
+  ft::map<char,int> mymap;
+  ft::pair<const char,int>* p;
+
+  // allocate an array of 5 elements using mymap's allocator:
+  p=mymap.get_allocator().allocate(5);
+
+  // assign some values to array
+  psize = sizeof(ft::map<char,int>::value_type)*5;
+
+  std::cout << "The allocated array has a size of " << psize << " bytes.\n";
+
+  mymap.get_allocator().deallocate(p,5);
+
+}
+
 	std::cout.precision(10);
 	std::cout << NAMESPACE << std::fixed <<  float(clock() - start)/CLOCKS_PER_SEC  << std::endl;
 	// system("leaks a.out");

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 16:08:27 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/17 15:35:11 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,37 +20,35 @@
 namespace ft
 {
 
-
 template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key,T> > >
 class map
 {
 
-	class value_compare
-	{   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
-	friend class map;
-	protected:
-	Compare comp;
-	value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
-	public:
-	typedef bool result_type;
-	typedef T first_argument_type;
-	typedef T second_argument_type;
-	bool operator() (const T& x, const T& y) const
-	{
-		return comp(x.first, y.first);
-	}
-	};
 	public:
 	typedef Key																					key_type;
 	typedef	T																					mapped_type;
 	typedef typename ft::pair<const key_type,mapped_type>										value_type;
 	typedef Compare																				key_compare;
-	typedef	value_compare																		value_comp;
 	typedef Alloc																				allocator_type;
 	typedef value_type &																		reference;
 	typedef	const value_type &																	const_reference;
 	typedef value_type *																		pointer;
 	typedef const value_type *																	const_pointer;
+	typedef class value_compare : public std::binary_function<value_type,value_type,bool>
+	{
+		friend class map;
+		protected:
+		Compare comp;
+		value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+		public:
+		typedef bool result_type;
+		typedef value_type first_argument_type;
+		typedef value_type second_argument_type;
+		bool operator() (const value_type& x, const value_type& y) const
+		{
+			return comp(x.first, y.first);
+		}
+	} value_compare;
 	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare> >			iterator;
 	typedef ft::bidirectional_iterator<const AVL<value_type, allocator_type, key_compare> >		const_iterator;
 	typedef ft::reverse_iterator<iterator>								reverse_iterator;
@@ -61,6 +59,7 @@ class map
 	private:
 		typedef AVL<value_type, allocator_type, key_compare> Node;
 		Node avl;
+		allocator_type allocator;
 		key_compare comp_key;
 		const Node *get_avl() const
 		{
@@ -72,7 +71,7 @@ class map
             const allocator_type& alloc = allocator_type()):avl()
 			{
 				comp_key = comp;
-				(void)alloc;		
+				allocator = alloc;		
 			};
 	template <class InputIterator>
   	map (InputIterator first, InputIterator last,
@@ -80,7 +79,7 @@ class map
        const allocator_type& alloc = allocator_type()):avl()
 	{
 		comp_key = comp;
-		(void)alloc;
+		allocator = alloc;
 		bool is_inserted = false;
 		for(; first != last; ++first)
 			avl.add((*first), is_inserted);
@@ -191,139 +190,34 @@ class map
 	{
 		return comp_key;
 	}
+	value_compare value_comp() const
+	{
+		return value_compare(comp_key);
+	}
+	iterator find (const key_type& k)
+	{
+		Node *res = avl.find(ft::make_pair(k, mapped_type()));
+		if (res)
+			return iterator(res, NULL);
+		return iterator(NULL, avl.findMax(avl.get_root()));
+	}
+	const_iterator find (const key_type& k) const
+	{
+		Node *res = avl.find(ft::make_pair(k, mapped_type()));
+		if (res)
+			return const_iterator(res, NULL);
+		return const_iterator(NULL, avl.findMax(avl.get_root()));
+	}
+	size_type count (const key_type& k) const
+	{
+		Node *res = avl.find(ft::make_pair(k, mapped_type()));
+		if (res)
+			return 1;
+		return 0;
+	}
+	allocator_type get_allocator() const
+	{
+		return allocator;
+	}
 };
 }
-
-
-
-// 100,50,20,18,25,23,21
-
-
-			// int ind = 50;
-						// std::string val = "value";
-						// ft::pair<int, std::string> tst;
-		// AVL<value_type, allocator_type, key_compare> avl1;
-						// AVL<value_type, allocator_type, key_compare> *res;
-			// res = (avl.add(tst));
-			// std::cout << res->get_pair()->first << std::endl;
-			// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-			// int ind2 = 100;
-			// std::string val2 = "value 02";
-			// ft::pair<int, std::string> tst2(ind2, val2);
-			// res = avl.add(tst2);
-			// std::cout << res->get_pair()->first << std::endl;
-						// bool is_inserted = false;
-						// for(int i = 3; i < 10; ++i)
-						// {
-						// 	tst = ft::make_pair(i, val);
-						// 	res = avl.add(tst, is_inserted);
-						// 	std:: cout << is_inserted;
-						// }
-						// std::cout << std::endl;
-						// res = avl.add(tst, is_inserted); 
-						// std:: cout <<"inserted: " << is_inserted << std::endl;
-						// if (res)
-						// 	std::cout << "value :" << res->get_pair()->first << std::endl;
-						// std::cout << "Root :" << std::endl;
-						// avl.printBT();
-						// while(1);
-		// res = avl.find(ft::make_pair(7, val));
-			// AVL<value_type, allocator_type, key_compare> *tmp;
-
-		// tmp = avl.get_successor(res);
-		// res = avl.get_predecessor(res);
-		// 	// std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-		// 	int ind0 = 60;
-		// 	std::string val0 = "value 00";
-		// 	ft::pair<int, std::string> tst0(ind0, val0);
-		// 	res = avl.add(tst0);
-		// 	std::cout << tmp->get_pair()->first << std::endl;
-		// 	std::cout << res->get_pair()->first << std::endl;
-		// if (tmp == res)
-		// 	std::cout << "This node doesn't have a successor \n";
-		// 	// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-		// 	int ind5 = 55;
-		// 	std::string val5 = "value 55";
-		// 	ft::pair<int, std::string> tst5(ind5, val5);
-		// 	res = avl.add(tst5);
-		// 	// // // // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-		// 	int ind3 = 40;
-		// 	std::string val3 = "value 03";
-		// 	ft::pair<int, std::string> tst3(ind3, val3);
-		// 	res = avl.add(tst3);
-		// 	// // // // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-		// 	int ind9 = 37;
-		// 	std::string val9 = "value 09";
-		// 	ft::pair<int, std::string> tst9(ind9, val9);
-		// 	res = avl.add(tst9);
-		// 	// // // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-		// 	int ind18 = 45;
-		// 	std::string val18 = "value 018";
-		// 	ft::pair<int, std::string> tst18(ind18, val18);
-		// 	res = avl.add(tst18);
-
-
-		// 	int ind07 = 25;
-		// 	std::string val07 = "value 007";
-		// 	ft::pair<int, std::string> tst07(ind07, val07);
-		// 	res = avl.add(tst07);
-
-
-		// 	int ind99 = 20;
-		// 	std::string val99 = "value 099";
-		// 	ft::pair<int, std::string> tst99(ind99, val99);
-		// 	res = avl.add(tst99);
-		// 	// res = avl.find(tst9);
-		// 	// // // std::cout << "Inserted node's key: " << res->first << " value: " << res->second << std::endl;
-		// 	avl1.assign(&avl);
-		// 	avl.printBT();
-		// 	std::cout << std::endl;
-		// 	std::cout << "Height :" << avl.height() << std::endl;
-		// // 	std::cout << "Size : " << avl.size() <<std::endl;
-		// // 	std::cout << "removed Nodes : " << (avl.remove(avl.find(tst07))) << std::endl;
-		// // 	// // std::cout << "After remove\n\n\n";
-		// 	avl.clear();
-		// 	avl1.printBT();
-			// while(1);
-		// 	std::cout << std::endl;
-		// 	std::cout << "Height :" << avl.height() << std::endl;
-		// 	std::cout << "Size : " << avl.size() <<std::endl;
-			
-
-		// 	res = avl.find(tst0);
-		// 	avl.remove(res);
-		// 	avl.printBT();
-		// 	std::cout << std::endl;
-		// 	std::cout << "Height :" << avl.height() << std::endl;
-		// 	std::cout << "Size : " << avl.size() <<std::endl;
-
-		// 	res = avl.find(tst);
-		// 	avl.remove(res);
-		// 	avl.printBT();
-		// 	std::cout << std::endl;
-		// 	std::cout << "Height :" << avl.height() << std::endl;
-		// 	std::cout << "Size : " << avl.size() <<std::endl;
-
-		// 	res = avl.find(tst5);
-		// 	avl.remove(res);
-		// 	avl.printBT();
-		// 	std::cout << std::endl;
-		// 	std::cout << "Height :" << avl.height() << std::endl;
-		// 	std::cout << "Size : " << avl.size() <<std::endl;
-
-		// 	res = avl.find(tst3);
-		// 	avl.remove(res);
-		// 	avl.printBT();
-		// 	std::cout << std::endl;
-		// 	std::cout << "Height :" << avl.height() << std::endl;
-		// 	std::cout << "Size : " << avl.size() <<std::endl;
-		
-		// 	res = avl.find(tst2);
-		// 	avl.remove(res);
-		// 	avl.printBT();
-		// 	std::cout << std::endl;
-		// 	std::cout << "Height :" << avl.height() << std::endl;
-		// 	std::cout << "Size : " << avl.size() <<std::endl;
-
-
-		
