@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/17 14:39:47 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/18 16:04:19 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,6 @@ class  AVL
 			root = NULL;
 			assign1(obj->root);
 		}
-		// bool operator==(const Node* obj)
-		// {
-		// 	return  (this->parent == obj->parent && this->left == obj->left && this->right == obj->right && *(this->data) == *(obj->data));
-		// }
-		// Node &operator=(const type &obj)
-		// {
-		// 	std::cout << "Called !\n"; 
-		// 	freeNode(this);
-		// 	this = newNode(obj);
-		// 	return *this;
-		// }
-		// Node
 		Node *newNode(const type&obj)
 		{
 			AVL *new_node = node_alloc.allocate(1); // allocate node
@@ -270,6 +258,62 @@ class  AVL
 			else
 				return find(parent->right, pair);
 		}
+		Node *lower_bound(type pair) const
+		{
+			bool is_found = false;
+			Node *res = get_lower_bound(this->root, NULL, pair, is_found);
+			if (is_found)
+				return res;
+			if (!is_found && !comp(res->data->first, pair.first)) // parent key > pair key
+				return res;
+			else 
+				return NULL; 
+		}
+		Node *get_lower_bound(Node *current, Node *parent, type &pair, bool &found) const
+		{
+			if (!current)
+			{
+				found = false;
+				return parent;
+			}
+			if (!(comp(current->data->first, pair.first)) && !(comp(pair.first, current->data->first))) // equal keys
+			{
+				found = true;
+				return current;
+			}
+			else if (!comp(current->data->first, pair.first)) //parent key < pair.key
+				return get_lower_bound(current->left, current, pair, found);	
+			else
+				return get_lower_bound(current->right, current, pair, found);
+		}
+		Node *upper_bound(type pair) const
+		{
+			bool is_found = false;
+			Node *res = get_lower_bound(this->root, NULL, pair, is_found);
+			if (is_found)
+				return get_successor(res);
+			if (!is_found && !comp(res->data->first, pair.first)) // parent key > pair key
+				return res;
+			else 
+				return NULL; 
+		}
+		Node *get_upper_bound(Node *current, Node *parent, type &pair, bool &found) const
+		{
+			if (!current)
+			{
+				found = false;
+				return parent;
+			}
+			if (!(comp(current->data->first, pair.first)) && !(comp(pair.first, current->data->first))) // equal keys
+			{
+				found = true;
+				return current;
+			}
+			else if (!comp(current->data->first, pair.first)) //parent key < pair.key
+				return get_upper_bound(current->left, current, pair, found);	
+			else
+				return get_upper_bound(current->right, current, pair, found);
+		}
 		int remove(Node *node)
 		{
 			bool is_deleted = false;
@@ -453,19 +497,19 @@ class  AVL
 			// return 100;
 			return to_delete;
 		}
-		Node* findMinimum(Node* node) // returns most left node
+		Node* findMinimum(Node* node) const// returns most left node
 		{
 			while (node && node->left)
 				node = node->left;
 			return node;
 		}
-		Node *findMax(Node *node)
+		Node *findMax(Node *node) const
 		{
 			while (node && node->right)
 				node = node->right;
 			return node;
 		}
-		Node *get_successor(Node *node)
+		Node *get_successor(Node *node) const
 		{
 			if (!node)
 				return node;
@@ -481,7 +525,7 @@ class  AVL
 				}
 				// std::cout << "Val : " << parent->data->first << std::endl;
 				if (parent == NULL)
-					return root;
+					return NULL;
 				return parent;
 			}
 		}

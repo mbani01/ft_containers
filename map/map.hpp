@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/17 15:35:11 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/18 16:19:05 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ class map
 			return comp(x.first, y.first);
 		}
 	} value_compare;
-	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare> >			iterator;
-	typedef ft::bidirectional_iterator<const AVL<value_type, allocator_type, key_compare> >		const_iterator;
+	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare>, value_type>			iterator;
+	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare>, const value_type >		const_iterator;
 	typedef ft::reverse_iterator<iterator>								reverse_iterator;
 	// typedef ft::reverse<const value_type>						const_reverse_iterator;
 	typedef ptrdiff_t										difference_type;
@@ -97,13 +97,13 @@ class map
 	iterator begin()
 	{
 		if (avl.size())
-			return iterator(avl.findMinimum(avl.get_root()), NULL);
+			return iterator(avl.findMinimum(avl.get_root()), avl.findMax(avl.get_root()));
 		return iterator();
 	}
 	const_iterator begin() const
 	{
 		if (avl.size())
-			return const_iterator(avl.findMinimum(avl.get_root()), NULL);
+			return const_iterator(avl.findMinimum(avl.get_root()), avl.findMax(avl.get_root()));
 		return const_iterator();
 	}
 	iterator end()
@@ -148,6 +148,22 @@ class map
 		Node *res =	avl.add(val, is_inserted);
 		return ft::make_pair(iterator(res, NULL), is_inserted);
 	}
+	iterator insert (iterator position, const value_type& val)
+	{
+		(void)position;
+		bool is_inserted = false;
+		Node *res =	avl.add(val, is_inserted);
+		return iterator(res, avl.findMax(avl.get_root()));
+	}
+	template <class InputIterator>
+	void insert (InputIterator first, InputIterator last)
+	{
+		for(; first != last; ++first)
+		{
+			ft::make_pair(first->first, first->second);
+			insert(*(first));
+		}
+	}
 	mapped_type& operator[] (const key_type& k)
 	{
 		return (this->insert(ft::make_pair(k, mapped_type())).first)->second;
@@ -171,10 +187,7 @@ class map
 			++first;
 		}
 		for(size_t i = 0; i <= keys.size(); ++i)
-			{
-				this->erase(keys[i]);
-				// std::cout << this->size() << std::endl;			
-			}
+			this->erase(keys[i]);
 	}
 	void swap (map& x)
 	{
@@ -219,5 +232,92 @@ class map
 	{
 		return allocator;
 	}
+	iterator lower_bound (const key_type& k)
+	{
+		Node *res = avl.lower_bound(ft::make_pair(k, mapped_type()));
+		if (res)
+			return iterator(res, NULL);
+		return end();
+	}
+	const_iterator lower_bound (const key_type& k) const
+	{
+		Node *res = avl.lower_bound(ft::make_pair(k, mapped_type()));
+		if (res)
+			return const_iterator(res, NULL);
+		return end();
+	}
+	iterator upper_bound (const key_type& k)
+	{
+		Node *res = avl.upper_bound(ft::make_pair(k, mapped_type()));
+		if (res)
+			return iterator(res, NULL);
+		return end();
+	}
+	const_iterator upper_bound (const key_type& k) const
+	{
+		Node *res = avl.upper_bound(ft::make_pair(k, mapped_type()));
+		if (res)
+			return const_iterator(res, NULL);
+		return end();
+	}
+	ft::pair<iterator,iterator>             equal_range (const key_type& k)
+	{
+		return (ft::make_pair(this->lower_bound(k), this->upper_bound(k)));
+	}
+	ft::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+	{
+		return (ft::make_pair(this->lower_bound(k), this->upper_bound(k)));
+	}
+	~map()
+	{
+		avl.clear();
+	}
 };
+template <class Key, class T, class Compare, class Alloc>
+bool operator== (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
+{
+	if (lhs.size() != rhs.size())
+		return false;
+	typename ft::map<Key,T,Compare,Alloc>::const_iterator lhs_b = lhs.begin();
+	typename ft::map<Key,T,Compare,Alloc>::const_iterator lhs_e = lhs.end();
+	typename ft::map<Key,T,Compare,Alloc>::const_iterator rhs_b = rhs.begin();
+	while(lhs_b != lhs_e && *(lhs_b) == *(rhs_b))
+	{
+		++lhs_b;
+		++rhs_b;
+	}
+	if (lhs_b == lhs_e)
+		return true;
+	return false;
+}
+template <class Key, class T, class Compare, class Alloc>
+bool operator!= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{
+	return !(lhs == rhs);
+}
+template <class Key, class T, class Compare, class Alloc>
+bool operator<  ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{
+	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+template <class Key, class T, class Compare, class Alloc>
+bool operator<= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{
+	return !(rhs < lhs);
+}
+template <class Key, class T, class Compare, class Alloc>
+bool operator>  ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{
+	return rhs < lhs;
+}
+template <class Key, class T, class Compare, class Alloc>
+bool operator>= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{
+	return !(lhs < rhs);
+}
+template <class Key, class T, class Compare, class Alloc>
+void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y)
+{
+	x.swap(y);
+}
 }

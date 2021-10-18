@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/17 15:36:49 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/18 16:18:43 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -433,15 +433,24 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 		ft_map.insert(ft::make_pair<int, std::string>(i, "value"));
 	ft::map<int, std::string>::iterator ft_iter(ft_map.begin());
 	ft::map<int, std::string>::iterator ft_iter1(ft_map.end());
+	std::cout << (ft_map.insert(ft_iter1, ft::make_pair<int, std::string>(50, "value")))->first << std::endl;
 
 	ft::map<int, std::string> ft_map1(ft_iter, ft_iter1);
 
+	ft::map<int, std::string> ft_map6;
+	ft_map6.insert(ft_map.begin(), ft_map.end());
+	
 	ft_iter = ft_map1.begin();
 	ft_iter1 = ft_map1.end();
 	for(;ft_iter != ft_iter1; ++ft_iter)
 		std::cout << ft_iter->first << " ";
 	std::cout << std::endl;
 
+	ft_iter = ft_map6.begin();
+	ft_iter1 = ft_map6.end();
+	for(;ft_iter != ft_iter1; ++ft_iter)
+		std::cout << ft_iter->first << " ";
+	std::cout << std::endl;
 
 	ft::map<int, std::string> ft_map3(ft_map1);
 	ft_iter = ft_map3.begin();
@@ -630,6 +639,127 @@ ft::map<char, int>::reverse_iterator rev_iter(mymap10.rbegin());
   std::cout << "The allocated array has a size of " << psize << " bytes.\n";
 
   mymap.get_allocator().deallocate(p,5);
+
+}
+
+{
+	ft::map<int, std::string> ft_map;
+	for(int i = 3; i < 10; ++i)
+		ft_map.insert(ft::make_pair<int, std::string>(i, "value"));
+	ft::map<int, std::string>::iterator ft_iter(ft_map.begin());
+	ft::map<int, std::string>::iterator ft_iter1(ft_map.end());
+	ft_iter = ft_map.lower_bound(1);
+	std::cout << ft_iter->first << std::endl;
+	ft_iter = ft_map.lower_bound(7);
+	std::cout << ft_iter->first << std::endl;
+	ft_iter = ft_map.lower_bound(12);
+	if (ft_iter == ft_map.end())
+		std::cout << "True \n";
+	ft_iter--;
+	(void)ft_iter1;
+	std::cout << ft_iter->first << std::endl;
+	const ft::map<int, std::string> const_map(ft_map);
+	std::cout << (const_map.lower_bound(1))->first << std::endl;
+	std::cout << (const_map.lower_bound(7))->first << std::endl;
+}
+
+{
+	ft::map<int, std::string> ft_map;
+	for(int i = 3; i < 10; ++i)
+		ft_map.insert(ft::make_pair<int, std::string>(i, "value"));
+	ft::map<int, std::string>::iterator ft_iter(ft_map.begin());
+	ft::map<int, std::string>::iterator ft_iter1(ft_map.end());
+	ft_iter = ft_map.upper_bound(1);
+	std::cout << ft_iter->first << std::endl;
+	ft_iter = ft_map.upper_bound(7);
+	std::cout << ft_iter->first << std::endl;
+	ft_iter = ft_map.upper_bound(9);
+	if (ft_iter == ft_map.end())
+		std::cout << "True \n";
+	ft_iter--;
+	(void)ft_iter1;
+	std::cout << ft_iter->first << std::endl;
+	const ft::map<int, std::string> const_map(ft_map);
+	std::cout << (const_map.lower_bound(1))->first << std::endl;
+	std::cout << (const_map.lower_bound(7))->first << std::endl;
+}
+
+{
+  ft::map<char,int> mymap;
+  ft::map<char,int>::iterator itlow,itup;
+
+  mymap['a']=20;
+  mymap['b']=40;
+  mymap['c']=60;
+  mymap['d']=80;
+  mymap['e']=100;
+
+  itlow=mymap.lower_bound ('b');  // itlow points to b
+  itup=mymap.upper_bound ('d');   // itup points to e (not d!)
+
+  mymap.erase(itlow,itup);        // erases [itlow,itup)
+
+  // print content:
+  for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+}
+
+{
+  ft::map<char,int> mymap;
+
+  mymap['a']=10;
+  mymap['b']=20;
+  mymap['c']=30;
+
+  ft::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> ret;
+  ret = mymap.equal_range('b');
+
+  std::cout << "lower bound points to: ";
+  std::cout << ret.first->first << " => " << ret.first->second << '\n';
+
+  std::cout << "upper bound points to: ";
+  std::cout << ret.second->first << " => " << ret.second->second << '\n';
+
+}
+
+
+{
+   ft::map<char,int> foo,bar;
+  foo['a']=100;
+  foo['b']=200;
+  bar['a']=10;
+  bar['z']=1000;
+  
+  // foo ({{a,100},{b,200}}) vs bar ({a,10},{z,1000}}):
+  if (foo==bar) std::cout << "foo and bar are equal\n";
+  if (foo!=bar) std::cout << "foo and bar are not equal\n";
+  if (foo< bar) std::cout << "foo is less than bar\n";
+  if (foo> bar) std::cout << "foo is greater than bar\n";
+  if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+  if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+
+}
+
+{
+  ft::map<char,int> foo,bar;
+
+  foo['x']=100;
+  foo['y']=200;
+
+  bar['a']=11;
+  bar['b']=22;
+  bar['c']=33;
+
+  swap(foo,bar);
+
+  std::cout << "foo contains:\n";
+  for (ft::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+  std::cout << "bar contains:\n";
+  for (ft::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
 
 }
 
