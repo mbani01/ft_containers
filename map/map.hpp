@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/18 16:19:05 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/18 18:57:33 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "AVL.hpp"
 #include "../tools/map_iterators.hpp"
 #include "../vector/vector.hpp"
+#include "../tools/reverse_iterator.hpp"
 
 namespace ft
 {
@@ -50,11 +51,11 @@ class map
 		}
 	} value_compare;
 	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare>, value_type>			iterator;
-	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare>, const value_type >		const_iterator;
-	typedef ft::reverse_iterator<iterator>								reverse_iterator;
-	// typedef ft::reverse<const value_type>						const_reverse_iterator;
-	typedef ptrdiff_t										difference_type;
-	typedef size_t											size_type;
+	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare>, const value_type >	const_iterator;
+	typedef ft::reverse_iterator<iterator>																	reverse_iterator;
+	typedef ft::reverse_iterator<const_iterator>															const_reverse_iterator;
+	typedef ptrdiff_t																						difference_type;
+	typedef size_t																							size_type;
 
 	private:
 		typedef AVL<value_type, allocator_type, key_compare> Node;
@@ -118,18 +119,18 @@ class map
 	{
 		return reverse_iterator(end());
 	}
-	// reverse_iterator rbegin() const
-	// {
-	// 	return const_reverse_iterator(end());
-	// }
+	reverse_iterator rbegin() const
+	{
+		return const_reverse_iterator(end());
+	}
 	reverse_iterator rend()
 	{
 		return reverse_iterator(begin());
 	}
-	// reverse_iterator rend() const
-	// {
-	// 	return const_reverse_iterator(begin());
-	// }
+	reverse_iterator rend() const
+	{
+		return const_reverse_iterator(begin());
+	}
 	bool empty() const
 	{
 		return (avl.size() == 0);
@@ -278,17 +279,7 @@ bool operator== (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Al
 {
 	if (lhs.size() != rhs.size())
 		return false;
-	typename ft::map<Key,T,Compare,Alloc>::const_iterator lhs_b = lhs.begin();
-	typename ft::map<Key,T,Compare,Alloc>::const_iterator lhs_e = lhs.end();
-	typename ft::map<Key,T,Compare,Alloc>::const_iterator rhs_b = rhs.begin();
-	while(lhs_b != lhs_e && *(lhs_b) == *(rhs_b))
-	{
-		++lhs_b;
-		++rhs_b;
-	}
-	if (lhs_b == lhs_e)
-		return true;
-	return false;
+	return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 template <class Key, class T, class Compare, class Alloc>
 bool operator!= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )

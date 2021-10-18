@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 09:45:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/18 16:00:18 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/18 18:39:40 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,18 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::iterator_category	iterator_category;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::value_type			value_type;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::difference_type		difference_type;
-		typedef Tp*																				pointer;
-		typedef Tp&																				reference;
-		typedef U																		pair;
+		typedef Tp*																				node_pointer;
+		typedef Tp&																				node_reference;
+		typedef U*																				pointer;
+		typedef U&																				reference;
+
 	private:
-		pointer _iter;
-		pointer _last;
+		node_pointer _iter;
+		node_pointer _last;
 	public:
 		bidirectional_iterator():_iter(NULL), _last(NULL)
 		{};
-		bidirectional_iterator(pointer avl, pointer last):_iter(avl), _last(last)
+		bidirectional_iterator(node_pointer avl, node_pointer last):_iter(avl), _last(last)
 		{};
 		bidirectional_iterator(const bidirectional_iterator &obj)
 		{
@@ -51,11 +53,11 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		{
 			return (*this);
 		}
-		pair operator*()const
+		reference operator*()const
 		{
 			return *(_iter->get_pair());
 		}
-		pair *operator->() const
+		pointer operator->() const
 		{
 			return _iter->get_pair();	
 		}
@@ -90,7 +92,7 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		{
 			return bidirectional_iterator<Tp, const U>(_iter, _last);
 		}
-		pointer get_node()const
+		node_pointer get_node()const
 		{
 			return _iter;
 		}

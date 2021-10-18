@@ -6,12 +6,13 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/18 16:18:43 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/18 19:03:05 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include <time.h>
+// #include <time.h>
+#include <sys/time.h>
 #if NS
 #define NAMESPACE "FT  : "
 #include "vector/vector.hpp"
@@ -43,16 +44,26 @@ void print_vector(ft::vector<int>::iterator ft_it_b, ft::vector<int>::iterator f
 	std::cout << std::endl;
 }
 
+// long	get_timestamp(void)
+// {
+// 	struct timeval	creation;
+// 	long			timestamp;
+
+// 	gettimeofday(&creation, NULL);
+// 	timestamp = (creation.tv_sec * 1000.0 + creation.tv_usec / 1000.0);
+// 	return (timestamp);
+// }
+
 int main(void)
 {
-	clock_t start = clock();
 	
+	clock_t start = clock();
     	std::cout << "	======================>\033[1;31m init and iterators tests \033[0m<============================ " << std::endl;
 	// Creating vects of diffrent types
 
 	ft::vector<int> ft_vect_int; // call default constructor 
-	ft::vector<int> vect_1(10, 5); // call fill constructor
-	ft::vector<char> ft_vect_char(5, 'a');
+	ft::vector<int> vect_1(1e6, 5); // call fill constructor
+	ft::vector<char> ft_vect_char(1e6, 'a');
 	ft::vector<float> ft_vect_float;ft::vector<int>::iterator ft_it;
 	ft::vector<char>::iterator ft_it_char(ft_vect_char.begin());
 	ft::vector<int>::const_iterator ft_itc(vect_1.end());
@@ -429,7 +440,7 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 
 	ft::map<int, std::string> ft_map;
 
-	for(int i = 0; i < 10; ++i)
+	for(int i = 0; i < 1e5; ++i)
 		ft_map.insert(ft::make_pair<int, std::string>(i, "value"));
 	ft::map<int, std::string>::iterator ft_iter(ft_map.begin());
 	ft::map<int, std::string>::iterator ft_iter1(ft_map.end());
@@ -760,6 +771,21 @@ ft::map<char, int>::reverse_iterator rev_iter(mymap10.rbegin());
   std::cout << "bar contains:\n";
   for (ft::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
     std::cout << it->first << " => " << it->second << '\n';
+
+	ft::map<char, int>::reverse_iterator rev_it(foo.rbegin());
+	ft::map<char, int>::reverse_iterator rev_it1(foo.rend());
+
+	ft::map<char, int>::const_reverse_iterator rev_itc(foo.rbegin());
+	ft::map<char, int>::const_reverse_iterator rev_it1c(foo.rend());
+
+if (rev_itc == foo.rbegin())
+	std::cout << "equal \n";
+	// for(; rev_itc != foo.rend();rev_it1++)
+	// 	std::cout << rev_itc->first << std::endl;
+
+	for(; rev_it != rev_it1 ; ++rev_it)
+		std::cout << rev_it->first << " ";
+	std::cout << std::endl;
 
 }
 

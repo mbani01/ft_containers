@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 10:50:03 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/16 14:29:37 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/18 18:54:42 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,20 @@ struct iterator_traits
 template <class U>
 struct iterator_traits<U*>
 {
-
    typedef U							value_type;
    typedef ptrdiff_t					difference_type;
    typedef U*							pointer;
    typedef U&							reference;
-   typedef random_access_iterator_tag	iterator_category;
+   typedef ft::random_access_iterator_tag	iterator_category;
 };
 
 template <class U> class iterator_traits<const U*>
 {
-
    typedef const U						value_type;
    typedef ptrdiff_t					difference_type;
    typedef const U*						pointer;
    typedef const U&						reference;
-   typedef random_access_iterator_tag	iterator_category;
+   typedef ft::random_access_iterator_tag	iterator_category;
 };
 
 template<class Category, class P,class Distance = std::ptrdiff_t,
