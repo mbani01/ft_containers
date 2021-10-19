@@ -69,7 +69,8 @@
 		"filesystem": "cpp",
 		"iomanip": "cpp",
 		"__functional_03": "cpp",
-		"__cxx_version": "cpp"
+		"__cxx_version": "cpp",
+		"set": "cpp"
 	},
 	"C_Cpp.dimInactiveRegions": true
 }

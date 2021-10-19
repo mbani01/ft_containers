@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/19 16:15:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/18 18:20:25 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/19 09:47:43 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 namespace ft
 {
 template <typename Tp>
-class random_access_iterator : public ft::iterator<std::random_access_iterator_tag, Tp>
+class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, Tp>
 {
 	public:
-	typedef typename ft::iterator<std::random_access_iterator_tag, Tp>::iterator_category	iterator_category;
-	typedef typename ft::iterator<std::random_access_iterator_tag, Tp>::value_type			value_type;
-	typedef typename ft::iterator<std::random_access_iterator_tag, Tp>::difference_type		difference_type;
+	typedef typename ft::iterator<ft::random_access_iterator_tag, Tp>::iterator_category	iterator_category;
+	typedef typename ft::iterator<ft::random_access_iterator_tag, Tp>::value_type			value_type;
+	typedef typename ft::iterator<ft::random_access_iterator_tag, Tp>::difference_type		difference_type;
 	typedef Tp*																				pointer;
 	typedef Tp&																				reference;
 	private:
@@ -154,7 +154,7 @@ class random_access_iterator : public ft::iterator<std::random_access_iterator_t
 		~random_access_iterator(){};
 };
 template <typename Tp>
-random_access_iterator<Tp> operator+(typename ft::iterator<std::random_access_iterator_tag, Tp>::difference_type		n, random_access_iterator<Tp> lhs)
+random_access_iterator<Tp> operator+(typename ft::iterator<ft::random_access_iterator_tag, Tp>::difference_type		n, random_access_iterator<Tp> lhs)
 {
 	return lhs + n;
 }

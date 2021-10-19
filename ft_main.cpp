@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/18 19:03:05 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/19 12:26:41 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,6 +311,9 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 	std::cout << "ft::size  :" <<ft_new3.size() << " ft::capacity  :" << ft_new3.capacity() << std::endl<< std::endl;
 
 	ft::vector<int>::iterator ft_it3(ft_new3.begin());
+	ft::vector<int>::const_iterator ft_it30(ft_new3.begin());
+	if (ft_it30 == ft_it3)
+		std::cout << "equal \n";
 
 	std::cout << *(4 + ft_it3) << std::endl;
 	std::cout << *ft_it3++ << std::endl;
@@ -343,6 +346,9 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 
 	std::cout << std::endl;
 	ft::vector<int>::reverse_iterator ft_rit3(ft_new3.end() - 1);
+	ft::vector<int>::const_reverse_iterator ft_crit13(ft_new3.rend());
+	if (ft_crit13 == ft_new3.rend())
+		std::cout << "equal \n";
 	std::cout << *ft_rit3 << std::endl;
 	ft_rit3 = ft_new3.rbegin();
 	std::cout << *ft_rit3 << std::endl;	
@@ -358,21 +364,17 @@ std::cout << "	======================>\033[1;31m iteartors && rev_iterators arit
 	std::cout << *ft_rit3 << std::endl;
 	std::cout << *(ft_rit3 -= 5) << std::endl;
 
-	
 	std::cout << std::endl;
 
 	ft_rit3 = ft_new3.rend();
 	std::cout << ft_rit3[1] << std::endl;
-
-
 	
 	std::cout << *(ft_new3.rend() - 2) << std::endl;
 	ft::vector<int>::const_reverse_iterator ft_crit3(ft_new3.end() - 1);
 
 	std::cout << *ft_crit3 << std::endl;
 
-	// *std_crit3 = 8;
-	// *ft_crit3 = 8;
+	// *ft_crit3 = 8; // compilation error 
 
 	std::cout << std::endl;
 
@@ -775,14 +777,17 @@ ft::map<char, int>::reverse_iterator rev_iter(mymap10.rbegin());
 	ft::map<char, int>::reverse_iterator rev_it(foo.rbegin());
 	ft::map<char, int>::reverse_iterator rev_it1(foo.rend());
 
-	ft::map<char, int>::const_reverse_iterator rev_itc(foo.rbegin());
-	ft::map<char, int>::const_reverse_iterator rev_it1c(foo.rend());
+	const ft::map<char,int> foo1;
 
-if (rev_itc == foo.rbegin())
-	std::cout << "equal \n";
-	// for(; rev_itc != foo.rend();rev_it1++)
-	// 	std::cout << rev_itc->first << std::endl;
+	ft::map<char, int>::const_reverse_iterator rev_itc(foo1.rbegin());
+	// ft::map<char, int>::const_reverse_iterator rev_it1c(rev_itc);
 
+// if (rev_itc == foo.rbegin())
+// 	std::cout << "equal \n";
+// 	for(; rev_itc != foo.rend();rev_it1++)
+		// std::cout << rev_itc->first << std::endl;
+	(void)rev_itc;
+	// (void)rev_it1c;
 	for(; rev_it != rev_it1 ; ++rev_it)
 		std::cout << rev_it->first << " ";
 	std::cout << std::endl;

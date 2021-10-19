@@ -6,22 +6,30 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/18 16:04:19 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/19 11:47:55 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iostream>
 #include "../tools/pair.hpp"
+#include "../tools/map_iterators.hpp"
+#include "../tools/reverse_iterator.hpp"
+
 
 template <class T, class Alloc, class Compare>
 class  AVL
 {
 	public:
-		typedef T 											type;
-		typedef AVL<T, Alloc, Compare> 						Node;
-		typedef Alloc 										allocator;
-		typedef typename Alloc::template rebind<AVL>::other node_all;
+		typedef T 																								type;
+		typedef AVL<T, Alloc, Compare> 																			Node;
+		typedef AVL<const T, Alloc, Compare> 																	Node_const;
+		typedef Alloc 																							allocator;
+		typedef typename Alloc::template rebind<AVL>::other 													node_all;
+		typedef ft::bidirectional_iterator< AVL, T>													iterator;
+		typedef ft::bidirectional_iterator< AVL, const T>										const_iterator;
+		typedef ft::reverse_iterator<iterator>																	reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>															const_reverse_iterator;
 	private:
 		allocator 		pair_alloc;
 		node_all 		node_alloc;

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 10:50:03 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/18 18:54:42 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/19 11:08:55 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ template<class Category, class P,class Distance = std::ptrdiff_t,
 		class Pointer = P*, class Reference = P&>
 struct iterator
 {
-	typedef Category	iterator_category;
-	typedef P			value_type;
-	typedef Distance	difference_type;
+	typedef Category	   iterator_category;
+	typedef P			   value_type;
+	typedef Distance	   difference_type;
 	typedef	Reference	reference;
 };
 

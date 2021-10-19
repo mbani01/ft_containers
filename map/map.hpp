@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/18 18:57:33 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/19 12:27:44 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ class map
 			return comp(x.first, y.first);
 		}
 	} value_compare;
-	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare>, value_type>			iterator;
-	typedef ft::bidirectional_iterator< AVL<value_type, allocator_type, key_compare>, const value_type >	const_iterator;
-	typedef ft::reverse_iterator<iterator>																	reverse_iterator;
-	typedef ft::reverse_iterator<const_iterator>															const_reverse_iterator;
+	typedef typename AVL<value_type, allocator_type, key_compare>::iterator																				iterator;
+	typedef typename AVL<value_type, allocator_type, key_compare>::const_iterator																	const_iterator;
+	typedef typename AVL<value_type, allocator_type, key_compare>::reverse_iterator																	reverse_iterator;
+	typedef typename AVL<value_type, allocator_type, key_compare>::reverse_iterator															const_reverse_iterator;
 	typedef ptrdiff_t																						difference_type;
 	typedef size_t																							size_type;
 
@@ -104,8 +104,8 @@ class map
 	const_iterator begin() const
 	{
 		if (avl.size())
-			return const_iterator(avl.findMinimum(avl.get_root()), avl.findMax(avl.get_root()));
-		return const_iterator();
+			return iterator(avl.findMinimum(avl.get_root()), avl.findMax(avl.get_root()));
+		return iterator();
 	}
 	iterator end()
 	{
@@ -113,23 +113,23 @@ class map
 	}
 	const_iterator end() const
 	{
-		return const_iterator(NULL, avl.findMax(avl.get_root()));
+		return iterator(NULL, avl.findMax(avl.get_root()));
 	}
 	reverse_iterator rbegin()
 	{
 		return reverse_iterator(end());
 	}
-	reverse_iterator rbegin() const
+	const_reverse_iterator rbegin() const
 	{
-		return const_reverse_iterator(end());
+		return reverse_iterator(iterator(NULL, avl.findMax(avl.get_root())));
 	}
 	reverse_iterator rend()
 	{
 		return reverse_iterator(begin());
 	}
-	reverse_iterator rend() const
+	const_reverse_iterator rend() const
 	{
-		return const_reverse_iterator(begin());
+		return const_reverse_iterator(iterator(avl.findMinimum(avl.get_root()), avl.findMax(avl.get_root())));
 	}
 	bool empty() const
 	{
