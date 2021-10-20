@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 14:56:10 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/13 14:50:37 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/19 17:06:45 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ template <class T1, class T2> struct pair
 	{};
 	pair& operator= (const pair& pr)
 	{
-		
 		if(this == &pr)
 			return *this;
 		this->first = pr.first;

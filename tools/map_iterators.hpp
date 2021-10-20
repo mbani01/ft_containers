@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 09:45:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/19 11:46:44 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/19 15:18:39 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ namespace ft
 {
 
 template<typename Tp, typename U>
-class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_tag, U>
+class bidirectional_iterator : public ft::iterator<std::bidirectional_iterator_tag, U>
 {
 	public:
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::iterator_category	iterator_category;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::value_type			value_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tp>::difference_type		difference_type;
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, Tp>::iterator_category	iterator_category;
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, Tp>::value_type			value_type;
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, Tp>::difference_type		difference_type;
 		typedef Tp*																				node_pointer;
 		typedef Tp&																				node_reference;
 		typedef U*																				pointer;
@@ -77,6 +77,7 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 			if (this->_iter == NULL && _last != NULL)
 			{
 				_iter = _last;
+				_last = NULL;
 				return *this;
 			}
 			this->_iter = _iter->get_predecessor(_iter);

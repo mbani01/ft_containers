@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 09:40:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/19 12:27:44 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/19 17:07:06 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,13 @@ class map
 	iterator begin()
 	{
 		if (avl.size())
-			return iterator(avl.findMinimum(avl.get_root()), avl.findMax(avl.get_root()));
+			return iterator(avl.findMinimum(avl.get_root()), NULL);
 		return iterator();
 	}
 	const_iterator begin() const
 	{
 		if (avl.size())
-			return iterator(avl.findMinimum(avl.get_root()), avl.findMax(avl.get_root()));
+			return iterator(avl.findMinimum(avl.get_root()), NULL);
 		return iterator();
 	}
 	iterator end()
@@ -129,7 +129,7 @@ class map
 	}
 	const_reverse_iterator rend() const
 	{
-		return const_reverse_iterator(iterator(avl.findMinimum(avl.get_root()), avl.findMax(avl.get_root())));
+		return const_reverse_iterator(iterator(avl.findMinimum(avl.get_root()),NULL));
 	}
 	bool empty() const
 	{
@@ -171,24 +171,30 @@ class map
 	}
 	void erase(iterator position)
 	{
-		avl.remove(position.get_node());
+		if (this->size() > 0)
+			avl.remove(position.get_node());
 		(void)position;
 	}
 	size_type erase (const key_type& k)
 	{
 		value_type pair0 = ft::make_pair(k, mapped_type());
-		return avl.remove(pair0);
+		if (this->size() > 0)
+			return avl.remove(pair0);
+		return 0;
 	}
 	void erase (iterator first, iterator last)
 	{
-		ft::vector<key_type> keys;
-		while (first != last)
-		{
-			keys.push_back((first)->first);
-			++first;
+		if (this->size() > 0)
+		{	
+			ft::vector<key_type> keys;
+			while (first != last)
+			{
+				keys.push_back((first)->first);
+				++first;
+			}
+			for(size_t i = 0; i <= keys.size(); ++i)
+				this->erase(keys[i]);
 		}
-		for(size_t i = 0; i <= keys.size(); ++i)
-			this->erase(keys[i]);
 	}
 	void swap (map& x)
 	{

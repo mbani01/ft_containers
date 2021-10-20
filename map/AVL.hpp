@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/19 11:47:55 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/20 09:06:06 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ class  AVL
 			else if (tmp[0]->parent && tmp[0]->parent->left == tmp[0])
 					tmp[0]->parent->left = NULL;
 			if (tmp[0]->data)
+			
 			{
 				pair_alloc.destroy(tmp[0]->data);
 				pair_alloc.deallocate(tmp[0]->data, 1);
@@ -268,60 +269,60 @@ class  AVL
 		}
 		Node *lower_bound(type pair) const
 		{
-			bool is_found = false;
-			Node *res = get_lower_bound(this->root, NULL, pair, is_found);
-			if (is_found)
+			Node *res = NULL;
+			bool found = false;
+			get_lower_bound(this->root, pair, &res, found);
 				return res;
-			if (!is_found && !comp(res->data->first, pair.first)) // parent key > pair key
-				return res;
-			else 
-				return NULL; 
 		}
-		Node *get_lower_bound(Node *current, Node *parent, type &pair, bool &found) const
+		void get_lower_bound(Node *current, type &pair, Node **res, bool &found) const
 		{
 			if (!current)
 			{
-				found = false;
-				return parent;
+				found = true;
+				return;
 			}
 			if (!(comp(current->data->first, pair.first)) && !(comp(pair.first, current->data->first))) // equal keys
 			{
-				found = true;
-				return current;
+				res[0] = current;
+				return ;
 			}
 			else if (!comp(current->data->first, pair.first)) //parent key < pair.key
-				return get_lower_bound(current->left, current, pair, found);	
+			{
+				get_lower_bound(current->left, pair, res, found);
+				if (found && res[0] == NULL && (!comp(current->data->first, pair.first)))
+					res[0] = current;
+			}
 			else
-				return get_lower_bound(current->right, current, pair, found);
+			{
+				get_lower_bound(current->right, pair, res, found);
+				if (found && res[0] == NULL && (!comp(current->data->first, pair.first)))
+					res[0] = current;
+			}
 		}
 		Node *upper_bound(type pair) const
 		{
-			bool is_found = false;
-			Node *res = get_lower_bound(this->root, NULL, pair, is_found);
-			if (is_found)
-				return get_successor(res);
-			if (!is_found && !comp(res->data->first, pair.first)) // parent key > pair key
-				return res;
-			else 
-				return NULL; 
+			Node *lower = lower_bound(pair);
+			if (!comp(lower->data->first, pair.first) && !comp(pair.first, lower->data->first))
+				return get_successor(lower);
+			return lower;
 		}
-		Node *get_upper_bound(Node *current, Node *parent, type &pair, bool &found) const
-		{
-			if (!current)
-			{
-				found = false;
-				return parent;
-			}
-			if (!(comp(current->data->first, pair.first)) && !(comp(pair.first, current->data->first))) // equal keys
-			{
-				found = true;
-				return current;
-			}
-			else if (!comp(current->data->first, pair.first)) //parent key < pair.key
-				return get_upper_bound(current->left, current, pair, found);	
-			else
-				return get_upper_bound(current->right, current, pair, found);
-		}
+		// Node *get_upper_bound(Node *current, Node *parent, type &pair, bool &found) const
+		// {
+		// 	if (!current)
+		// 	{
+		// 		found = false;
+		// 		return parent;
+		// 	}
+		// 	if (!(comp(current->data->first, pair.first)) && !(comp(pair.first, current->data->first))) // equal keys
+		// 	{
+		// 		found = true;
+		// 		return current;
+		// 	}
+		// 	else if (!comp(current->data->first, pair.first)) //parent key < pair.key
+		// 		return get_upper_bound(current->left, current, pair, found);	
+		// 	else
+		// 		return get_upper_bound(current->right, current, pair, found);
+		// }
 		int remove(Node *node)
 		{
 			bool is_deleted = false;
@@ -384,7 +385,7 @@ class  AVL
 				return true;
 			return false;
 		}
-		Node *remove_right_child(Node *to_delete, Node *tmp)
+		Node *remove_right_child(Node *to_delete, Node **tmp)
 		{
 			if (to_delete->bf == 1) // has right child
 			{
@@ -397,12 +398,13 @@ class  AVL
 					update_height(root);
 					return root;
 				}
-				tmp->right = to_delete->right;
-				tmp->right->parent = tmp;
+				tmp[0]->right = to_delete->right;
+				tmp[0]->right->parent = tmp[0];
+				to_delete->right->parent = tmp[0];
 				freeNode(&to_delete);
-				update_height(tmp);
+				update_height(tmp[0]);
 				// --_size;
-				return tmp->right;
+				return tmp[0]->right;
 			}
 			else if (to_delete->bf == -1)
 			{
@@ -415,16 +417,17 @@ class  AVL
 					update_height(root);
 					return root;
 				}
-				tmp->right = to_delete->left;
-				tmp->left->parent = tmp;
+				tmp[0]->right = to_delete->left;
+				tmp[0]->left->parent = tmp[0];
+				to_delete->left->parent = tmp[0];
 				freeNode(&to_delete);
-				update_height(tmp);
+				update_height(tmp[0]);
 				// --_size;
-				return tmp->right;
+				return tmp[0]->right;
 			}
 			return NULL;
 		}
-		Node *remove_left_child(Node *to_delete, Node *tmp)
+		Node *remove_left_child(Node *to_delete, Node **tmp)
 		{
 			if (to_delete->bf == 1) //has right child
 			{
@@ -437,12 +440,12 @@ class  AVL
 					update_height(root);
 					return root;
 				}
-				tmp->left = to_delete->right;
-				tmp->left->parent = tmp;
+				tmp[0]->left = to_delete->right;
+				tmp[0]->left->parent = tmp[0];
 				freeNode(&to_delete);
-				update_height(tmp);
+				update_height(tmp[0]);
 				// --_size;
-				return tmp->left;
+				return tmp[0]->left;
 			}
 			else if (to_delete->bf == -1) // has left child
 			{
@@ -455,12 +458,12 @@ class  AVL
 					update_height(root);
 					return root;
 				}
-				tmp->left = to_delete->left;
-				tmp->left->parent = tmp;
+				tmp[0]->left = to_delete->left;
+				tmp[0]->left->parent = tmp[0];
 				freeNode(&to_delete);
-				update_height(tmp);
+				update_height(tmp[0]);
 				// --_size;
-				return tmp->left;
+				return tmp[0]->left;
 			}
 			return NULL;
 		}
@@ -468,9 +471,9 @@ class  AVL
 		{
 			Node *tmp = to_delete->parent; // save node's parent
 			if (is_right_child(to_delete, tmp))
-				return remove_right_child(to_delete, tmp);
+				return remove_right_child(to_delete, &tmp);
 			else if (is_left_child(to_delete, tmp))
-				return remove_left_child(to_delete, tmp);
+				return remove_left_child(to_delete, &tmp);
 			return NULL;
 		}
 		void replace_data(Node *node, Node *tmp)
@@ -526,12 +529,11 @@ class  AVL
 			else
 			{
 				Node *parent = node->parent;
-				while(parent && node == parent->right)
+				while(parent && parent->right && node == parent->right)
 				{
 					node = parent;
 					parent = parent->parent;
 				}
-				// std::cout << "Val : " << parent->data->first << std::endl;
 				if (parent == NULL)
 					return NULL;
 				return parent;
@@ -546,7 +548,7 @@ class  AVL
 			else
 			{
 				Node *parent = node->parent;
-				while(parent && node == parent->left)
+				while(parent && parent->left && node == parent->left)
 				{
 					node = parent;
 					parent = parent->parent;
