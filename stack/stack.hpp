@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 12:44:43 by mbani             #+#    #+#             */
-/*   Updated: 2021/09/22 11:32:32 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/20 14:08:26 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ class stack
     protected:
         container_type c;
     public:
-    
     // member functions
     explicit stack (const container_type& ctnr = container_type())
     {
@@ -42,6 +41,10 @@ class stack
         return this->c.size();
     }
     value_type& top()
+    {
+        return this->c.back();
+    }
+    const value_type& top() const
     {
         return this->c.back();
     }

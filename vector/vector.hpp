@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 08:04:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/18 17:48:10 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/20 16:13:20 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ class vector
 			for(size_t i = 1; i <= _size; ++i)
 				_ptr[i].~T();
 			_alloc.deallocate(_ptr, _capacity + 2);
-			_ptr = nullptr;
+			_ptr = NULL;
 		}
 		void reserve_and_insert (size_type n, iterator postion, const value_type& val)
 		{
@@ -178,7 +178,7 @@ class vector
 			(void)alloc;
 			_size = 0;
 			_capacity = 0;
-			_ptr = nullptr;
+			_ptr = NULL;
 		};
 		explicit vector (size_type n, const value_type& val = value_type(),
                  const allocator_type& alloc = allocator_type())
@@ -198,7 +198,7 @@ class vector
 			{
 				_size = 0;
 				_capacity = 0;
-				_ptr = nullptr;
+				_ptr = NULL;
 				return;
 			}
 			_size = last - first;
@@ -208,15 +208,18 @@ class vector
 
 		vector (const vector& x)
 		{
-			//should allocate size of x not capacity ^_^
-			if (x._capacity == 0)
+			if (x._size)
 			{
-				_size = 0;
-				_capacity = 0;
-				_ptr = nullptr;
-				return ;
+				this->_size = x.size();
+				this->_capacity = _size;
+				this->_ptr = _alloc.allocate(_size + 2);
+				int i = 1;
+				for(size_t len = 0 ; len < x.size() ; ++len)
+				{
+					_ptr[i] = x[i - 1];
+					++i;
+				}
 			}
-			allocate_range(x.begin(), x.end()); // should check if end index == capacity 
 		}
 		vector& operator= (const vector& x)
 		{
@@ -407,23 +410,23 @@ class vector
 		}
 		template <class InputIterator>
   		void assign (InputIterator first, InputIterator last, 
-				typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
-				{
-					if (last - first > (int)_capacity)
-					{
-						free_vect();
-						this->_size = last - first;
-						this->_capacity = _size;
-						allocate_range(first, last);
-						return ;
-					}
-					_size = last - first;
-					for(int i = 1;first != last; first++)
-					{
-						_ptr[i] = *first;
-						i++;
-					}
-				}
+		typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+		{
+			if (last - first > (int)_capacity)
+			{
+				free_vect();
+				this->_size = last - first;
+				this->_capacity = _size;
+				allocate_range(first, last);
+				return ;
+			}
+			_size = last - first;
+			for(int i = 1;first != last; first++)
+			{
+				_ptr[i] = *first;
+				i++;
+			}
+		}
 		void assign (size_type n, const value_type& val)
 		{
 			if (n > _capacity)
@@ -440,7 +443,6 @@ class vector
 		}
 		void push_back (const value_type& val)
 		{
-			
 			if (_size == _capacity)
 			{
 				if (_capacity == 0)

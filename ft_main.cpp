@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/19 12:35:52 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/19 17:57:16 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/20 10:56:40 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -825,7 +825,6 @@ ft::map<char, int>::reverse_iterator rev_iter(mymap10.rbegin());
             ft::map<int, int>::iterator it = m.begin(), eit = --m.end();
             tmp = eit->first;
             m.erase(eit);
-            // std::cout << (--m.end())->first << std::endl;
             for (; it != m.end(); ++it)
             {
                 std::cout << it->first << " ";

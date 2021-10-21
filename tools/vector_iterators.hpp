@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/19 16:15:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/19 09:47:43 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/20 16:28:11 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,8 @@ class random_access_iterator : public ft::iterator<ft::random_access_iterator_ta
 		}
 
 		~random_access_iterator(){};
+		template <typename Iter, typename Iter1>
+		friend bool operator==(random_access_iterator<Iter> lhs, random_access_iterator<Iter1> rhs);
 };
 template <typename Tp>
 random_access_iterator<Tp> operator+(typename ft::iterator<ft::random_access_iterator_tag, Tp>::difference_type		n, random_access_iterator<Tp> lhs)
@@ -159,26 +161,38 @@ random_access_iterator<Tp> operator+(typename ft::iterator<ft::random_access_ite
 	return lhs + n;
 }
 
-template <typename Tp>
-bool operator<(random_access_iterator<Tp> lhs, random_access_iterator<Tp> rhs)
+template <typename Iter, typename Iter1>
+bool operator==(random_access_iterator<Iter> lhs, random_access_iterator<Iter1> rhs)
+{
+	return lhs._it == rhs._it;
+}
+
+template <typename Iter, typename Iter1>
+bool operator!=(random_access_iterator<Iter> lhs, random_access_iterator<Iter1> rhs)
+{
+	return !(lhs == rhs);
+}
+
+template <typename Iter, typename Iter1>
+bool operator<(random_access_iterator<Iter> lhs, random_access_iterator<Iter1> rhs)
 {
 	return lhs.get_pos() < rhs.get_pos();
 }
 
-template <typename Tp>
-bool operator<=(random_access_iterator<Tp> lhs, random_access_iterator<Tp> rhs)
+template <typename Iter, typename Iter1>
+bool operator<=(random_access_iterator<Iter> lhs, random_access_iterator<Iter1> rhs)
 {
 	return lhs.get_pos() <= rhs.get_pos();
 }
 
-template <typename Tp>
-bool operator>(random_access_iterator<Tp> lhs, random_access_iterator<Tp> rhs)
+template <typename Iter, typename Iter1>
+bool operator>(random_access_iterator<Iter> lhs, random_access_iterator<Iter1> rhs)
 {
 	return lhs.get_pos() > rhs.get_pos();
 }
 
-template <typename Tp>
-bool operator>=(random_access_iterator<Tp> lhs, random_access_iterator<Tp> rhs)
+template <typename Iter, typename Iter1>
+bool operator>=(random_access_iterator<Iter> lhs, random_access_iterator<Iter1> rhs)
 {
 	return lhs.get_pos() >= rhs.get_pos();
 }

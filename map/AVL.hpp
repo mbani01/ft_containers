@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:26:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/10/20 09:06:06 by mbani            ###   ########.fr       */
+/*   Updated: 2021/10/20 10:54:38 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,23 +306,6 @@ class  AVL
 				return get_successor(lower);
 			return lower;
 		}
-		// Node *get_upper_bound(Node *current, Node *parent, type &pair, bool &found) const
-		// {
-		// 	if (!current)
-		// 	{
-		// 		found = false;
-		// 		return parent;
-		// 	}
-		// 	if (!(comp(current->data->first, pair.first)) && !(comp(pair.first, current->data->first))) // equal keys
-		// 	{
-		// 		found = true;
-		// 		return current;
-		// 	}
-		// 	else if (!comp(current->data->first, pair.first)) //parent key < pair.key
-		// 		return get_upper_bound(current->left, current, pair, found);	
-		// 	else
-		// 		return get_upper_bound(current->right, current, pair, found);
-		// }
 		int remove(Node *node)
 		{
 			bool is_deleted = false;
@@ -342,6 +325,7 @@ class  AVL
 			root = remove(this->root, node, is_deleted);
 			if (is_deleted)
 				--_size;
+			freeNode(&node);
 			return is_deleted;
 		}
 		Node *remove(Node *current, Node *to_delete, bool &is_deleted)
@@ -385,7 +369,7 @@ class  AVL
 				return true;
 			return false;
 		}
-		Node *remove_right_child(Node *to_delete, Node **tmp)
+		Node *remove_right_child(Node *to_delete, Node *tmp)
 		{
 			if (to_delete->bf == 1) // has right child
 			{
@@ -398,13 +382,13 @@ class  AVL
 					update_height(root);
 					return root;
 				}
-				tmp[0]->right = to_delete->right;
-				tmp[0]->right->parent = tmp[0];
-				to_delete->right->parent = tmp[0];
+				tmp->right = to_delete->right;
+				tmp->right->parent = tmp;
+				to_delete->right->parent = tmp;
 				freeNode(&to_delete);
-				update_height(tmp[0]);
+				update_height(tmp);
 				// --_size;
-				return tmp[0]->right;
+				return tmp->right;
 			}
 			else if (to_delete->bf == -1)
 			{
@@ -417,17 +401,17 @@ class  AVL
 					update_height(root);
 					return root;
 				}
-				tmp[0]->right = to_delete->left;
-				tmp[0]->left->parent = tmp[0];
-				to_delete->left->parent = tmp[0];
+				tmp->right = to_delete->left;
+				tmp->left->parent = tmp;
+				to_delete->left->parent = tmp;
 				freeNode(&to_delete);
-				update_height(tmp[0]);
+				update_height(tmp);
 				// --_size;
-				return tmp[0]->right;
+				return tmp->right;
 			}
 			return NULL;
 		}
-		Node *remove_left_child(Node *to_delete, Node **tmp)
+		Node *remove_left_child(Node *to_delete, Node *tmp)
 		{
 			if (to_delete->bf == 1) //has right child
 			{
@@ -440,12 +424,12 @@ class  AVL
 					update_height(root);
 					return root;
 				}
-				tmp[0]->left = to_delete->right;
-				tmp[0]->left->parent = tmp[0];
+				tmp->left = to_delete->right;
+				tmp->left->parent = tmp;
 				freeNode(&to_delete);
-				update_height(tmp[0]);
+				update_height(tmp);
 				// --_size;
-				return tmp[0]->left;
+				return tmp->left;
 			}
 			else if (to_delete->bf == -1) // has left child
 			{
@@ -458,12 +442,12 @@ class  AVL
 					update_height(root);
 					return root;
 				}
-				tmp[0]->left = to_delete->left;
-				tmp[0]->left->parent = tmp[0];
+				tmp->left = to_delete->left;
+				tmp->left->parent = tmp;
 				freeNode(&to_delete);
-				update_height(tmp[0]);
+				update_height(tmp);
 				// --_size;
-				return tmp[0]->left;
+				return tmp->left;
 			}
 			return NULL;
 		}
@@ -471,9 +455,9 @@ class  AVL
 		{
 			Node *tmp = to_delete->parent; // save node's parent
 			if (is_right_child(to_delete, tmp))
-				return remove_right_child(to_delete, &tmp);
+				return remove_right_child(to_delete, tmp);
 			else if (is_left_child(to_delete, tmp))
-				return remove_left_child(to_delete, &tmp);
+				return remove_left_child(to_delete, tmp);
 			return NULL;
 		}
 		void replace_data(Node *node, Node *tmp)
@@ -505,7 +489,6 @@ class  AVL
 				return remove_node_with_one_child(to_delete);
 			else if (to_delete->_height >= 1)
 				return remove_node_with_childs(to_delete);
-			// return 100;
 			return to_delete;
 		}
 		Node* findMinimum(Node* node) const// returns most left node
